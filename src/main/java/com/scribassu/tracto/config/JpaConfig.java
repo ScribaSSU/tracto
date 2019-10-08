@@ -17,8 +17,8 @@ import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Configuration
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider", dateTimeProviderRef = "auditingDateTimeProvider")
-@EnableJpaRepositories("com.dzeru.webfinalprojectmashkina.repository")
+@EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
+@EnableJpaRepositories("com.scribassu.tracto.repository")
 @Component
 public class JpaConfig {
 

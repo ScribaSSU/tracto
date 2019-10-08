@@ -1,6 +1,8 @@
 package com.scribassu.tracto.service;
 
+import com.scribassu.tracto.entity.FullTimeLessonEntity;
 import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
+import com.scribassu.tracto.repository.FullTimeLessonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -12,21 +14,26 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Service
 public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
 
     private final ScheduleDownloader scheduleDownloader;
+    private final FullTimeLessonRepository fullTimeLessonRepository;
 
     @Autowired
-    public FullTimeLessonScheduleParserImpl(ScheduleDownloaderImpl scheduleDownloader) {
+    public FullTimeLessonScheduleParserImpl(ScheduleDownloaderImpl scheduleDownloader,
+                                            FullTimeLessonRepository fullTimeLessonRepository) {
         this.scheduleDownloader = scheduleDownloader;
+        this.fullTimeLessonRepository = fullTimeLessonRepository;
     }
 
     @Override
     public ScheduleParserStatusEntity parseSchedule(String department, String scheduleType, String group) {
-        String scheduleFile = scheduleDownloader.downloadSchedule(department, scheduleType, group, false);
-        initLessonDays();
+        return null;
+        /*String scheduleFile = scheduleDownloader.downloadSchedule(department, scheduleType, group, false);
+        //initLessonDays();
 
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -90,7 +97,8 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                                     lessonTimeList.add(new LessonTime(r, time[0].trim(), time[1].trim()));
                                 }
                                 else {
-                                    Lesson lesson = new Lesson(group);
+                                    FullTimeLessonEntity lesson = new FullTimeLessonEntity();
+                                    lesson.setGroup(group);
 
                                     if(cellContent.contains(LessonType.NOMINATOR)) {
                                         lesson.setWeek(LessonType.NOMINATOR);
@@ -118,8 +126,7 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                                     lesson.setContent(cellContent);
                                     lesson.setLessonTimeId(r);
                                     lesson.setDayId(c);
-                                    lesson.setId(r * 100000 + c * 10000 + lesson.getWeek().length() * 1000 + Long.parseLong(group));
-                                    lessonRepository.saveOrUpdate(lesson);
+                                    fullTimeLessonRepository.save(lesson);
                                 }
                             }
 
@@ -131,7 +138,7 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                 }
             }
 
-            utilRepository.initLessonTime(lessonTimeList);
+            //utilRepository.initLessonTime(lessonTimeList);
             ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("upd", scheduleFile);
             //TODO: save to repo
             return scheduleParserStatusEntity;
@@ -139,10 +146,10 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
             ex.printStackTrace(System.out);
             ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("fail", scheduleFile);
             //TODO: save to repo
-        }
+        }*/
     }
 
-    private void initLessonDays() {
+    /*private void initLessonDays() {
         ArrayList<LessonDay> lessonDays = new ArrayList<>();
         lessonDays.add(new LessonDay(1, "Понедельник"));
         lessonDays.add(new LessonDay(2, "Вторник"));
@@ -152,5 +159,5 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
         lessonDays.add(new LessonDay(6, "Суббота"));
         lessonDays.add(new LessonDay(7, "Воскресенье"));
         utilRepository.initLessonDays(lessonDays);
-    }
+    }*/
 }

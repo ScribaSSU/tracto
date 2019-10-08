@@ -12,26 +12,28 @@ import java.nio.channels.ReadableByteChannel;
 public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
     @Override
-    public String downloadSchedule(String department, String scheduleType, String group, boolean isSession) {
+    public String downloadSchedule(String department, String groupType, String group, boolean isSession) {
         //LOGGER.info("Start download schedule for group " + group);
         String schedule;
         String file;
 
-        if(scheduleType.equalsIgnoreCase("teacher")) {
+        if(groupType.equalsIgnoreCase("teacher")) {
             //group - teacher's schedule id
-            schedule = "https://www.sgu.ru/teacher/" + group;
-            file = "schedule_" + scheduleType + "_" + group + ".xls";
+            schedule = "https://www.sgu.ru/schedule/teacher/" + group;
+            file = "schedule_teacher_" + group + "_";
         }
         else {
-            schedule = "https://www.sgu.ru/schedule/" + department + "/" + scheduleType + "/" + group;
-            file = "schedule_" + scheduleType + "_" + group + ".xls";
+            schedule = "https://www.sgu.ru/schedule/" + department + "/" + groupType + "/" + group;
+            file = "schedule_" + department + "_" + groupType + "_" + group + "_";
         }
 
         if(isSession) {
             schedule = schedule + "/session";
+            file = file + "session.xls";
         }
         else {
             schedule = schedule + "/lesson";
+            file = file + "lesson.xls";
         }
 
         try {

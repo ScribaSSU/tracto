@@ -1,6 +1,7 @@
 package com.scribassu.tracto.service;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,11 +9,11 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 
-@Component
+@Service
 public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
     @Override
-    public String downloadSchedule(String department, String groupType, String group, boolean isSession) {
+    public String downloadSchedule(String departmentUrl, String groupType, String group, boolean isSession) {
         //LOGGER.info("Start download schedule for group " + group);
         String schedule;
         String file;
@@ -23,8 +24,8 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
             file = "schedule_teacher_" + group + "_";
         }
         else {
-            schedule = "https://www.sgu.ru/schedule/" + department + "/" + groupType + "/" + group;
-            file = "schedule_" + department + "_" + groupType + "_" + group + "_";
+            schedule = "https://www.sgu.ru/schedule/" + departmentUrl + "/" + groupType + "/" + group;
+            file = "schedule_" + departmentUrl + "_" + groupType + "_" + group + "_";
         }
 
         if(isSession) {

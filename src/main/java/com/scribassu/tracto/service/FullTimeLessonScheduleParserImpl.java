@@ -1,8 +1,11 @@
 package com.scribassu.tracto.service;
 
-import com.scribassu.tracto.entity.FullTimeLessonEntity;
+import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
+import com.scribassu.tracto.repository.DayRepository;
+import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.FullTimeLessonRepository;
+import com.scribassu.tracto.repository.TimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -14,33 +17,46 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
 
     private final ScheduleDownloader scheduleDownloader;
     private final FullTimeLessonRepository fullTimeLessonRepository;
+    private final DepartmentRepository departmentRepository;
+    private final DayRepository dayRepository;
+    private final TimeRepository timeRepository;
 
     @Autowired
     public FullTimeLessonScheduleParserImpl(ScheduleDownloaderImpl scheduleDownloader,
-                                            FullTimeLessonRepository fullTimeLessonRepository) {
+                                            FullTimeLessonRepository fullTimeLessonRepository,
+                                            DepartmentRepository departmentRepository,
+                                            DayRepository dayRepository,
+                                            TimeRepository timeRepository)
+                                             {
         this.scheduleDownloader = scheduleDownloader;
         this.fullTimeLessonRepository = fullTimeLessonRepository;
+        this.departmentRepository = departmentRepository;
+        this.dayRepository = dayRepository;
+        this.timeRepository = timeRepository;
     }
 
     @Override
-    public ScheduleParserStatusEntity parseSchedule(String department, String scheduleType, String group) {
-        return null;
-        /*String scheduleFile = scheduleDownloader.downloadSchedule(department, scheduleType, group, false);
-        //initLessonDays();
+    public ScheduleParserStatusEntity parseSchedule(String departmentUrl, String scheduleType, String group) {
+
+        if(!scheduleType.equalsIgnoreCase("do")) {
+            throw new IllegalArgumentException("Wrong schedule type");
+        }
+
+        String scheduleFile = scheduleDownloader.downloadSchedule(departmentUrl, scheduleType, group, false);
 
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document document = documentBuilder.parse(scheduleFile);
             Node root = document.getDocumentElement();
             NodeList rootChildren = root.getChildNodes();
-
             int i = 0;
             Node worksheet = root;
 
@@ -50,7 +66,6 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
             }
 
             NodeList worksheetList = worksheet.getChildNodes();
-
             i = 0;
             Node table = root;
 
@@ -60,16 +75,10 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
             }
 
             NodeList tableList = table.getChildNodes();
-
-            Node row;
+            Node row, cell, data;
             NodeList rowList;
-            Node cell;
-            Node data;
-
             int c = 0;
             int r = -1;
-
-            List<LessonTime> lessonTimeList = new ArrayList<>();
 
             for(int k = 0; k < tableList.getLength(); k++) {
                 row = tableList.item(k);
@@ -92,41 +101,13 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                             //row = 0 contains days of week
                             if(r != -1 && r != 0) {
 
-                                if(c == 0) {
-                                    String[] time = cellContent.split("-");
-                                    lessonTimeList.add(new LessonTime(r, time[0].trim(), time[1].trim()));
-                                }
-                                else {
-                                    FullTimeLessonEntity lesson = new FullTimeLessonEntity();
-                                    lesson.setGroup(group);
-
-                                    if(cellContent.contains(LessonType.NOMINATOR)) {
-                                        lesson.setWeek(LessonType.NOMINATOR);
-                                    }
-                                    else if(cellContent.contains(LessonType.DENOMINATOR)) {
-                                        lesson.setWeek(LessonType.DENOMINATOR);
+                                if(c != 0) {
+                                    if(cellContent.contains(WeekType.ODD.getType()) && cellContent.contains(WeekType.EVEN.getType())) {
+                                        List<FullTimeLesson> fullTimeLessons = parseTwoLessons(cellContent, group, departmentUrl);
                                     }
                                     else {
-                                        lesson.setWeek(LessonType.BOTH);
+                                        FullTimeLesson fullTimeLesson = parseOneLesson(cellContent, departmentUrl, group, r, c);
                                     }
-
-                                    if(cellContent.contains(LessonType.LECTURE)) {
-                                        lesson.setType(LessonType.LECTURE);
-                                        //cellContent = cellContent.substring(cellContent.indexOf(lesson.getType()) + 5).trim();
-                                    }
-                                    else {
-                                        lesson.setType(LessonType.PRACTICE);
-                                        //cellContent = cellContent.substring(cellContent.indexOf(lesson.getType()) + 4).trim();
-                                    }
-
-                                    cellContent = cellContent.replace(lesson.getType(), "");
-                                    cellContent = cellContent.replace(lesson.getWeek(), "");
-                                    cellContent = cellContent.trim();
-
-                                    lesson.setContent(cellContent);
-                                    lesson.setLessonTimeId(r);
-                                    lesson.setDayId(c);
-                                    fullTimeLessonRepository.save(lesson);
                                 }
                             }
 
@@ -138,7 +119,6 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                 }
             }
 
-            //utilRepository.initLessonTime(lessonTimeList);
             ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("upd", scheduleFile);
             //TODO: save to repo
             return scheduleParserStatusEntity;
@@ -146,18 +126,72 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
             ex.printStackTrace(System.out);
             ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("fail", scheduleFile);
             //TODO: save to repo
-        }*/
+        }
+
+        return null;
     }
 
-    /*private void initLessonDays() {
-        ArrayList<LessonDay> lessonDays = new ArrayList<>();
-        lessonDays.add(new LessonDay(1, "Понедельник"));
-        lessonDays.add(new LessonDay(2, "Вторник"));
-        lessonDays.add(new LessonDay(3, "Среда"));
-        lessonDays.add(new LessonDay(4, "Четверг"));
-        lessonDays.add(new LessonDay(5, "Пятница"));
-        lessonDays.add(new LessonDay(6, "Суббота"));
-        lessonDays.add(new LessonDay(7, "Воскресенье"));
-        utilRepository.initLessonDays(lessonDays);
-    }*/
+    private List<FullTimeLesson> parseTwoLessons(String cellContent, String departmentUrl, String group) {
+        return null;
+    }
+
+    private FullTimeLesson parseOneLesson(String cellContent, String departmentUrl, String group, int lessonNumber, int dayNumber) {
+        FullTimeLesson lesson = new FullTimeLesson();
+        lesson.setGroupNumber(group);
+
+        if(cellContent.contains(WeekType.ODD.getType())) {
+            lesson.setWeekType(WeekType.ODD);
+        }
+        else if(cellContent.contains(WeekType.EVEN.getType())) {
+            lesson.setWeekType(WeekType.EVEN);
+        }
+        else {
+            lesson.setWeekType(WeekType.BOTH);
+        }
+
+        if(cellContent.contains(LessonType.LECTURE.getType())) {
+            lesson.setLessonType(LessonType.LECTURE);
+            cellContent = cellContent.substring(cellContent.indexOf(lesson.getLessonType().getType()) + 5).trim();
+        }
+        else {
+            lesson.setLessonType(LessonType.PRACTICE);
+            cellContent = cellContent.substring(cellContent.indexOf(lesson.getLessonType().getType()) + 4).trim();
+        }
+
+        if(lesson.getWeekType().equals(WeekType.EVEN) || lesson.getWeekType().equals(WeekType.ODD)) {
+            cellContent = cellContent.replace(lesson.getWeekType().getType(), "");
+        }
+        cellContent = cellContent.trim();
+
+        Optional<Department> departmentOptional = departmentRepository.findByURL(departmentUrl);
+
+        if(departmentOptional.isPresent()) {
+            lesson.setDepartment(departmentOptional.get());
+        }
+        else {
+            throw new IllegalArgumentException("Wrong department");
+        }
+
+        Optional<Time> timeOptional = timeRepository.findByLessonNumber(lessonNumber);
+
+        if(timeOptional.isPresent()) {
+            lesson.setLessonTime(timeOptional.get());
+        }
+        else {
+            throw new IllegalArgumentException("Wrong time");
+        }
+
+        Optional<Day> dayOptional = dayRepository.findByDayNumber(dayNumber);
+
+        if(dayOptional.isPresent()) {
+            lesson.setWeekDay(dayOptional.get());
+        }
+        else {
+            throw new IllegalArgumentException("Wrong day");
+        }
+
+        lesson.setInfo(cellContent);
+        fullTimeLessonRepository.save(lesson);
+        return lesson;
+    }
 }

@@ -1,7 +1,6 @@
 package com.scribassu.tracto;
 
-import com.scribassu.tracto.domain.FullTimeLesson;
-import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
+import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.service.FullTimeLessonScheduleParserImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,6 @@ public class FullTimeLessonScheduleParserTests {
 
     @Test
     public void full() {
-        ScheduleParserStatusEntity s = fullTimeLessonScheduleParser.parseSchedule("knt", "do", "351");
+        ScheduleParserStatus s = fullTimeLessonScheduleParser.parseSchedule("knt", "do", "351");
     }
 }

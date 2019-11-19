@@ -1,11 +1,8 @@
 package com.scribassu.tracto.service;
 
 import com.scribassu.tracto.domain.*;
-import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
-import com.scribassu.tracto.repository.DayRepository;
-import com.scribassu.tracto.repository.DepartmentRepository;
-import com.scribassu.tracto.repository.FullTimeLessonRepository;
-import com.scribassu.tracto.repository.TimeRepository;
+import com.scribassu.tracto.entity.ScheduleParserStatus;
+import com.scribassu.tracto.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -28,29 +25,33 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
     private final DepartmentRepository departmentRepository;
     private final DayRepository dayRepository;
     private final TimeRepository timeRepository;
+    private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
     @Autowired
     public FullTimeLessonScheduleParserImpl(ScheduleDownloaderImpl scheduleDownloader,
                                             FullTimeLessonRepository fullTimeLessonRepository,
                                             DepartmentRepository departmentRepository,
                                             DayRepository dayRepository,
-                                            TimeRepository timeRepository)
+                                            TimeRepository timeRepository,
+                                            ScheduleParserStatusRepository scheduleParserStatusRepository)
                                              {
         this.scheduleDownloader = scheduleDownloader;
         this.fullTimeLessonRepository = fullTimeLessonRepository;
         this.departmentRepository = departmentRepository;
         this.dayRepository = dayRepository;
         this.timeRepository = timeRepository;
+        this.scheduleParserStatusRepository = scheduleParserStatusRepository;
     }
 
     @Override
-    public ScheduleParserStatusEntity parseSchedule(String departmentUrl, String scheduleType, String group) {
+    public ScheduleParserStatus parseSchedule(String departmentUrl, String scheduleType, String group) {
 
         if(!scheduleType.equalsIgnoreCase("do")) {
             throw new IllegalArgumentException("Wrong schedule type");
         }
 
         String scheduleFile = scheduleDownloader.downloadSchedule(departmentUrl, scheduleType, group, false);
+        ScheduleParserStatus scheduleParserStatus;
 
         try {
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -119,16 +120,16 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
                 }
             }
 
-            ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("upd", scheduleFile);
-            //TODO: save to repo
-            return scheduleParserStatusEntity;
+            scheduleParserStatus = new ScheduleParserStatus("upd", scheduleFile);
+            scheduleParserStatusRepository.save(scheduleParserStatus);
+            return scheduleParserStatus;
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             ex.printStackTrace(System.out);
-            ScheduleParserStatusEntity scheduleParserStatusEntity = new ScheduleParserStatusEntity("fail", scheduleFile);
-            //TODO: save to repo
+            scheduleParserStatus = new ScheduleParserStatus("fail", scheduleFile);
+            scheduleParserStatusRepository.save(scheduleParserStatus);
         }
 
-        return null;
+        return scheduleParserStatus;
     }
 
     private List<FullTimeLesson> parseTwoLessons(String cellContent, String departmentUrl, String group) {
@@ -136,7 +137,17 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
     }
 
     private FullTimeLesson parseOneLesson(String cellContent, String departmentUrl, String group, int lessonNumber, int dayNumber) {
-        FullTimeLesson lesson = new FullTimeLesson();
+        Optional<Time> timeOptional = timeRepository.findByLessonNumber(lessonNumber);
+        Optional<Day> dayOptional = dayRepository.findByDayNumber(dayNumber);
+        FullTimeLesson lesson;
+
+        if(timeOptional.isPresent() && dayOptional.isPresent()) {
+            lesson = fullTimeLessonRepository.findByGroupNumberAndLessonTimeAndWeekDay(group, timeOptional.get(), dayOptional.get()).orElse(new FullTimeLesson());
+        }
+        else {
+            throw new IllegalArgumentException("Corrupted full time lesson");
+        }
+
         lesson.setGroupNumber(group);
 
         if(cellContent.contains(WeekType.ODD.getType())) {
@@ -172,25 +183,10 @@ public class FullTimeLessonScheduleParserImpl implements ScheduleParser {
             throw new IllegalArgumentException("Wrong department");
         }
 
-        Optional<Time> timeOptional = timeRepository.findByLessonNumber(lessonNumber);
-
-        if(timeOptional.isPresent()) {
-            lesson.setLessonTime(timeOptional.get());
-        }
-        else {
-            throw new IllegalArgumentException("Wrong time");
-        }
-
-        Optional<Day> dayOptional = dayRepository.findByDayNumber(dayNumber);
-
-        if(dayOptional.isPresent()) {
-            lesson.setWeekDay(dayOptional.get());
-        }
-        else {
-            throw new IllegalArgumentException("Wrong day");
-        }
-
+        lesson.setLessonTime(timeOptional.get());
+        lesson.setWeekDay(dayOptional.get());
         lesson.setInfo(cellContent);
+
         fullTimeLessonRepository.save(lesson);
         return lesson;
     }

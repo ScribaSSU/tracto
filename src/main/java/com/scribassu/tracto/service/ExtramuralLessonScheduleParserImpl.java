@@ -1,11 +1,11 @@
 package com.scribassu.tracto.service;
 
-import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
+import com.scribassu.tracto.entity.ScheduleParserStatus;
 
 public class ExtramuralLessonScheduleParserImpl implements ScheduleParser {
 
     @Override
-    public ScheduleParserStatusEntity parseSchedule(String department, String scheduleType, String group) {
+    public ScheduleParserStatus parseSchedule(String department, String scheduleType, String group) {
         return null;
     }
 }

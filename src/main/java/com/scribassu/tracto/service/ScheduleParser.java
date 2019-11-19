@@ -1,11 +1,11 @@
 package com.scribassu.tracto.service;
 
-import com.scribassu.tracto.entity.ScheduleParserStatusEntity;
+import com.scribassu.tracto.entity.ScheduleParserStatus;
 
 public interface ScheduleParser {
 
     /*
     schedule type - fulltime or extramural or teacher
      */
-    ScheduleParserStatusEntity parseSchedule(String department, String scheduleType, String group);
+    ScheduleParserStatus parseSchedule(String department, String scheduleType, String group);
 }

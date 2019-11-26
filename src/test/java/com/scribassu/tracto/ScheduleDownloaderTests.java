@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class ScheduleDownloaderTests {
 
-    @Autowired
+  /*  @Autowired
     private ScheduleDownloaderImpl scheduleDownloader;
 
     @Test
@@ -68,5 +68,5 @@ public class ScheduleDownloaderTests {
     public void downloadTeacherBessonovSession() {
         String file = scheduleDownloader.downloadSchedule(null, "teacher", "1", true);
         assertEquals("schedule_teacher_1_session.xls", file);
-    }
+    }*/
 }

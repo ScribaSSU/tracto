@@ -1,5 +1,6 @@
 package com.scribassu.tracto.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -12,33 +13,20 @@ import java.nio.channels.ReadableByteChannel;
 @Service
 public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
+    @Value("${tracto.download-schedule.url}")
+    private String url;
+
+    private final String scheduleFilePrefix = "schedule_";
+    private final String scheduleFileSuffix = ".xml";
+
     @Override
-    public String downloadSchedule(String departmentUrl, String groupType, String group, boolean isSession) {
+    public String downloadSchedule(String departmentUrl) {
         //LOGGER.info("Start download schedule for group " + group);
-        String schedule;
-        String file;
-
-        if(groupType.equalsIgnoreCase("teacher")) {
-            //group - teacher's schedule id
-            schedule = "https://www.sgu.ru/schedule/teacher/" + group;
-            file = "schedule_teacher_" + group + "_";
-        }
-        else {
-            schedule = "https://www.sgu.ru/schedule/" + departmentUrl + "/" + groupType + "/" + group;
-            file = "schedule_" + departmentUrl + "_" + groupType + "_" + group + "_";
-        }
-
-        if(isSession) {
-            schedule = schedule + "/session";
-            file = file + "session.xls";
-        }
-        else {
-            schedule = schedule + "/lesson";
-            file = file + "lesson.xls";
-        }
+        String scheduleUrl = url + departmentUrl;
+        String file = scheduleFilePrefix + departmentUrl + scheduleFileSuffix;
 
         try {
-            URL url = new URL(schedule);
+            URL url = new URL(scheduleUrl);
             ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);

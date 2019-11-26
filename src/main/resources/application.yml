@@ -13,3 +13,8 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: update
+
+tracto:
+  download-schedule:
+    url:
+    auth-header:

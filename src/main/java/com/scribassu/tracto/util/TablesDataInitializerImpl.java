@@ -2,11 +2,11 @@ package com.scribassu.tracto.util;
 
 import com.scribassu.tracto.domain.Day;
 import com.scribassu.tracto.domain.Department;
-import com.scribassu.tracto.domain.Time;
+import com.scribassu.tracto.domain.LessonTime;
 import com.scribassu.tracto.domain.WeekDay;
 import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.DepartmentRepository;
-import com.scribassu.tracto.repository.TimeRepository;
+import com.scribassu.tracto.repository.LessonTimeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +16,15 @@ import java.util.Optional;
 public class TablesDataInitializerImpl implements TablesDataInitializer {
 
     private final DayRepository dayRepository;
-    private  final TimeRepository timeRepository;
+    private  final LessonTimeRepository lessonTimeRepository;
     private final DepartmentRepository departmentRepository;
 
     @Autowired
     public TablesDataInitializerImpl(DayRepository dayRepository,
-                                     TimeRepository timeRepository,
+                                     LessonTimeRepository lessonTimeRepository,
                                      DepartmentRepository departmentRepository) {
         this.dayRepository = dayRepository;
-        this.timeRepository = timeRepository;
+        this.lessonTimeRepository = lessonTimeRepository;
         this.departmentRepository = departmentRepository;
     }
 
@@ -94,76 +94,76 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     }
 
     private void initTimes() {
-        Optional<Time> lessonFirstOpt = timeRepository.findByLessonNumber(1);
+        Optional<LessonTime> lessonFirstOpt = lessonTimeRepository.findByLessonNumber(1);
         if(!lessonFirstOpt.isPresent()) {
-            Time lessonFirst = new Time();
+            LessonTime lessonFirst = new LessonTime();
             lessonFirst.setLessonNumber(1);
             lessonFirst.setTimeStart("8:20");
             lessonFirst.setTimeFinish("09:50");
-            timeRepository.save(lessonFirst);
+            lessonTimeRepository.save(lessonFirst);
         }
 
-        Optional<Time> lessonSecondOpt = timeRepository.findByLessonNumber(2);
+        Optional<LessonTime> lessonSecondOpt = lessonTimeRepository.findByLessonNumber(2);
         if(!lessonSecondOpt.isPresent()) {
-            Time lessonSecond = new Time();
+            LessonTime lessonSecond = new LessonTime();
             lessonSecond.setLessonNumber(2);
             lessonSecond.setTimeStart("10:00");
             lessonSecond.setTimeFinish("11:35");
-            timeRepository.save(lessonSecond);
+            lessonTimeRepository.save(lessonSecond);
         }
 
-        Optional<Time> lessonThirdOpt = timeRepository.findByLessonNumber(3);
+        Optional<LessonTime> lessonThirdOpt = lessonTimeRepository.findByLessonNumber(3);
         if(!lessonThirdOpt.isPresent()) {
-            Time lessonThird = new Time();
+            LessonTime lessonThird = new LessonTime();
             lessonThird.setLessonNumber(3);
             lessonThird.setTimeStart("12:05");
             lessonThird.setTimeFinish("13:40");
-            timeRepository.save(lessonThird);
+            lessonTimeRepository.save(lessonThird);
         }
 
-        Optional<Time> lessonFourthOpt = timeRepository.findByLessonNumber(4);
+        Optional<LessonTime> lessonFourthOpt = lessonTimeRepository.findByLessonNumber(4);
         if(!lessonFourthOpt.isPresent()) {
-            Time lessonFourth = new Time();
+            LessonTime lessonFourth = new LessonTime();
             lessonFourth.setLessonNumber(4);
             lessonFourth.setTimeStart("13:50");
             lessonFourth.setTimeFinish("15:25");
-            timeRepository.save(lessonFourth);
+            lessonTimeRepository.save(lessonFourth);
         }
 
-        Optional<Time> lessonFifthOpt = timeRepository.findByLessonNumber(5);
+        Optional<LessonTime> lessonFifthOpt = lessonTimeRepository.findByLessonNumber(5);
         if(!lessonFifthOpt.isPresent()) {
-            Time lessonFifth = new Time();
+            LessonTime lessonFifth = new LessonTime();
             lessonFifth.setLessonNumber(5);
             lessonFifth.setTimeStart("15:35");
             lessonFifth.setTimeFinish("17:10");
-            timeRepository.save(lessonFifth);
+            lessonTimeRepository.save(lessonFifth);
         }
 
-        Optional<Time> lessonSixOpt = timeRepository.findByLessonNumber(6);
+        Optional<LessonTime> lessonSixOpt = lessonTimeRepository.findByLessonNumber(6);
         if(!lessonSixOpt.isPresent()) {
-            Time lessonSix = new Time();
+            LessonTime lessonSix = new LessonTime();
             lessonSix.setLessonNumber(6);
             lessonSix.setTimeStart("17:20");
             lessonSix.setTimeFinish("18:40");
-            timeRepository.save(lessonSix);
+            lessonTimeRepository.save(lessonSix);
         }
 
-        Optional<Time> lessonSeventhOpt = timeRepository.findByLessonNumber(7);
+        Optional<LessonTime> lessonSeventhOpt = lessonTimeRepository.findByLessonNumber(7);
         if(!lessonSeventhOpt.isPresent()) {
-            Time lessonSeventh = new Time();
+            LessonTime lessonSeventh = new LessonTime();
             lessonSeventh.setLessonNumber(7);
             lessonSeventh.setTimeStart("18:45");
             lessonSeventh.setTimeFinish("20:05");
-            timeRepository.save(lessonSeventh);
+            lessonTimeRepository.save(lessonSeventh);
         }
 
-        Optional<Time> lessonEighthOpt = timeRepository.findByLessonNumber(8);
+        Optional<LessonTime> lessonEighthOpt = lessonTimeRepository.findByLessonNumber(8);
         if(!lessonEighthOpt.isPresent()) {
-            Time lessonEighth = new Time();
+            LessonTime lessonEighth = new LessonTime();
             lessonEighth.setLessonNumber(8);
             lessonEighth.setTimeStart("20:10");
             lessonEighth.setTimeFinish("21:30");
-            timeRepository.save(lessonEighth);
+            lessonTimeRepository.save(lessonEighth);
         }
     }
 

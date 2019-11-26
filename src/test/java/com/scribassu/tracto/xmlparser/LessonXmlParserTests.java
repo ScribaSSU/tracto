@@ -7,7 +7,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
-import java.security.acl.Group;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

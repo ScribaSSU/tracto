@@ -2,7 +2,7 @@ package com.scribassu.tracto.repository;
 
 import com.scribassu.tracto.domain.Day;
 import com.scribassu.tracto.domain.FullTimeLesson;
-import com.scribassu.tracto.domain.Time;
+import com.scribassu.tracto.domain.LessonTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,5 +17,5 @@ public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, 
     @Query("select ftl from FullTimeLesson ftl where ftl.groupNumber = :groupNumber")
     List<FullTimeLesson> findAllForGroup(@Param("groupNumber") String groupNumber);
 
-    Optional<FullTimeLesson> findByGroupNumberAndLessonTimeAndWeekDay(String groupNumber, Time time, Day day);
+    Optional<FullTimeLesson> findByGroupNumberAndLessonTimeAndWeekDay(String groupNumber, LessonTime time, Day day);
 }

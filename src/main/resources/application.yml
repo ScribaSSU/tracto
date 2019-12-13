@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /api/
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/tracto?serverTimezone=UTC
+    username: tracto
+    password: tracto
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: update
+
+tracto:
+  download-schedule:
+    url:
+    auth-header:

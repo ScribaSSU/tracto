@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface LessonTimeRepository extends JpaRepository<LessonTime, Long> {
-    Optional<LessonTime> findByLessonNumber(int lessonNumber);
+    LessonTime findByLessonNumber(int lessonNumber);
 }

@@ -7,10 +7,10 @@ import com.scribassu.tracto.domain.WeekDay;
 import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.LessonTimeRepository;
+import com.scribassu.tracto.service.ScheduleDownloader;
+import com.scribassu.tracto.service.ScheduleParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class TablesDataInitializerImpl implements TablesDataInitializer {
@@ -18,6 +18,12 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     private final DayRepository dayRepository;
     private  final LessonTimeRepository lessonTimeRepository;
     private final DepartmentRepository departmentRepository;
+
+    @Autowired
+    private ScheduleParser scheduleParser;
+
+    @Autowired
+    private ScheduleDownloader scheduleDownloader;
 
     @Autowired
     public TablesDataInitializerImpl(DayRepository dayRepository,
@@ -33,60 +39,62 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         initDays();
         initTimes();
         initDepartments();
+
+        scheduleParser.parseSchedule(scheduleDownloader.downloadSchedule("knt"), "knt");
     }
     
     private void initDays(){
-        Optional<Day> mondayOpt = dayRepository.findByDayNumber(1);
-        if(!mondayOpt.isPresent()) {
-            Day monday = new Day();
+        Day monday = dayRepository.findByDayNumber(1);
+        if(monday == null) {
+            monday = new Day();
             monday.setDayNumber(1);
             monday.setWeekDay(WeekDay.MONDAY);
             dayRepository.save(monday);
         }
 
-        Optional<Day> tuesdayOpt = dayRepository.findByDayNumber(2);
-        if(!tuesdayOpt.isPresent()) {
-            Day tuesday = new Day();
+        Day tuesday = dayRepository.findByDayNumber(2);
+        if(tuesday == null) {
+            tuesday = new Day();
             tuesday.setDayNumber(2);
             tuesday.setWeekDay(WeekDay.TUESDAY);
             dayRepository.save(tuesday);
         }
 
-        Optional<Day> wednesdayOpt = dayRepository.findByDayNumber(3);
-        if(!wednesdayOpt.isPresent()) {
-            Day wednesday = new Day();
+        Day wednesday = dayRepository.findByDayNumber(3);
+        if(wednesday == null) {
+            wednesday = new Day();
             wednesday.setDayNumber(3);
             wednesday.setWeekDay(WeekDay.WEDNESDAY);
             dayRepository.save(wednesday);
         }
 
-        Optional<Day> thursdayOpt = dayRepository.findByDayNumber(4);
-        if(!thursdayOpt.isPresent()) {
-            Day thursday = new Day();
+        Day thursday = dayRepository.findByDayNumber(4);
+        if(thursday == null) {
+            thursday = new Day();
             thursday.setDayNumber(4);
             thursday.setWeekDay(WeekDay.THURSDAY);
             dayRepository.save(thursday);
         }
 
-        Optional<Day> fridayOpt = dayRepository.findByDayNumber(5);
-        if(!fridayOpt.isPresent()) {
-            Day friday = new Day();
+        Day friday = dayRepository.findByDayNumber(5);
+        if(friday == null) {
+            friday = new Day();
             friday.setDayNumber(5);
             friday.setWeekDay(WeekDay.FRIDAY);
             dayRepository.save(friday);
         }
 
-        Optional<Day> saturdayOpt = dayRepository.findByDayNumber(6);
-        if(!saturdayOpt.isPresent()) {
-            Day saturday = new Day();
+        Day saturday = dayRepository.findByDayNumber(6);
+        if(saturday == null) {
+            saturday = new Day();
             saturday.setDayNumber(6);
             saturday.setWeekDay(WeekDay.SATURDAY);
             dayRepository.save(saturday);
         }
 
-        Optional<Day> sundayOpt = dayRepository.findByDayNumber(7);
-        if(!sundayOpt.isPresent()) {
-            Day sunday = new Day();
+        Day sunday = dayRepository.findByDayNumber(7);
+        if(sunday == null) {
+            sunday = new Day();
             sunday.setDayNumber(7);
             sunday.setWeekDay(WeekDay.SUNDAY);
             dayRepository.save(sunday);
@@ -94,72 +102,72 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     }
 
     private void initTimes() {
-        Optional<LessonTime> lessonFirstOpt = lessonTimeRepository.findByLessonNumber(1);
-        if(!lessonFirstOpt.isPresent()) {
-            LessonTime lessonFirst = new LessonTime();
+        LessonTime lessonFirst = lessonTimeRepository.findByLessonNumber(1);
+        if(lessonFirst == null) {
+            lessonFirst = new LessonTime();
             lessonFirst.setLessonNumber(1);
             lessonFirst.setTimeStart("8:20");
             lessonFirst.setTimeFinish("09:50");
             lessonTimeRepository.save(lessonFirst);
         }
 
-        Optional<LessonTime> lessonSecondOpt = lessonTimeRepository.findByLessonNumber(2);
-        if(!lessonSecondOpt.isPresent()) {
-            LessonTime lessonSecond = new LessonTime();
+        LessonTime lessonSecond = lessonTimeRepository.findByLessonNumber(2);
+        if(lessonSecond == null) {
+            lessonSecond = new LessonTime();
             lessonSecond.setLessonNumber(2);
             lessonSecond.setTimeStart("10:00");
             lessonSecond.setTimeFinish("11:35");
             lessonTimeRepository.save(lessonSecond);
         }
 
-        Optional<LessonTime> lessonThirdOpt = lessonTimeRepository.findByLessonNumber(3);
-        if(!lessonThirdOpt.isPresent()) {
-            LessonTime lessonThird = new LessonTime();
+        LessonTime lessonThird = lessonTimeRepository.findByLessonNumber(3);
+        if(lessonThird == null) {
+            lessonThird = new LessonTime();
             lessonThird.setLessonNumber(3);
             lessonThird.setTimeStart("12:05");
             lessonThird.setTimeFinish("13:40");
             lessonTimeRepository.save(lessonThird);
         }
 
-        Optional<LessonTime> lessonFourthOpt = lessonTimeRepository.findByLessonNumber(4);
-        if(!lessonFourthOpt.isPresent()) {
-            LessonTime lessonFourth = new LessonTime();
+        LessonTime lessonFourth = lessonTimeRepository.findByLessonNumber(4);
+        if(lessonFourth == null) {
+            lessonFourth = new LessonTime();
             lessonFourth.setLessonNumber(4);
             lessonFourth.setTimeStart("13:50");
             lessonFourth.setTimeFinish("15:25");
             lessonTimeRepository.save(lessonFourth);
         }
 
-        Optional<LessonTime> lessonFifthOpt = lessonTimeRepository.findByLessonNumber(5);
-        if(!lessonFifthOpt.isPresent()) {
-            LessonTime lessonFifth = new LessonTime();
+        LessonTime lessonFifth = lessonTimeRepository.findByLessonNumber(5);
+        if(lessonFifth == null) {
+            lessonFifth = new LessonTime();
             lessonFifth.setLessonNumber(5);
             lessonFifth.setTimeStart("15:35");
             lessonFifth.setTimeFinish("17:10");
             lessonTimeRepository.save(lessonFifth);
         }
 
-        Optional<LessonTime> lessonSixOpt = lessonTimeRepository.findByLessonNumber(6);
-        if(!lessonSixOpt.isPresent()) {
-            LessonTime lessonSix = new LessonTime();
+        LessonTime lessonSix = lessonTimeRepository.findByLessonNumber(6);
+        if(lessonSix == null) {
+            lessonSix = new LessonTime();
             lessonSix.setLessonNumber(6);
             lessonSix.setTimeStart("17:20");
             lessonSix.setTimeFinish("18:40");
             lessonTimeRepository.save(lessonSix);
         }
 
-        Optional<LessonTime> lessonSeventhOpt = lessonTimeRepository.findByLessonNumber(7);
-        if(!lessonSeventhOpt.isPresent()) {
-            LessonTime lessonSeventh = new LessonTime();
+        LessonTime lessonSeventh = lessonTimeRepository.findByLessonNumber(7);
+        if(lessonSeventh == null) {
+            lessonSeventh = new LessonTime();
             lessonSeventh.setLessonNumber(7);
             lessonSeventh.setTimeStart("18:45");
             lessonSeventh.setTimeFinish("20:05");
             lessonTimeRepository.save(lessonSeventh);
         }
 
-        Optional<LessonTime> lessonEighthOpt = lessonTimeRepository.findByLessonNumber(8);
-        if(!lessonEighthOpt.isPresent()) {
-            LessonTime lessonEighth = new LessonTime();
+        LessonTime lessonEighth = lessonTimeRepository.findByLessonNumber(8);
+        if(lessonEighth == null) {
+            lessonEighth = new LessonTime();
             lessonEighth.setLessonNumber(8);
             lessonEighth.setTimeStart("20:10");
             lessonEighth.setTimeFinish("21:30");
@@ -168,8 +176,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     }
 
     private void initDepartments() {
-        Optional<Department> dep = departmentRepository.findByURL("bf");
-        if(!dep.isPresent()) {
+        Department dep = departmentRepository.findByURL("bf");
+        if(dep == null) {
             Department biofac = new Department();
             biofac.setFullName("Биологический факультет");
             biofac.setShortName("БИОЛОГ Ф-Т");
@@ -178,7 +186,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("gf");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department geofac = new Department();
             geofac.setFullName("Географический факультет");
             geofac.setShortName("ГЕОГРАФ Ф-Т");
@@ -187,7 +195,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("gl");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department geolfac = new Department();
             geolfac.setFullName("Геологический факультет");
             geolfac.setShortName("ГЕОЛОГ Ф-Т");
@@ -196,7 +204,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("idpo");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department idpo = new Department();
             idpo.setFullName("Институт дополнительного профессионального образования");
             idpo.setShortName("ИДПО");
@@ -205,7 +213,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ii");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department instisk = new Department();
             instisk.setFullName("Институт искусств");
             instisk.setShortName("И-Т ИСКУССТВ");
@@ -214,7 +222,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("imo");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department imimo = new Department();
             imimo.setFullName("Институт истории и международных отношений");
             imimo.setShortName("ИИИМО");
@@ -223,7 +231,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ifk");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department ifkis = new Department();
             ifkis.setFullName("Институт физической культуры и спорта");
             ifkis.setShortName("И-Т ФИЗ КУЛ");
@@ -232,7 +240,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ifg");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department philological = new Department();
             philological.setFullName("Институт филологии и журналистики");
             philological.setShortName("ИФИЖ");
@@ -241,7 +249,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ih");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department chemical = new Department();
             chemical.setFullName("Институт химии");
             chemical.setShortName("И-Т ХИМИИ");
@@ -250,7 +258,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("mm");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department mechmath = new Department();
             mechmath.setFullName("Механико-математический факультет");
             mechmath.setShortName("МЕХМАТ");
@@ -259,7 +267,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("sf");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department sociological = new Department();
             sociological.setFullName("Социологический факультет");
             sociological.setShortName("СОЦ Ф-Т");
@@ -268,7 +276,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fi");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department fi = new Department();
             fi.setFullName("Факультет иностранных языков и лингводидактики");
             fi.setShortName("ИН ЯЗ Ф-Т");
@@ -277,7 +285,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("knt");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department csit = new Department();
             csit.setFullName("Факультет компьютерных наук и информационных технологий");
             csit.setShortName("КНИИТ");
@@ -286,7 +294,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fn");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department nbmt = new Department();
             nbmt.setFullName("Факультет нано- и биомедицинских технологий");
             nbmt.setShortName("ФНБМТ");
@@ -295,7 +303,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fnp");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department fnp = new Department();
             fnp.setFullName("Факультет нелинейных процессов");
             fnp.setShortName("ФНП");
@@ -304,7 +312,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fps");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department psych = new Department();
             psych.setFullName("Факультет психологии");
             psych.setShortName("ПСИХОЛОГ Ф-Т");
@@ -313,7 +321,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fppso");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department fppiso = new Department();
             fppiso.setFullName("Факультет психолого-педагогического и специального образования");
             fppiso.setShortName("ППИСО");
@@ -322,7 +330,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ff");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department phys = new Department();
             phys.setFullName("Физический факультет");
             phys.setShortName("ФИЗФАК");
@@ -331,7 +339,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("fp");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department philosophic = new Department();
             philosophic.setFullName("Философский факультет");
             philosophic.setShortName("ФИЛОСОФ Ф-Т");
@@ -340,7 +348,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("ef");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department economy = new Department();
             economy.setFullName("Экономический факультет");
             economy.setShortName("ЭКОНОМ Ф-Т");
@@ -349,7 +357,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         dep = departmentRepository.findByURL("uf");
-        if(!dep.isPresent()) {
+        if(dep == null) {
             Department jurist = new Department();
             jurist.setFullName("Юридический факультет");
             jurist.setShortName("ЮРФАК");

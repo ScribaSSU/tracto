@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DayRepository extends JpaRepository<Day, Long> {
-    Optional<Day> findByDayNumber(int dayNumber);
+    Day findByDayNumber(int dayNumber);
 }

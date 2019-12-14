@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /api/
+
+spring:
+  datasource:
+    url:
+    username:
+    password:
+  jpa:
+    properties:
+      hibernate:
+        dialect:
+    hibernate:
+      ddl-auto:
+
+tracto:
+  download-schedule:
+    url:
+    auth-header:

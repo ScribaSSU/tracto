@@ -30,32 +30,29 @@ public class FullTimeLessonService {
     }
 
     public List<FullTimeLesson> getFullTimeLessonByGroup(String department,
-                                                         String educationForm,
                                                          String groupNumber) {
         Department dep = departmentRepository.findByURL(department);
-        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.valueOf(educationForm.toUpperCase()), dep);
+        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
         return fullTimeLessonRepository.findByStudentGroup(studentGroup);
     }
 
     public List<FullTimeLesson> getFullTimeLessonByDayAndGroup(int dayNumber,
                                                        String department,
-                                                       String educationForm,
                                                        String groupNumber) {
         Day day = dayRepository.findByDayNumber(dayNumber);
         Department dep = departmentRepository.findByURL(department);
-        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.valueOf(educationForm.toUpperCase()), dep);
+        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
         return fullTimeLessonRepository.findByDayAndStudentGroup(day, studentGroup);
     }
 
     public List<FullTimeLesson> getFullTimeLessonByDayAndLessonTimeAndStudentGroup(int dayNumber,
                                                                int lessonNumber,
                                                                String department,
-                                                               String educationForm,
                                                                String groupNumber) {
         Day day = dayRepository.findByDayNumber(dayNumber);
         Department dep = departmentRepository.findByURL(department);
         LessonTime lessonTime = lessonTimeRepository.findByLessonNumber(lessonNumber);
-        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.valueOf(educationForm.toUpperCase()), dep);
+        StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
         return fullTimeLessonRepository.findByDayAndLessonTimeAndGroup(day, lessonTime, studentGroup);
     }
 }

@@ -20,32 +20,28 @@ public class FullTimeLessonController {
         this.fullTimeLessonService = fullTimeLessonService;
     }
 
-    @GetMapping("/{department}/{educationForm}/{groupNumber}")
-    public List<FullTimeLesson> getFullTimeLessonEntityList(@PathVariable("department") String department,
-                                                            @PathVariable("educationForm") String educationForm,
-                                                            @PathVariable("groupNumber") String groupNumber) {
-        return fullTimeLessonService.getFullTimeLessonByGroup(department, educationForm, groupNumber);
+    @GetMapping("/{department}/{groupNumber}")
+    public List<FullTimeLesson> getFullTimeLesson(@PathVariable("department") String department,
+                                                  @PathVariable("groupNumber") String groupNumber) {
+        return fullTimeLessonService.getFullTimeLessonByGroup(department, groupNumber);
     }
 
-    @GetMapping("/{department}/{educationForm}/{groupNumber}/{dayNumber}")
+    @GetMapping("/{department}/{groupNumber}/{dayNumber}")
     public List<FullTimeLesson> getFullTimeLessonByDay(@PathVariable("department") String department,
-                                                       @PathVariable("educationForm") String educationForm,
                                                        @PathVariable("groupNumber") String groupNumber,
                                                        @PathVariable("dayNumber") int dayNumber) {
-        return fullTimeLessonService.getFullTimeLessonByDayAndGroup(dayNumber, department, educationForm, groupNumber);
+        return fullTimeLessonService.getFullTimeLessonByDayAndGroup(dayNumber, department, groupNumber);
     }
 
-    @GetMapping("/{department}/{educationForm}/{groupNumber}/{dayNumber}/{lessonNumber}")
-    public List<FullTimeLesson> getFullTimeLessonByDayAndGroupNumber(@PathVariable("department") String department,
-                                                                     @PathVariable("educationForm") String educationForm,
-                                                                     @PathVariable("groupNumber") String groupNumber,
-                                                                     @PathVariable("dayNumber") int dayNumber,
-                                                                     @PathVariable("lessonNumber") int lessonNumber) {
+    @GetMapping("/{department}/{groupNumber}/{dayNumber}/{lessonNumber}")
+    public List<FullTimeLesson> getFullTimeLessonByDayAndLessonTimeAndStudentGroup(@PathVariable("department") String department,
+                                                                                  @PathVariable("groupNumber") String groupNumber,
+                                                                                  @PathVariable("dayNumber") int dayNumber,
+                                                                                  @PathVariable("lessonNumber") int lessonNumber) {
         return fullTimeLessonService.getFullTimeLessonByDayAndLessonTimeAndStudentGroup(
                 dayNumber,
                 lessonNumber,
                 department,
-                educationForm,
                 groupNumber
         );
     }

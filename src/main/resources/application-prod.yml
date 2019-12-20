@@ -1,6 +1,7 @@
 server:
   servlet:
     context-path: /api/
+  port: ${TRACTO_SERVER_PORT}
 
 spring:
   datasource:

@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /api/
+
+spring:
+  datasource:
+    url: ${TRACTO_DATABASE_URL}
+    username: ${TRACTO_DATABASE_USERNAME}
+    password: ${TRACTO_DATABASE_PASSWORD}
+  jpa:
+    properties:
+      hibernate:
+        dialect: ${TRACTO_JPA_HIBERNATE_DIALECT}
+    hibernate:
+      ddl-auto: update
+
+tracto:
+  download-schedule:
+    url: ${TRACTO_DOWNLOAD_SCHEDULE_URL}
+    auth-header: ${TRACTO_AUTH_HEADER}

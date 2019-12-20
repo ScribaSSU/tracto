@@ -18,3 +18,4 @@ tracto:
   download-schedule:
     url:
     auth-header:
+  time-update-schedule:

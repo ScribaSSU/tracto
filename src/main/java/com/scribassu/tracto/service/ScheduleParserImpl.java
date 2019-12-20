@@ -50,13 +50,14 @@ public class ScheduleParserImpl implements ScheduleParser {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
-            fullTimeLessonRepository.deleteAll();
+            fullTimeLessonRepository.deleteByDepartmentURL(department);
             parseGroups(scheduleXml.groups, department);
 
             scheduleParserStatus = new ScheduleParserStatus("success", department);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }
         catch(Exception e) {
+            e.printStackTrace();
             scheduleParserStatus = new ScheduleParserStatus("fail", department);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }

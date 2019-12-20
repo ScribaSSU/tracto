@@ -39,8 +39,6 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         initDays();
         initTimes();
         initDepartments();
-
-        scheduleParser.parseSchedule(scheduleDownloader.downloadSchedule("knt"), "knt");
     }
     
     private void initDays(){

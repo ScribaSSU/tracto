@@ -1,6 +1,7 @@
 package com.scribassu.tracto.controller.v1v0;
 
 import com.scribassu.tracto.domain.FullTimeLesson;
+import com.scribassu.tracto.dto.web.FullTimeLessonDto;
 import com.scribassu.tracto.service.FullTimeLessonService;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,23 +22,23 @@ public class FullTimeLessonController {
     }
 
     @GetMapping("/{department}/{groupNumber}")
-    public List<FullTimeLesson> getFullTimeLesson(@PathVariable("department") String department,
-                                                  @PathVariable("groupNumber") String groupNumber) {
+    public FullTimeLessonDto getFullTimeLesson(@PathVariable("department") String department,
+                                               @PathVariable("groupNumber") String groupNumber) {
         return fullTimeLessonService.getFullTimeLessonByGroup(department, groupNumber);
     }
 
     @GetMapping("/{department}/{groupNumber}/{dayNumber}")
-    public List<FullTimeLesson> getFullTimeLessonByDay(@PathVariable("department") String department,
-                                                       @PathVariable("groupNumber") String groupNumber,
-                                                       @PathVariable("dayNumber") int dayNumber) {
+    public FullTimeLessonDto getFullTimeLessonByDay(@PathVariable("department") String department,
+                                                    @PathVariable("groupNumber") String groupNumber,
+                                                    @PathVariable("dayNumber") int dayNumber) {
         return fullTimeLessonService.getFullTimeLessonByDayAndGroup(dayNumber, department, groupNumber);
     }
 
     @GetMapping("/{department}/{groupNumber}/{dayNumber}/{lessonNumber}")
-    public List<FullTimeLesson> getFullTimeLessonByDayAndLessonTimeAndStudentGroup(@PathVariable("department") String department,
-                                                                                  @PathVariable("groupNumber") String groupNumber,
-                                                                                  @PathVariable("dayNumber") int dayNumber,
-                                                                                  @PathVariable("lessonNumber") int lessonNumber) {
+    public FullTimeLessonDto getFullTimeLessonByDayAndLessonTimeAndStudentGroup(@PathVariable("department") String department,
+                                                                                @PathVariable("groupNumber") String groupNumber,
+                                                                                @PathVariable("dayNumber") int dayNumber,
+                                                                                @PathVariable("lessonNumber") int lessonNumber) {
         return fullTimeLessonService.getFullTimeLessonByDayAndLessonTimeAndStudentGroup(
                 dayNumber,
                 lessonNumber,

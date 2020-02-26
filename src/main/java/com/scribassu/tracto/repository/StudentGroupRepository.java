@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long> {
 
@@ -15,4 +17,8 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     StudentGroup findByNumberAndEducationFormAndDepartment(@Param("groupNumber") String groupNumber,
                                                            @Param("educationForm") EducationForm educationForm,
                                                            @Param("department") Department department);
+
+    @Query("select sg from StudentGroup sg left join sg.department d where d.URL = :url and sg.educationForm = :educationForm")
+    List<StudentGroup> findByDepartmentUrlAndEducationForm(@Param("url") String url,
+                                                           @Param("educationForm") EducationForm educationForm);
 }

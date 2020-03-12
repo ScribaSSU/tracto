@@ -2,6 +2,10 @@ package com.scribassu.tracto.xmlparser;
 
 import com.scribassu.tracto.dto.xml.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -11,6 +15,9 @@ import java.io.StringReader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@ActiveProfiles({"dev"})
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class LessonXmlParserTests {
 
     private final String teacherXml = "<teacher id=\"99999\">\n" +

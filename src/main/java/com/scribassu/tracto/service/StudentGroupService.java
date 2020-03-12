@@ -2,6 +2,7 @@ package com.scribassu.tracto.service;
 
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.domain.StudentGroup;
+import com.scribassu.tracto.dto.web.GroupNumbersDto;
 import com.scribassu.tracto.repository.StudentGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,12 +20,18 @@ public class StudentGroupService {
         this.studentGroupRepository = studentGroupRepository;
     }
 
-    public List<String> getGroupNumbersByDepartmentUrlAndEducationForm(String url,
-                                                                       String educationForm) {
-        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(
+    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationForm(String url,
+                                                                          EducationForm educationForm,
+                                                                          String course) {
+        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationFormAndCourse(
                 url,
-                EducationForm.valueOf(educationForm)
+                educationForm,
+                course
         );
-        return groups.stream().map(StudentGroup::getGroupNumber).collect(Collectors.toList());
+        return new GroupNumbersDto(
+                groups.stream().map(StudentGroup::getGroupNumber).collect(Collectors.toList()),
+                url,
+                educationForm.name()
+        );
     }
 }

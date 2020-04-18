@@ -14,7 +14,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @Service
-public class ScheduleParserImpl implements ScheduleParser {
+public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
     private final DayRepository dayRepository;
@@ -25,13 +25,13 @@ public class ScheduleParserImpl implements ScheduleParser {
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
     @Autowired
-    public ScheduleParserImpl(FullTimeLessonRepository fullTimeLessonRepository,
-                              DayRepository dayRepository,
-                              LessonTimeRepository lessonTimeRepository,
-                              StudentGroupRepository studentGroupRepository,
-                              DepartmentRepository departmentRepository,
-                              TeacherRepository teacherRepository,
-                              ScheduleParserStatusRepository scheduleParserStatusRepository) {
+    public FullTimeScheduleParserImpl(FullTimeLessonRepository fullTimeLessonRepository,
+                                      DayRepository dayRepository,
+                                      LessonTimeRepository lessonTimeRepository,
+                                      StudentGroupRepository studentGroupRepository,
+                                      DepartmentRepository departmentRepository,
+                                      TeacherRepository teacherRepository,
+                                      ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.dayRepository = dayRepository;
         this.fullTimeLessonRepository = fullTimeLessonRepository;
         this.lessonTimeRepository = lessonTimeRepository;

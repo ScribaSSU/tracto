@@ -24,4 +24,7 @@ public interface StudentGroupRepository extends JpaRepository<StudentGroup, Long
     List<StudentGroup> findByDepartmentUrlAndEducationFormAndCourse(@Param("url") String url,
                                                                     @Param("educationForm") EducationForm educationForm,
                                                                     @Param("course") String course);
+
+    @Query("select sg from StudentGroup sg left join sg.department d where d.URL = :url")
+    List<StudentGroup> findByDepartmentUrl(@Param("url") String departmentURL);
 }

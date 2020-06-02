@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.scribassu</groupId>
 	<artifactId>tracto</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<name>tracto</name>
 	<description>Tracto: REST API for sgu.ru</description>
 
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.github.ScribaSSU</groupId>
 			<artifactId>tracto-domain</artifactId>
-			<version>1.0.1</version>
+			<version>1.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

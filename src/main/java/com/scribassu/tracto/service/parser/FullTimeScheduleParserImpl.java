@@ -1,4 +1,4 @@
-package com.scribassu.tracto.service;
+package com.scribassu.tracto.service.parser;
 
 import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
@@ -42,7 +42,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     @Override
-    public ScheduleParserStatus parseSchedule(String schedule, String department) {
+    public ScheduleParserStatus parseSchedule(String schedule, String departmentURL) {
         ScheduleParserStatus scheduleParserStatus;
         try {
             StringReader stringReader = new StringReader(schedule);
@@ -50,15 +50,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
-            fullTimeLessonRepository.deleteByDepartmentURL(department);
-            parseGroups(scheduleXml.groups, department);
+            fullTimeLessonRepository.deleteByDepartmentURL(departmentURL);
+            parseGroups(scheduleXml.groups, departmentURL);
 
-            scheduleParserStatus = new ScheduleParserStatus("success", department);
+            scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }
         catch(Exception e) {
             e.printStackTrace();
-            scheduleParserStatus = new ScheduleParserStatus("fail", department);
+            scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }
 

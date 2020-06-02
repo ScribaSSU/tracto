@@ -1,4 +1,4 @@
-package com.scribassu.tracto.service;
+package com.scribassu.tracto.service.downloader;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

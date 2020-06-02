@@ -20,3 +20,4 @@ tracto:
     url: ${TRACTO_DOWNLOAD_SCHEDULE_URL}
     auth-header: ${TRACTO_AUTH_HEADER}
   time-update-schedule: 0 10 4 * * *
+  time-update-session:

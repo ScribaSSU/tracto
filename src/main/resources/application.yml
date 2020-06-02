@@ -1,7 +1,7 @@
 server:
   servlet:
-    context-path: /api/
-  port: 8080
+    context-path:
+  port:
 
 spring:
   datasource:
@@ -19,4 +19,6 @@ tracto:
   download-schedule:
     url:
     auth-header:
+    session-url:
   time-update-schedule:
+  time-update-session:

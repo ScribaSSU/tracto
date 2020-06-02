@@ -1,4 +1,4 @@
-package com.scribassu.tracto.controller.v1v0;
+package com.scribassu.tracto.controller;
 
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.dto.web.GroupNumbersDto;

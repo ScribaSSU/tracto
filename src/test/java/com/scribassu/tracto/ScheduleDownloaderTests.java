@@ -1,7 +1,7 @@
 package com.scribassu.tracto;
 
 import com.scribassu.tracto.dto.xml.ScheduleXml;
-import com.scribassu.tracto.service.ScheduleDownloaderImpl;
+import com.scribassu.tracto.service.downloader.ScheduleDownloaderImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,6 @@ public class ScheduleDownloaderTests {
     @Value("${tracto.download-schedule.url}")
     private String url;
 
-    @Value("${tracto.download-schedule.auth-header}")
-    private String authHeader;
-
     @Test
     public void contextLoads() {
         assertThat(scheduleDownloader).isNotNull();
@@ -39,7 +36,7 @@ public class ScheduleDownloaderTests {
 
     @Test
     public void downloadKntSchedule() throws JAXBException {
-        String schedule = scheduleDownloader.downloadSchedule("knt");
+        String schedule = scheduleDownloader.downloadSchedule(url + "knt");
         StringReader stringReader = new StringReader(schedule);
 
         JAXBContext jaxbContext = JAXBContext.newInstance(ScheduleXml.class);

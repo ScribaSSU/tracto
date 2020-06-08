@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ScheduleUpdaterServiceImpl implements ScheduleUpdater {
+public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
     private final ScheduleDownloader scheduleDownloader;
@@ -22,9 +22,9 @@ public class ScheduleUpdaterServiceImpl implements ScheduleUpdater {
     private String fullTimeScheduleUrl;
 
     @Autowired
-    public ScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
-                                      ScheduleDownloader scheduleDownloader,
-                                      FullTimeScheduleParserImpl fullTimeScheduleParser) {
+    public FullTimeScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
+                                              ScheduleDownloader scheduleDownloader,
+                                              FullTimeScheduleParserImpl fullTimeScheduleParser) {
         this.departmentRepository = departmentRepository;
         this.scheduleDownloader = scheduleDownloader;
         this.fullTimeScheduleParser = fullTimeScheduleParser;

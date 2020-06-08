@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SessionParserImpl implements ScheduleParser {
+public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
     private final TeacherRepository teacherRepository;
     private final DepartmentRepository departmentRepository;
@@ -25,11 +25,11 @@ public class SessionParserImpl implements ScheduleParser {
     private static final String SESSION_ID = "session";
 
     @Autowired
-    public SessionParserImpl(TeacherRepository teacherRepository,
-                             DepartmentRepository departmentRepository,
-                             StudentGroupRepository studentGroupRepository,
-                             ExamPeriodEventRepository examPeriodEventRepository,
-                             ScheduleParserStatusRepository scheduleParserStatusRepository) {
+    public ExamPeriodScheduleParserImpl(TeacherRepository teacherRepository,
+                                        DepartmentRepository departmentRepository,
+                                        StudentGroupRepository studentGroupRepository,
+                                        ExamPeriodEventRepository examPeriodEventRepository,
+                                        ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
         this.studentGroupRepository = studentGroupRepository;
@@ -43,56 +43,58 @@ public class SessionParserImpl implements ScheduleParser {
         Elements title = document.getElementsByClass(PAGE_TITLE_CLASS);
         Element pageTitle = title.get(0);
         StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), departmentURL);
-        examPeriodEventRepository.deleteByStudentGroup(studentGroup);
-        Element sessionTable = document.getElementById(SESSION_ID);
-        Elements trs = sessionTable.child(0).children();
-        ExamPeriodEvent examPeriodEvent = null;
-        boolean firstTd2 = true;
-        for(Element tr : trs) {
-            Elements tds = tr.children();
-            if(tds.size() == 4) {
-                examPeriodEvent = new ExamPeriodEvent();
-                examPeriodEvent.setStudentGroup(studentGroup);
-                for(int cell = 0; cell < tds.size(); cell++) {
-                    switch(cell) {
-                        case 0:
-                            String[] date = tds.get(cell).text().split(" ");
-                            examPeriodEvent.setDay(Integer.parseInt(date[0]));
-                            examPeriodEvent.setMonth(date[1]);
-                            break;
-                        case 1:
-                            String[] time = tds.get(cell).text().split(":");
-                            examPeriodEvent.setHour(Integer.parseInt(time[0]));
-                            examPeriodEvent.setMinute(Integer.parseInt(time[1]));
-                            break;
-                        case 2:
-                            examPeriodEvent.setExamPeriodEventType(getExamPeriodEventType(tds.get(cell).text()));
-                            break;
-                        case 3:
-                            examPeriodEvent.setSubjectName(tds.get(cell).text());
-                            break;
+        try {
+            Element sessionTable = document.getElementById(SESSION_ID);
+            Elements trs = sessionTable.child(0).children();
+            examPeriodEventRepository.deleteByStudentGroup(studentGroup);
+            ExamPeriodEvent examPeriodEvent = null;
+            boolean firstTd2 = true;
+            for(Element tr : trs) {
+                Elements tds = tr.children();
+                if(tds.size() == 4) {
+                    examPeriodEvent = new ExamPeriodEvent();
+                    examPeriodEvent.setStudentGroup(studentGroup);
+                    for(int cell = 0; cell < tds.size(); cell++) {
+                        switch(cell) {
+                            case 0:
+                                String[] date = tds.get(cell).text().split(" ");
+                                examPeriodEvent.setDay(Integer.parseInt(date[0]));
+                                examPeriodEvent.setMonth(date[1]);
+                                break;
+                            case 1:
+                                String[] time = tds.get(cell).text().split(":");
+                                examPeriodEvent.setHour(Integer.parseInt(time[0]));
+                                examPeriodEvent.setMinute(Integer.parseInt(time[1]));
+                                break;
+                            case 2:
+                                examPeriodEvent.setExamPeriodEventType(getExamPeriodEventType(tds.get(cell).text()));
+                                break;
+                            case 3:
+                                examPeriodEvent.setSubjectName(tds.get(cell).text());
+                                break;
+                        }
+                    }
+                }
+                if(tds.size() == 2) {
+                    if(firstTd2) {
+                        Teacher teacher = getTeacher(tds.get(1).text());
+                        examPeriodEvent.setTeacher(teacher);
+                        firstTd2 = false;
+                    } else {
+                        examPeriodEvent.setPlace(tds.get(1).text());
+                        firstTd2 = true;
+                        examPeriodEvent = examPeriodEventRepository.save(examPeriodEvent);
+                        if(null != examPeriodEvent.getId()) {
+                            scheduleParserStatusRepository.save(new ScheduleParserStatus("ok", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
+                        } else {
+                            scheduleParserStatusRepository.save(new ScheduleParserStatus("fail", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
+                        }
                     }
                 }
             }
-            if(tds.size() == 2) {
-                if(firstTd2) {
-                    Teacher teacher = getTeacher(tds.get(1).text());
-                    examPeriodEvent.setTeacher(teacher);
-                    firstTd2 = false;
-                }
-                else {
-                    examPeriodEvent.setPlace(tds.get(1).text());
-                    firstTd2 = true;
-                    examPeriodEvent = examPeriodEventRepository.save(examPeriodEvent);
-                    if(null != examPeriodEvent.getId()) {
-                        scheduleParserStatusRepository.save(new ScheduleParserStatus("ok", "s-" + departmentURL));
-                    }
-                    else {
-                        scheduleParserStatusRepository.save(new ScheduleParserStatus("fail", "s-" + departmentURL));
-                    }
-
-                }
-            }
+        }
+        catch(Exception e) {
+            scheduleParserStatusRepository.save(new ScheduleParserStatus("fail", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
         }
 
         return null;
@@ -122,7 +124,6 @@ public class SessionParserImpl implements ScheduleParser {
                 groupNumber,
                 educationForm,
                 departmentRepository.findByURL(departmentURL)
-
         );
     }
 

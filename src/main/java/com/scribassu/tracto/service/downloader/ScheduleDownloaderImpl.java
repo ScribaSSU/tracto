@@ -55,6 +55,9 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
         catch(IOException e) {
             e.printStackTrace();
         }
+        finally {
+            httpGet.abort();
+        }
 
         return "";
     }

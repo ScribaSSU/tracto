@@ -79,7 +79,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 studentGroup = new StudentGroup();
             }
             studentGroup.setDepartment(dep);
-            studentGroup.setGroupNumber(group.numberRus);
+            studentGroup.setGroupNumber(group.number);
+            studentGroup.setGroupNumberRus(group.numberRus);
             studentGroup.setGroupType(convertGroupType(group.groupType));
             studentGroup.setEducationForm(educationForm);
             studentGroupRepository.save(studentGroup);

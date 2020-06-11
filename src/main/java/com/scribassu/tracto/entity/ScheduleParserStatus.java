@@ -26,7 +26,7 @@ public class ScheduleParserStatus {
     @Column(length = 10)
     private String status;
 
-    @Column(length = 20)
+    @Column(length = 50)
     private String schedule;
 
     public ScheduleParserStatus(String status, String schedule) {

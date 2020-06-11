@@ -41,8 +41,8 @@ public class FullTimeLessonService {
     }
 
     public FullTimeLessonDto getFullTimeLessonByDayAndGroup(int dayNumber,
-                                                       String department,
-                                                       String groupNumber) {
+                                                            String department,
+                                                            String groupNumber) {
         Day day = dayRepository.findByDayNumber(dayNumber);
         Department dep = departmentRepository.findByURL(department);
         StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
@@ -54,9 +54,9 @@ public class FullTimeLessonService {
     }
 
     public FullTimeLessonDto getFullTimeLessonByDayAndLessonTimeAndStudentGroup(int dayNumber,
-                                                               int lessonNumber,
-                                                               String department,
-                                                               String groupNumber) {
+                                                                                int lessonNumber,
+                                                                                String department,
+                                                                                String groupNumber) {
         Day day = dayRepository.findByDayNumber(dayNumber);
         Department dep = departmentRepository.findByURL(department);
         LessonTime lessonTime = lessonTimeRepository.findByLessonNumber(lessonNumber);

@@ -19,6 +19,6 @@ tracto:
   download-schedule:
     url:
     auth-header:
-    session-url:
+    exam-period-url:
   time-update-schedule:
-  time-update-session:
+  time-update-exam-period:

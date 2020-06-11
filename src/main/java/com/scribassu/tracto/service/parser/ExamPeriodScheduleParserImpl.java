@@ -43,6 +43,10 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
         Elements title = document.getElementsByClass(PAGE_TITLE_CLASS);
         Element pageTitle = title.get(0);
         StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), departmentURL);
+        if(null == studentGroup) {
+            System.out.println("AAAAAAAAAA");
+        }
+        ScheduleParserStatus status = new ScheduleParserStatus();
         try {
             Element sessionTable = document.getElementById(SESSION_ID);
             Elements trs = sessionTable.child(0).children();
@@ -85,24 +89,26 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                         firstTd2 = true;
                         examPeriodEvent = examPeriodEventRepository.save(examPeriodEvent);
                         if(null != examPeriodEvent.getId()) {
-                            scheduleParserStatusRepository.save(new ScheduleParserStatus("ok", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
+                            status.setStatus("ok");
                         } else {
-                            scheduleParserStatusRepository.save(new ScheduleParserStatus("fail", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
+                            status.setStatus("fail");
                         }
                     }
                 }
             }
         }
         catch(Exception e) {
-            scheduleParserStatusRepository.save(new ScheduleParserStatus("fail", "s-" + studentGroup.getGroupNumber() + "-" + departmentURL));
+            status.setStatus("fail");
         }
+        status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
+        status = scheduleParserStatusRepository.save(status);
 
-        return null;
+        return status;
     }
 
     private StudentGroup getStudentGroupByPageTitleText(String text, String departmentURL) {
         EducationForm educationForm = null;
-        text = text.replace("группа", "");
+        text = text.replace(" группа", "");
         String[] educationForms = {"Дневное", "Заочное", "Вечернее"};
         if(text.startsWith(educationForms[0])) {
             educationForm = EducationForm.DO;
@@ -118,7 +124,8 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
         }
 
         text = text.replace("отделение:", "");
-        String groupNumber = text.replace(" ", "");
+        String groupNumber = text.trim();
+        System.out.println(";"+groupNumber+";");
 
         return studentGroupRepository.findByNumberAndEducationFormAndDepartment(
                 groupNumber,

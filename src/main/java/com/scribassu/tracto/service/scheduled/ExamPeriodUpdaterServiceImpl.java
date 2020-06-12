@@ -70,7 +70,6 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
                 .replace("(", "%28")
                 .replace(")", "%29")
                 .replace("+", "%2B");
-        System.out.println(a);
         return a;
     }
 }

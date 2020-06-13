@@ -62,8 +62,16 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                         switch(cell) {
                             case 0:
                                 String[] date = tds.get(cell).text().split(" ");
-                                examPeriodEvent.setDay(Integer.parseInt(date[0]));
-                                examPeriodEvent.setMonth(date[1]);
+                                try {
+                                    examPeriodEvent.setDay(Integer.parseInt(date[0]));
+                                    examPeriodEvent.setMonth(date[1]);
+                                    examPeriodEvent.setYear(date[2]);
+                                }
+                                catch(Exception e) {
+                                    examPeriodEvent.setDay(-1);
+                                    examPeriodEvent.setMonth(" ");
+                                    examPeriodEvent.setYear(" ");
+                                }
                                 break;
                             case 1:
                                 String[] time = tds.get(cell).text().split(":");

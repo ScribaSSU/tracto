@@ -1,6 +1,7 @@
 package com.scribassu.tracto.service.scheduled;
 
 import com.scribassu.tracto.domain.Department;
+import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.domain.StudentGroup;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
@@ -46,7 +47,7 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
 
         for(Department department : departments) {
             String departmentURL = department.getURL();
-            List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrl(departmentURL);
+            List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
             for(StudentGroup studentGroup : studentGroups) {
                 ScheduleParserStatus status = sessionParser.parseSchedule(scheduleDownloader.downloadSchedule(
                         String.format(

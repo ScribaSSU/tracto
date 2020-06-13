@@ -146,6 +146,9 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
         if("Зачет:".equalsIgnoreCase(eventType)) {
             return ExamPeriodEventType.MIDTERM;
         }
+        if("Дифференцированный зачет:".equalsIgnoreCase(eventType)) {
+            return ExamPeriodEventType.MIDTERM_WITH_MARK;
+        }
         if("Консультация:".equalsIgnoreCase(eventType)) {
             return ExamPeriodEventType.CONSULTATION;
         }

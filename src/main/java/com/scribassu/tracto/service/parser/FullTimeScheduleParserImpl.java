@@ -74,13 +74,13 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
         for(GroupXml group : groups) {
             EducationForm educationForm = convertEducationForm(group.eduForm);
-            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus, educationForm, dep);
+            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus.trim(), educationForm, dep);
             if(studentGroup == null) {
                 studentGroup = new StudentGroup();
             }
             studentGroup.setDepartment(dep);
-            studentGroup.setGroupNumber(group.number);
-            studentGroup.setGroupNumberRus(group.numberRus);
+            studentGroup.setGroupNumber(group.number.trim());
+            studentGroup.setGroupNumberRus(group.numberRus.trim());
             studentGroup.setGroupType(convertGroupType(group.groupType));
             studentGroup.setEducationForm(educationForm);
             studentGroupRepository.save(studentGroup);

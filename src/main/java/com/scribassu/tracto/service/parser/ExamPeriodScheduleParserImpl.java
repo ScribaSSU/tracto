@@ -74,9 +74,15 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                 }
                                 break;
                             case 1:
-                                String[] time = tds.get(cell).text().split(":");
-                                examPeriodEvent.setHour(Integer.parseInt(time[0]));
-                                examPeriodEvent.setMinute(Integer.parseInt(time[1]));
+                                try {
+                                    String[] time = tds.get(cell).text().split(":");
+                                    examPeriodEvent.setHour(Integer.parseInt(time[0]));
+                                    examPeriodEvent.setMinute(Integer.parseInt(time[1]));
+                                }
+                                catch(Exception e) {
+                                    examPeriodEvent.setHour(-1);
+                                    examPeriodEvent.setMinute(0);
+                                }
                                 break;
                             case 2:
                                 examPeriodEvent.setExamPeriodEventType(getExamPeriodEventType(tds.get(cell).text()));
@@ -147,6 +153,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             return ExamPeriodEventType.MIDTERM;
         }
         if("Дифференцированный зачет:".equalsIgnoreCase(eventType)) {
+            System.out.println("DIFFFFF");
             return ExamPeriodEventType.MIDTERM_WITH_MARK;
         }
         if("Консультация:".equalsIgnoreCase(eventType)) {

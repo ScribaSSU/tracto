@@ -1,15 +1,11 @@
-package com.scribassu.tracto.controller.v1v0;
+package com.scribassu.tracto.controller;
 
-import com.scribassu.tracto.domain.FullTimeLesson;
 import com.scribassu.tracto.dto.web.FullTimeLessonDto;
 import com.scribassu.tracto.service.FullTimeLessonService;
-import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1.0/schedule/full")

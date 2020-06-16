@@ -1,4 +1,4 @@
-package com.scribassu.tracto.controller.v1v0;
+package com.scribassu.tracto.controller;
 
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.dto.web.GroupNumbersDto;
@@ -21,12 +21,21 @@ public class StudentGroupController {
     }
 
     @GetMapping("/number/{departmentUrl}/{educationForm}/{course}")
-    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationForm(
+    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(
             @PathVariable("departmentUrl") String departmentUrl,
             @PathVariable("educationForm") String educationForm,
             @PathVariable("course") String course) {
-        return studentGroupService.getGroupNumbersByDepartmentUrlAndEducationForm(
+        return studentGroupService.getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(
                 departmentUrl, EducationForm.valueOf(educationForm.toUpperCase()), course
+        );
+    }
+
+    @GetMapping("/number/{departmentUrl}/{educationForm}/other")
+    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationForm(
+            @PathVariable("departmentUrl") String departmentUrl,
+            @PathVariable("educationForm") String educationForm) {
+        return studentGroupService.getOtherGroupNumbersByDepartmentUrlAndEducationForm(
+                departmentUrl, EducationForm.valueOf(educationForm.toUpperCase())
         );
     }
 }

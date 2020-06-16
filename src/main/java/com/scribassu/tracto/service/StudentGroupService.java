@@ -20,16 +20,30 @@ public class StudentGroupService {
         this.studentGroupRepository = studentGroupRepository;
     }
 
-    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationForm(String url,
-                                                                          EducationForm educationForm,
-                                                                          String course) {
+    public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(String url,
+                                                                                   EducationForm educationForm,
+                                                                                   String course) {
         List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationFormAndCourse(
                 url,
                 educationForm,
                 course
         );
         return new GroupNumbersDto(
-                groups.stream().map(StudentGroup::getGroupNumber).collect(Collectors.toList()),
+                groups.stream().map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
+                url,
+                educationForm.name()
+        );
+    }
+
+    public GroupNumbersDto getOtherGroupNumbersByDepartmentUrlAndEducationForm(String url,
+                                                                               EducationForm educationForm) {
+        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
+        return new GroupNumbersDto(
+                groups
+                        .stream()
+                        .filter(s -> !Character.isDigit(s.getGroupNumberRus().charAt(0)))
+                .map(StudentGroup::getGroupNumberRus)
+                .collect(Collectors.toList()),
                 url,
                 educationForm.name()
         );

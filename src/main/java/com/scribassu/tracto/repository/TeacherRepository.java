@@ -15,4 +15,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     List<Teacher> findBySurnameAndNameAndPatronymic(@Param("surname") String surname,
                                                     @Param("name") String name,
                                                     @Param("patronymic") String patronymic);
+
+    @Query("select t from Teacher t where t.surname = :surname")
+    List<Teacher> findBySurname(@Param("surname") String surname);
 }

@@ -1,4 +1,4 @@
-package com.scribassu.tracto.service;
+package com.scribassu.tracto.service.parser;
 
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 

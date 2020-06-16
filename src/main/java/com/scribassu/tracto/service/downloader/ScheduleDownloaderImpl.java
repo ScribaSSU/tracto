@@ -1,4 +1,4 @@
-package com.scribassu.tracto.service;
+package com.scribassu.tracto.service.downloader;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
     @Value("${tracto.download-schedule.url}")
-    private String url;
+    private String fullTimeScheduleUrl;
 
     @Value("${tracto.download-schedule.auth-header}")
     private String authHeader;
@@ -27,16 +27,17 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
     private HttpGet httpGet;
 
     /**
-     * @param departmentUrl department url
      * @return downloaded schedule
      */
     @Override
-    public String downloadSchedule(String departmentUrl) {
-        String scheduleUrl = url + departmentUrl;
+    public String downloadSchedule(String url) {
 
         try {
-            httpGet = new HttpGet(scheduleUrl);
-            httpGet.addHeader(authorization, authHeader);
+            httpGet = new HttpGet(url);
+
+            if(url.startsWith(fullTimeScheduleUrl)) {
+                httpGet.addHeader(authorization, authHeader);
+            }
             httpResponse = httpClient.execute(httpGet);
 
             BufferedReader bufferedReader = new BufferedReader(
@@ -53,6 +54,9 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
         }
         catch(IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            httpGet.abort();
         }
 
         return "";

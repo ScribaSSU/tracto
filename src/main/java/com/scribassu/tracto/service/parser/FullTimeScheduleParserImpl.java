@@ -1,4 +1,4 @@
-package com.scribassu.tracto.service;
+package com.scribassu.tracto.service.parser;
 
 import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
@@ -14,7 +14,7 @@ import java.io.StringReader;
 import java.util.List;
 
 @Service
-public class ScheduleParserImpl implements ScheduleParser {
+public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
     private final DayRepository dayRepository;
@@ -25,13 +25,13 @@ public class ScheduleParserImpl implements ScheduleParser {
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
     @Autowired
-    public ScheduleParserImpl(FullTimeLessonRepository fullTimeLessonRepository,
-                              DayRepository dayRepository,
-                              LessonTimeRepository lessonTimeRepository,
-                              StudentGroupRepository studentGroupRepository,
-                              DepartmentRepository departmentRepository,
-                              TeacherRepository teacherRepository,
-                              ScheduleParserStatusRepository scheduleParserStatusRepository) {
+    public FullTimeScheduleParserImpl(FullTimeLessonRepository fullTimeLessonRepository,
+                                      DayRepository dayRepository,
+                                      LessonTimeRepository lessonTimeRepository,
+                                      StudentGroupRepository studentGroupRepository,
+                                      DepartmentRepository departmentRepository,
+                                      TeacherRepository teacherRepository,
+                                      ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.dayRepository = dayRepository;
         this.fullTimeLessonRepository = fullTimeLessonRepository;
         this.lessonTimeRepository = lessonTimeRepository;
@@ -42,7 +42,7 @@ public class ScheduleParserImpl implements ScheduleParser {
     }
 
     @Override
-    public ScheduleParserStatus parseSchedule(String schedule, String department) {
+    public ScheduleParserStatus parseSchedule(String schedule, String departmentURL) {
         ScheduleParserStatus scheduleParserStatus;
         try {
             StringReader stringReader = new StringReader(schedule);
@@ -50,15 +50,15 @@ public class ScheduleParserImpl implements ScheduleParser {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
-            fullTimeLessonRepository.deleteByDepartmentURL(department);
-            parseGroups(scheduleXml.groups, department);
+            fullTimeLessonRepository.deleteByDepartmentURL(departmentURL);
+            parseGroups(scheduleXml.groups, departmentURL);
 
-            scheduleParserStatus = new ScheduleParserStatus("success", department);
+            scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }
         catch(Exception e) {
             e.printStackTrace();
-            scheduleParserStatus = new ScheduleParserStatus("fail", department);
+            scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
         }
 
@@ -74,12 +74,13 @@ public class ScheduleParserImpl implements ScheduleParser {
 
         for(GroupXml group : groups) {
             EducationForm educationForm = convertEducationForm(group.eduForm);
-            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus, educationForm, dep);
+            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus.trim(), educationForm, dep);
             if(studentGroup == null) {
                 studentGroup = new StudentGroup();
             }
             studentGroup.setDepartment(dep);
-            studentGroup.setGroupNumber(group.numberRus);
+            studentGroup.setGroupNumber(group.number.trim());
+            studentGroup.setGroupNumberRus(group.numberRus.trim());
             studentGroup.setGroupType(convertGroupType(group.groupType));
             studentGroup.setEducationForm(educationForm);
             studentGroupRepository.save(studentGroup);

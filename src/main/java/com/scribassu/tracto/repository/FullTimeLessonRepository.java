@@ -23,8 +23,8 @@ public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, 
 
     @Query("select ftl from FullTimeLesson ftl where ftl.day = :day and ftl.lessonTime = :lessonTime and ftl.studentGroup = :studentGroup")
     List<FullTimeLesson> findByDayAndLessonTimeAndGroup(@Param("day") Day day,
-                                          @Param("lessonTime") LessonTime lessonTime,
-                                          @Param("studentGroup") StudentGroup studentGroup);
+                                                        @Param("lessonTime") LessonTime lessonTime,
+                                                        @Param("studentGroup") StudentGroup studentGroup);
 
     @Transactional
     @Modifying

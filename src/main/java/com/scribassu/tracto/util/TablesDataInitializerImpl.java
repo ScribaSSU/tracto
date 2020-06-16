@@ -7,8 +7,6 @@ import com.scribassu.tracto.domain.WeekDay;
 import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.LessonTimeRepository;
-import com.scribassu.tracto.service.ScheduleDownloader;
-import com.scribassu.tracto.service.ScheduleParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +16,6 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     private final DayRepository dayRepository;
     private  final LessonTimeRepository lessonTimeRepository;
     private final DepartmentRepository departmentRepository;
-
-    @Autowired
-    private ScheduleParser scheduleParser;
-
-    @Autowired
-    private ScheduleDownloader scheduleDownloader;
 
     @Autowired
     public TablesDataInitializerImpl(DayRepository dayRepository,

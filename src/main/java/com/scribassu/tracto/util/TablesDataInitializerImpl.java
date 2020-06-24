@@ -162,6 +162,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonEighth.setTimeStart("20:10");
             lessonEighth.setTimeFinish("21:30");
             lessonTimeRepository.save(lessonEighth);
+            eeee
         }
     }
 

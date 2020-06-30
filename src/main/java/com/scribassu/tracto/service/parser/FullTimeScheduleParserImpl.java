@@ -4,6 +4,7 @@ import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.util.List;
 
+@Slf4j
 @Service
 public class FullTimeScheduleParserImpl implements ScheduleParser {
 
@@ -105,28 +107,57 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private void parseLessons(List<LessonXml> lessons, Day day, StudentGroup studentGroup) {
-        for(LessonXml les : lessons) {
-            LessonTime lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
-            FullTimeLesson lesson = new FullTimeLesson();
-            lesson.setStudentGroup(studentGroup);
-            lesson.setDepartment(studentGroup.getDepartment());
-            lesson.setName(les.name);
-            lesson.setPlace(les.place);
-            lesson.setSubGroup(les.subgroup);
-            lesson.setDay(day);
-            lesson.setLessonTime(lessonTime);
-            lesson.setWeekType(convertWeekType(les.weekType));
-            lesson.setTeacher(parseTeacher(les.teacher));
-            lesson.setLessonType(convertLessonType(les.type));
-            fullTimeLessonRepository.save(lesson);
+        LessonTime lessonTime;
+        if(isFromCollege(studentGroup)) {
+            for(LessonXml les : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(collegeLessonNumber(les));
+                FullTimeLesson lesson = new FullTimeLesson();
+                lesson.setStudentGroup(studentGroup);
+                lesson.setDepartment(studentGroup.getDepartment());
+                lesson.setName(les.name);
+                lesson.setPlace(les.place);
+                lesson.setSubGroup(les.subgroup);
+                lesson.setDay(day);
+                lesson.setLessonTime(lessonTime);
+                lesson.setWeekType(convertWeekType(les.weekType));
+                lesson.setTeacher(parseTeacher(les.teacher));
+                lesson.setLessonType(convertLessonType(les.type));
+                fullTimeLessonRepository.save(lesson);
+            }
         }
+        else {
+            for(LessonXml les : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
+                FullTimeLesson lesson = new FullTimeLesson();
+                lesson.setStudentGroup(studentGroup);
+                lesson.setDepartment(studentGroup.getDepartment());
+                lesson.setName(les.name);
+                lesson.setPlace(les.place);
+                lesson.setSubGroup(les.subgroup);
+                lesson.setDay(day);
+                lesson.setLessonTime(lessonTime);
+                lesson.setWeekType(convertWeekType(les.weekType));
+                lesson.setTeacher(parseTeacher(les.teacher));
+                lesson.setLessonType(convertLessonType(les.type));
+                fullTimeLessonRepository.save(lesson);
+            }
+        }
+    }
+
+    private boolean isFromCollege(StudentGroup studentGroup) {
+        return studentGroup.getDepartment().getURL().equals("kgl")
+                || studentGroup.getDepartment().getURL().equals("cre");
+    }
+
+    private int collegeLessonNumber(LessonXml lessonXml) {
+        return lessonXml.number * 10 + lessonXml.number;
     }
 
     private Teacher parseTeacher(TeacherXml teacher) {
         List<Teacher> tList = teacherRepository.findBySurnameAndNameAndPatronymic(teacher.lastname, teacher.name, teacher.patronymic);
 
         if(tList.size() > 1) {
-            //TODO: log warning
+            log.warn("Find more than 1 teacher for surname {}, name {}, patronymic {}", teacher.lastname, teacher.name, teacher.patronymic);
         }
 
         Teacher t;

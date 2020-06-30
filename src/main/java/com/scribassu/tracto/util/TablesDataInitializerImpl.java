@@ -7,9 +7,11 @@ import com.scribassu.tracto.domain.WeekDay;
 import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.LessonTimeRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class TablesDataInitializerImpl implements TablesDataInitializer {
 
@@ -34,6 +36,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
     }
     
     private void initDays(){
+        log.info("Start init days");
         Day monday = dayRepository.findByDayNumber(1);
         if(monday == null) {
             monday = new Day();
@@ -89,14 +92,16 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             sunday.setWeekDay(WeekDay.SUNDAY);
             dayRepository.save(sunday);
         }
+        log.info("End init days");
     }
 
     private void initTimes() {
+        log.info("Start init lesson times");
         LessonTime lessonFirst = lessonTimeRepository.findByLessonNumber(1);
         if(lessonFirst == null) {
             lessonFirst = new LessonTime();
             lessonFirst.setLessonNumber(1);
-            lessonFirst.setTimeStart("8:20");
+            lessonFirst.setTimeStart("08:20");
             lessonFirst.setTimeFinish("09:50");
             lessonTimeRepository.save(lessonFirst);
         }
@@ -162,11 +167,57 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonEighth.setTimeStart("20:10");
             lessonEighth.setTimeFinish("21:30");
             lessonTimeRepository.save(lessonEighth);
-            eeee
         }
+
+        LessonTime lessonFirstCollege = lessonTimeRepository.findByLessonNumber(11);
+        if(lessonFirstCollege == null) {
+            lessonFirstCollege = new LessonTime();
+            lessonFirstCollege.setLessonNumber(11);
+            lessonFirstCollege.setTimeStart("08:45");
+            lessonFirstCollege.setTimeFinish("10:15");
+            lessonTimeRepository.save(lessonFirstCollege);
+        }
+
+        LessonTime lessonSecondCollege = lessonTimeRepository.findByLessonNumber(22);
+        if(lessonSecondCollege == null) {
+            lessonSecondCollege = new LessonTime();
+            lessonSecondCollege.setLessonNumber(22);
+            lessonSecondCollege.setTimeStart("10:25");
+            lessonSecondCollege.setTimeFinish("11:55");
+            lessonTimeRepository.save(lessonSecondCollege);
+        }
+
+        LessonTime lessonThirdCollege = lessonTimeRepository.findByLessonNumber(33);
+        if(lessonThirdCollege == null) {
+            lessonThirdCollege = new LessonTime();
+            lessonThirdCollege.setLessonNumber(33);
+            lessonThirdCollege.setTimeStart("12:25");
+            lessonThirdCollege.setTimeFinish("13:55");
+            lessonTimeRepository.save(lessonThirdCollege);
+        }
+
+        LessonTime lessonFourthCollege = lessonTimeRepository.findByLessonNumber(44);
+        if(lessonFourthCollege == null) {
+            lessonFourthCollege = new LessonTime();
+            lessonFourthCollege.setLessonNumber(44);
+            lessonFourthCollege.setTimeStart("14:05");
+            lessonFourthCollege.setTimeFinish("15:35");
+            lessonTimeRepository.save(lessonFourthCollege);
+        }
+
+        LessonTime lessonFifthCollege = lessonTimeRepository.findByLessonNumber(55);
+        if(lessonFifthCollege == null) {
+            lessonFifthCollege = new LessonTime();
+            lessonFifthCollege.setLessonNumber(55);
+            lessonFifthCollege.setTimeStart("15:45");
+            lessonFifthCollege.setTimeFinish("17:15");
+            lessonTimeRepository.save(lessonFifthCollege);
+        }
+        log.info("End init lesson times");
     }
 
     private void initDepartments() {
+        log.info("Start init departments");
         Department dep = departmentRepository.findByURL("bf");
         if(dep == null) {
             Department biofac = new Department();
@@ -214,11 +265,11 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         dep = departmentRepository.findByURL("imo");
         if(dep == null) {
-            Department imimo = new Department();
-            imimo.setFullName("Институт истории и международных отношений");
-            imimo.setShortName("ИИИМО");
-            imimo.setURL("imo");
-            departmentRepository.save(imimo);
+            Department iimo = new Department();
+            iimo.setFullName("Институт истории и международных отношений");
+            iimo.setShortName("ИИИМО");
+            iimo.setURL("imo");
+            departmentRepository.save(iimo);
         }
 
         dep = departmentRepository.findByURL("ifk");
@@ -355,5 +406,22 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             jurist.setURL("uf");
             departmentRepository.save(jurist);
         }
+
+        dep = departmentRepository.findByURL("kgl");
+        if(dep == null) {
+            Department geolCollege = new Department();
+            geolCollege.setFullName("Геологический колледж");
+            geolCollege.setShortName("ГЕОЛОГ К-Ж");
+            geolCollege.setURL("kgl");
+        }
+
+        dep = departmentRepository.findByURL("cre");
+        if(dep == null) {
+            Department yablCollege = new Department();
+            yablCollege.setFullName("Колледж радиоэлектроники им. П.Н. Яблочкова");
+            yablCollege.setShortName("К-Ж ЯБЛОЧКОВА");
+            yablCollege.setURL("cre");
+        }
+        log.info("End init departments");
     }
 }

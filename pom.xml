@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>com.github.ScribaSSU</groupId>
 			<artifactId>tracto-domain</artifactId>
-			<version>1.0.5</version>
+			<version>1.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

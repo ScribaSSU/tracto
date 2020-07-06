@@ -579,6 +579,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             geolCollege.setFullName("Геологический колледж");
             geolCollege.setShortName("ГЕОЛОГ К-Ж");
             geolCollege.setURL("kgl");
+            departmentRepository.save(geolCollege);
             log.info("Init kgl");
         }
         else {
@@ -591,6 +592,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             yablCollege.setFullName("Колледж радиоэлектроники им. П.Н. Яблочкова");
             yablCollege.setShortName("К-Ж ЯБЛОЧКОВА");
             yablCollege.setURL("cre");
+            departmentRepository.save(yablCollege);
             log.info("Init cre");
         }
         else {

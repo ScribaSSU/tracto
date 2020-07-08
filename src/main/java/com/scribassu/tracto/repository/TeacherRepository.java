@@ -16,10 +16,17 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
                                                     @Param("name") String name,
                                                     @Param("patronymic") String patronymic);
 
-    @Query("select t from Teacher t where t.surname like concat(:surname, '%') or t.name like concat(:name, '%') or t.patronymic like concat(:patronymic, '%')")
-    List<Teacher> findBySurnameOrNameOrPatronymicLike(@Param("surname") String surname,
-                                                      @Param("name") String name,
-                                                      @Param("patronymic") String patronymic);
+    @Query("select t from Teacher t where " +
+            "t.surname like concat(:surname, '%') " +
+            "or t.name like concat(:name, '%') " +
+            "or t.patronymic like concat(:patronymic, '%')")
+    List<Teacher> findByAnyPartOfName(@Param("surname") String surname,
+                                      @Param("name") String name,
+                                      @Param("patronymic") String patronymic);
+
+    @Query("select t from Teacher t where " +
+            "concat(t.surname, ' ', t.name, ' ', t.patronymic) like concat(:fullName, '%')")
+    List<Teacher> findByFullNameLike(@Param("fullName") String fullName);
 
     @Query("select t from Teacher t where t.surname = :surname")
     List<Teacher> findBySurname(@Param("surname") String surname);

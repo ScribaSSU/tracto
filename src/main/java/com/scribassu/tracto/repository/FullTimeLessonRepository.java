@@ -26,6 +26,28 @@ public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, 
                                                         @Param("lessonTime") LessonTime lessonTime,
                                                         @Param("studentGroup") StudentGroup studentGroup);
 
+    @Query("select ftl from FullTimeLesson ftl where " +
+            "ftl.name = :name " +
+            "and ftl.teacher = :teacher " +
+            "and ftl.studentGroup = :studentGroup " +
+            "and ftl.subGroup = :subGroup " +
+            "and ftl.department = :department " +
+            "and ftl.place = :place " +
+            "and ftl.day = :day " +
+            "and ftl.lessonTime = :lessonTime " +
+            "and ftl.weekType = :weekType " +
+            "and ftl.lessonType = :lessonType")
+    List<FullTimeLesson> findEqual(@Param("name") String name,
+                                   @Param("teacher") Teacher teacher,
+                                   @Param("studentGroup") StudentGroup studentGroup,
+                                   @Param("subGroup") String subGroup,
+                                   @Param("department") Department department,
+                                   @Param("place") String place,
+                                   @Param("day") Day day,
+                                   @Param("lessonTime") LessonTime lessonTime,
+                                   @Param("weekType") WeekType weekType,
+                                   @Param("lessonType") LessonType lessonType);
+
     @Transactional
     @Modifying
     @Query("delete from FullTimeLesson ftl where ftl.department in (select d from Department d where url = :department)")

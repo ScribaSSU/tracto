@@ -38,14 +38,23 @@ public class StudentGroupService {
     public GroupNumbersDto getOtherGroupNumbersByDepartmentUrlAndEducationForm(String url,
                                                                                EducationForm educationForm) {
         List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
-        return new GroupNumbersDto(
-                groups
-                        .stream()
-                        .filter(s -> !Character.isDigit(s.getGroupNumberRus().charAt(0)))
-                .map(StudentGroup::getGroupNumberRus)
-                .collect(Collectors.toList()),
-                url,
-                educationForm.name()
-        );
+        if(url.equals("cre") || url.equals("kgl")) {
+            return new GroupNumbersDto(
+                    groups.stream().map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
+                    url,
+                    educationForm.name()
+            );
+        }
+        else {
+            return new GroupNumbersDto(
+                    groups
+                            .stream()
+                            .filter(s -> !Character.isDigit(s.getGroupNumberRus().charAt(0)))
+                            .map(StudentGroup::getGroupNumberRus)
+                            .collect(Collectors.toList()),
+                    url,
+                    educationForm.name()
+            );
+        }
     }
 }

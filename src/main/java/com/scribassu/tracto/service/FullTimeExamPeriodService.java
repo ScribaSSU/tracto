@@ -7,9 +7,11 @@ import com.scribassu.tracto.dto.web.ExamPeriodEventDto;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ExamPeriodEventRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class FullTimeExamPeriodService {
 
@@ -29,9 +31,11 @@ public class FullTimeExamPeriodService {
     public ExamPeriodEventDto getFullTimeExamPeriodByGroup(String department, String groupNumber) {
         Department dep = departmentRepository.findByURL(department);
         StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
-        return new ExamPeriodEventDto(
+        ExamPeriodEventDto examPeriodEventDto = new ExamPeriodEventDto(
                 examPeriodEventRepository.findByStudentGroup(studentGroup),
                 studentGroup
         );
+        log.info("Get exam period event dto: {}", examPeriodEventDto);
+        return examPeriodEventDto;
     }
 }

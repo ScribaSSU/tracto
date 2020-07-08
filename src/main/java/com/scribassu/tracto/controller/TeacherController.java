@@ -19,7 +19,7 @@ public class TeacherController {
         this.teacherRepository = teacherRepository;
     }
 
-    @GetMapping
+    @PostMapping("/word")
     public TeacherListDto findByWord(@RequestBody String word) {
         String[] words = word.split(" "); //in case of more than one part of name
         if(words.length == 1) {

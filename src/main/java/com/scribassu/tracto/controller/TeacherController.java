@@ -1,7 +1,12 @@
 package com.scribassu.tracto.controller;
 
+import com.scribassu.tracto.domain.Day;
+import com.scribassu.tracto.domain.FullTimeLesson;
 import com.scribassu.tracto.domain.Teacher;
+import com.scribassu.tracto.dto.web.TeacherFullTimeLessonDto;
 import com.scribassu.tracto.dto.web.TeacherListDto;
+import com.scribassu.tracto.repository.DayRepository;
+import com.scribassu.tracto.repository.FullTimeLessonRepository;
 import com.scribassu.tracto.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +17,17 @@ import java.util.List;
 @RequestMapping("/v1.0/teacher")
 public class TeacherController {
 
+    private final DayRepository dayRepository;
     private final TeacherRepository teacherRepository;
+    private final FullTimeLessonRepository fullTimeLessonRepository;
 
     @Autowired
-    public TeacherController(TeacherRepository teacherRepository) {
+    public TeacherController(DayRepository dayRepository,
+                             TeacherRepository teacherRepository,
+                             FullTimeLessonRepository fullTimeLessonRepository) {
+        this.dayRepository = dayRepository;
         this.teacherRepository = teacherRepository;
+        this.fullTimeLessonRepository = fullTimeLessonRepository;
     }
 
     @PostMapping("/word")
@@ -50,5 +61,14 @@ public class TeacherController {
                 }
             }
         }
+    }
+
+    @GetMapping("/{teacherId}/{day}")
+    public TeacherFullTimeLessonDto getLessonsByDay(@PathVariable("teacherId") Long teacherId,
+                                                    @PathVariable("day") String dayNumber) {
+        Teacher teacher = teacherRepository.findById(teacherId).orElseThrow(IllegalArgumentException::new);
+        List<FullTimeLesson> lessons = fullTimeLessonRepository.findByTeacher(teacher);
+        Day day = dayRepository.findByDayNumber(Integer.parseInt(dayNumber));
+        return new TeacherFullTimeLessonDto(lessons, teacher, day);
     }
 }

@@ -26,8 +26,9 @@ public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, 
                                                         @Param("lessonTime") LessonTime lessonTime,
                                                         @Param("studentGroup") StudentGroup studentGroup);
 
-    @Query("select ftl from FullTimeLesson ftl where ftl.teacher = :teacher")
-    List<FullTimeLesson> findByTeacher(@Param("teacher") Teacher teacher);
+    @Query("select ftl from FullTimeLesson ftl where ftl.teacher = :teacher and ftl.day = :day")
+    List<FullTimeLesson> findByTeacher(@Param("teacher") Teacher teacher,
+                                       @Param("day") Day day);
 
     @Query("select ftl from FullTimeLesson ftl where " +
             "ftl.name = :name " +

@@ -67,8 +67,8 @@ public class TeacherController {
     public TeacherFullTimeLessonDto getLessonsByDay(@PathVariable("teacherId") Long teacherId,
                                                     @PathVariable("day") String dayNumber) {
         Teacher teacher = teacherRepository.findById(teacherId).orElseThrow(IllegalArgumentException::new);
-        List<FullTimeLesson> lessons = fullTimeLessonRepository.findByTeacher(teacher);
         Day day = dayRepository.findByDayNumber(Integer.parseInt(dayNumber));
+        List<FullTimeLesson> lessons = fullTimeLessonRepository.findByTeacher(teacher, day);
         return new TeacherFullTimeLessonDto(lessons, teacher, day);
     }
 }

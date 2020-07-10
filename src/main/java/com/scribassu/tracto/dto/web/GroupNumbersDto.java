@@ -10,7 +10,9 @@ import java.util.List;
 public class GroupNumbersDto {
 
     private List<String> groupNumbers;
+
     private String departmentUrl;
+
     private String educationForm;
 
     public GroupNumbersDto(List<String> groupNumbers,

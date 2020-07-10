@@ -44,8 +44,7 @@ public class StudentGroupService {
                     url,
                     educationForm.name()
             );
-        }
-        else {
+        } else {
             return new GroupNumbersDto(
                     groups
                             .stream()

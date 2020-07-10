@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 public class FullTimeExamPeriodService {
 
     private final DepartmentRepository departmentRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final ExamPeriodEventRepository examPeriodEventRepository;
 
     @Autowired

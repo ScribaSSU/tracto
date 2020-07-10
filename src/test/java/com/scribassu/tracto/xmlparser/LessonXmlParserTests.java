@@ -43,25 +43,41 @@ public class LessonXmlParserTests {
     private final String scheduleXml = "<schedule>" + groupXml + "</schedule>";
 
     private final int idTeacher = 99999;
+
     private final String lastNameTeacher = "Иванов";
+
     private final String nameTeacher = "Иван";
+
     private final String patronymicTeacher = "Иванович";
+
     private final String compiledFioTeacher = "Иванов Иван Иванович";
 
     private final String typeLesson = "practice";
+
     private final String weekTypeLesson = "full";
+
     private final int numLesson = 1;
+
     private final String updatedLesson = "1567847064";
+
     private final String dateBeginLesson = "";
+
     private final String dateEndLesson = "";
+
     private final String nameLesson = "Физическая культура";
+
     private final String placeLesson = "999 корп. спортзал";
+
     private final String subgroupLesson = "";
 
     private final int innerGroupIdGroup = 450;
+
     private final String numberGroup = "131";
+
     private final String numberRusGroup = "131";
+
     private final int eduFormGroup = 0;
+
     private final int groupTypeGroup = 0;
 
     @Test

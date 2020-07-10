@@ -6,15 +6,17 @@ import com.scribassu.tracto.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class FullTimeLessonService {
 
     private final DayRepository dayRepository;
+
     private final DepartmentRepository departmentRepository;
+
     private final LessonTimeRepository lessonTimeRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final FullTimeLessonRepository fullTimeLessonRepository;
 
     @Autowired

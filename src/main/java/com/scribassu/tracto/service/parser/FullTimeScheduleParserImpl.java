@@ -3,7 +3,6 @@ package com.scribassu.tracto.service.parser;
 import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
-import com.scribassu.tracto.entity.UpdatedRow;
 import com.scribassu.tracto.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +19,19 @@ import java.util.List;
 public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
+
     private final DayRepository dayRepository;
+
     private final LessonTimeRepository lessonTimeRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final DepartmentRepository departmentRepository;
+
     private final TeacherRepository teacherRepository;
+
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
+
     private final UpdatedRowRepository updatedRowRepository;
 
     @Autowired
@@ -61,8 +67,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
             scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             e.printStackTrace();
             scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
@@ -136,8 +141,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setLessonType(lessonType);
                 fullTimeLessonRepository.save(lesson);
             }
-        }
-        else {
+        } else {
             for(LessonXml les : lessons) {
                 lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
                 weekType = convertWeekType(les.weekType);
@@ -180,8 +184,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
         if(CollectionUtils.isEmpty(tList)) {
             t = new Teacher();
-        }
-        else {
+        } else {
             t = tList.get(0);
         }
 
@@ -193,11 +196,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private LessonType convertLessonType(String type) {
-        switch (type) {
-            case "lecture": return LessonType.LECTURE;
-            case "practice": return LessonType.PRACTICE;
-            case "laboratory": return LessonType.LABORATORY;
-            default: return null;
+        switch(type) {
+            case "lecture":
+                return LessonType.LECTURE;
+            case "practice":
+                return LessonType.PRACTICE;
+            case "laboratory":
+                return LessonType.LABORATORY;
+            default:
+                return null;
         }
     }
 
@@ -207,20 +214,29 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private GroupType convertGroupType(int groupType) {
         switch(groupType) {
-            case 0: return GroupType.SPECIALTY;
-            case 1: return GroupType.BACHELOR;
-            case 2: return GroupType.MASTER;
-            case 3: return GroupType.GRADUATE_SCHOOL;
-            default: return null;
+            case 0:
+                return GroupType.SPECIALTY;
+            case 1:
+                return GroupType.BACHELOR;
+            case 2:
+                return GroupType.MASTER;
+            case 3:
+                return GroupType.GRADUATE_SCHOOL;
+            default:
+                return null;
         }
     }
 
     private EducationForm convertEducationForm(int educationForm) {
         switch(educationForm) {
-            case 0: return EducationForm.DO;
-            case 1: return EducationForm.ZO;
-            case 2: return EducationForm.VO;
-            default: return null;
+            case 0:
+                return EducationForm.DO;
+            case 1:
+                return EducationForm.ZO;
+            case 2:
+                return EducationForm.VO;
+            default:
+                return null;
         }
     }
 }

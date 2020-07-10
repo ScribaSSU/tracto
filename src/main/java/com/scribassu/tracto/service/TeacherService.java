@@ -19,8 +19,11 @@ import java.util.List;
 public class TeacherService {
 
     private final DayRepository dayRepository;
+
     private final TeacherRepository teacherRepository;
+
     private final FullTimeLessonRepository fullTimeLessonRepository;
+
     private final ExamPeriodEventRepository examPeriodEventRepository;
 
     public TeacherService(DayRepository dayRepository,
@@ -38,8 +41,7 @@ public class TeacherService {
         String[] words = word.split(" "); //in case of more than one part of name
         if(words.length == 1) {
             return new TeacherListDto(teacherRepository.findByAnyPartOfName(word, word, word));
-        }
-        else {
+        } else {
             StringBuilder stringBuilder = new StringBuilder();
             for(String w : words) {
                 stringBuilder.append(w).append(" ");
@@ -49,17 +51,14 @@ public class TeacherService {
                 List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
                 if(teachers.isEmpty()) {
                     return new TeacherListDto(teacherRepository.findByAnyPartOfName(words[0], words[1], words[0]));
-                }
-                else {
+                } else {
                     return new TeacherListDto(teachers);
                 }
-            }
-            else {
+            } else {
                 List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
                 if(teachers.isEmpty()) {
                     return new TeacherListDto(teacherRepository.findByAnyPartOfName(words[0], words[1], words[2]));
-                }
-                else {
+                } else {
                     return new TeacherListDto(teachers);
                 }
             }

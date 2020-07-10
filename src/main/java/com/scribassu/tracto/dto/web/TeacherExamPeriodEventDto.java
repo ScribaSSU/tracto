@@ -12,6 +12,7 @@ import java.util.List;
 public class TeacherExamPeriodEventDto {
 
     private List<ExamPeriodEvent> examPeriodEvents;
+
     private Teacher teacher;
 
     public TeacherExamPeriodEventDto(List<ExamPeriodEvent> examPeriodEvents,

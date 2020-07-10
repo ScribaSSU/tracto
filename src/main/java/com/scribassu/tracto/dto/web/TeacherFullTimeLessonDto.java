@@ -13,7 +13,9 @@ import java.util.List;
 public class TeacherFullTimeLessonDto {
 
     private List<FullTimeLesson> lessons;
+
     private Teacher teacher;
+
     private Day day;
 
     public TeacherFullTimeLessonDto(List<FullTimeLesson> lessons,

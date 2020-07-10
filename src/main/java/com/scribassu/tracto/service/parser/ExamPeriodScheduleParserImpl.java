@@ -15,14 +15,19 @@ import java.util.List;
 @Service
 public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
-    private final TeacherRepository teacherRepository;
-    private final DepartmentRepository departmentRepository;
-    private final StudentGroupRepository studentGroupRepository;
-    private final ExamPeriodEventRepository examPeriodEventRepository;
-    private final ScheduleParserStatusRepository scheduleParserStatusRepository;
-
     private static final String PAGE_TITLE_CLASS = "page-title";
+
     private static final String SESSION_ID = "session";
+
+    private final TeacherRepository teacherRepository;
+
+    private final DepartmentRepository departmentRepository;
+
+    private final StudentGroupRepository studentGroupRepository;
+
+    private final ExamPeriodEventRepository examPeriodEventRepository;
+
+    private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
     @Autowired
     public ExamPeriodScheduleParserImpl(TeacherRepository teacherRepository,
@@ -66,8 +71,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                     examPeriodEvent.setDay(Integer.parseInt(date[0]));
                                     examPeriodEvent.setMonth(date[1]);
                                     examPeriodEvent.setYear(date[2]);
-                                }
-                                catch(Exception e) {
+                                } catch(Exception e) {
                                     examPeriodEvent.setDay(-1);
                                     examPeriodEvent.setMonth(" ");
                                     examPeriodEvent.setYear(" ");
@@ -78,8 +82,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                     String[] time = tds.get(cell).text().split(":");
                                     examPeriodEvent.setHour(Integer.parseInt(time[0]));
                                     examPeriodEvent.setMinute(Integer.parseInt(time[1]));
-                                }
-                                catch(Exception e) {
+                                } catch(Exception e) {
                                     examPeriodEvent.setHour(-1);
                                     examPeriodEvent.setMinute(0);
                                 }
@@ -110,8 +113,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                     }
                 }
             }
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             status.setStatus("fail");
         }
         status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
@@ -139,7 +141,6 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
         text = text.replace("отделение:", "");
         String groupNumber = text.trim();
-        System.out.println(";"+groupNumber+";");
 
         return studentGroupRepository.findByNumberAndEducationFormAndDepartment(
                 groupNumber,
@@ -153,7 +154,6 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             return ExamPeriodEventType.MIDTERM;
         }
         if("Дифференцированный зачет:".equalsIgnoreCase(eventType)) {
-            System.out.println("DIFFFFF");
             return ExamPeriodEventType.MIDTERM_WITH_MARK;
         }
         if("Консультация:".equalsIgnoreCase(eventType)) {
@@ -179,15 +179,12 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                 teacher.setName(teacherName[1]);
                 teacher.setPatronymic(teacherName[2]);
                 teacher = teacherRepository.save(teacher);
-            }
-            else {
+            } else {
                 teacher = teacherList.get(0);
             }
-        }
-        else if (teacherName.length == 1) {
+        } else if(teacherName.length == 1) {
             teacher = findTeacherBySurname(teacherName[0]);
-        }
-        else {
+        } else {
             teacher = findTeacherBySurname(" ");
         }
         return teacher;
@@ -200,8 +197,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             teacher = new Teacher();
             teacher.setSurname(surname);
             teacher = teacherRepository.save(teacher);
-        }
-        else {
+        } else {
             teacher = teacherList.get(0);
         }
         return teacher;

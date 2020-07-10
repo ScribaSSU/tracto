@@ -130,8 +130,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFirst == null) {
             lessonFirst = new LessonTime();
             lessonFirst.setLessonNumber(1);
-            lessonFirst.setTimeStart("08:20");
-            lessonFirst.setTimeFinish("09:50");
+            lessonFirst.setHourStart(8);
+            lessonFirst.setMinuteStart(20);
+            lessonFirst.setHourEnd(9);
+            lessonFirst.setMinuteEnd(50);
             lessonTimeRepository.save(lessonFirst);
             log.info("Init lesson first");
         }
@@ -143,8 +145,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonSecond == null) {
             lessonSecond = new LessonTime();
             lessonSecond.setLessonNumber(2);
-            lessonSecond.setTimeStart("10:00");
-            lessonSecond.setTimeFinish("11:35");
+            lessonSecond.setHourStart(10);
+            lessonSecond.setMinuteStart(0);
+            lessonSecond.setHourEnd(11);
+            lessonSecond.setMinuteEnd(35);
             lessonTimeRepository.save(lessonSecond);
             log.info("Init lesson second");
         }
@@ -156,8 +160,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonThird == null) {
             lessonThird = new LessonTime();
             lessonThird.setLessonNumber(3);
-            lessonThird.setTimeStart("12:05");
-            lessonThird.setTimeFinish("13:40");
+            lessonThird.setHourStart(12);
+            lessonThird.setMinuteStart(5);
+            lessonThird.setHourEnd(13);
+            lessonThird.setMinuteEnd(40);
             lessonTimeRepository.save(lessonThird);
             log.info("Init lesson third");
         }
@@ -169,8 +175,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFourth == null) {
             lessonFourth = new LessonTime();
             lessonFourth.setLessonNumber(4);
-            lessonFourth.setTimeStart("13:50");
-            lessonFourth.setTimeFinish("15:25");
+            lessonFourth.setHourStart(13);
+            lessonFourth.setMinuteStart(50);
+            lessonFourth.setHourEnd(15);
+            lessonFourth.setMinuteEnd(25);
             lessonTimeRepository.save(lessonFourth);
             log.info("Init lesson fourth");
         }
@@ -182,8 +190,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFifth == null) {
             lessonFifth = new LessonTime();
             lessonFifth.setLessonNumber(5);
-            lessonFifth.setTimeStart("15:35");
-            lessonFifth.setTimeFinish("17:10");
+            lessonFifth.setHourStart(15);
+            lessonFifth.setMinuteStart(35);
+            lessonFifth.setHourEnd(17);
+            lessonFifth.setMinuteEnd(10);
             lessonTimeRepository.save(lessonFifth);
             log.info("Init lesson fifth");
         }
@@ -195,8 +205,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonSix == null) {
             lessonSix = new LessonTime();
             lessonSix.setLessonNumber(6);
-            lessonSix.setTimeStart("17:20");
-            lessonSix.setTimeFinish("18:40");
+            lessonSix.setHourStart(17);
+            lessonSix.setMinuteStart(20);
+            lessonSix.setHourEnd(18);
+            lessonSix.setMinuteEnd(40);
             lessonTimeRepository.save(lessonSix);
             log.info("Init lesson six");
         }
@@ -208,8 +220,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonSeventh == null) {
             lessonSeventh = new LessonTime();
             lessonSeventh.setLessonNumber(7);
-            lessonSeventh.setTimeStart("18:45");
-            lessonSeventh.setTimeFinish("20:05");
+            lessonSeventh.setHourStart(18);
+            lessonSeventh.setMinuteStart(45);
+            lessonSeventh.setHourEnd(20);
+            lessonSeventh.setMinuteEnd(5);
             lessonTimeRepository.save(lessonSeventh);
             log.info("Init lesson seventh");
         }
@@ -221,8 +235,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonEighth == null) {
             lessonEighth = new LessonTime();
             lessonEighth.setLessonNumber(8);
-            lessonEighth.setTimeStart("20:10");
-            lessonEighth.setTimeFinish("21:30");
+            lessonEighth.setHourStart(20);
+            lessonEighth.setMinuteStart(10);
+            lessonEighth.setHourEnd(21);
+            lessonEighth.setHourEnd(30);
             lessonTimeRepository.save(lessonEighth);
             log.info("Init lesson eighth");
         }
@@ -234,8 +250,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFirstCollege == null) {
             lessonFirstCollege = new LessonTime();
             lessonFirstCollege.setLessonNumber(11);
-            lessonFirstCollege.setTimeStart("08:45");
-            lessonFirstCollege.setTimeFinish("10:15");
+            lessonFirstCollege.setHourStart(8);
+            lessonFirstCollege.setMinuteStart(45);
+            lessonFirstCollege.setHourEnd(10);
+            lessonFirstCollege.setMinuteEnd(15);
             lessonTimeRepository.save(lessonFirstCollege);
             log.info("Init lesson first college");
         }
@@ -247,8 +265,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonSecondCollege == null) {
             lessonSecondCollege = new LessonTime();
             lessonSecondCollege.setLessonNumber(22);
-            lessonSecondCollege.setTimeStart("10:25");
-            lessonSecondCollege.setTimeFinish("11:55");
+            lessonSecondCollege.setHourStart(10);
+            lessonSecondCollege.setMinuteStart(25);
+            lessonSecondCollege.setHourEnd(11);
+            lessonSecondCollege.setMinuteEnd(55);
             lessonTimeRepository.save(lessonSecondCollege);
             log.info("Init lesson second college");
         }
@@ -260,8 +280,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonThirdCollege == null) {
             lessonThirdCollege = new LessonTime();
             lessonThirdCollege.setLessonNumber(33);
-            lessonThirdCollege.setTimeStart("12:25");
-            lessonThirdCollege.setTimeFinish("13:55");
+            lessonThirdCollege.setHourStart(12);
+            lessonThirdCollege.setMinuteStart(25);
+            lessonThirdCollege.setHourEnd(13);
+            lessonThirdCollege.setMinuteEnd(55);
             lessonTimeRepository.save(lessonThirdCollege);
             log.info("Init lesson third college");
         }
@@ -273,8 +295,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFourthCollege == null) {
             lessonFourthCollege = new LessonTime();
             lessonFourthCollege.setLessonNumber(44);
-            lessonFourthCollege.setTimeStart("14:05");
-            lessonFourthCollege.setTimeFinish("15:35");
+            lessonFourthCollege.setHourStart(14);
+            lessonFourthCollege.setMinuteStart(5);
+            lessonFourthCollege.setHourEnd(15);
+            lessonFourthCollege.setMinuteEnd(35);
             lessonTimeRepository.save(lessonFourthCollege);
             log.info("Init lesson fourth college");
         }
@@ -286,8 +310,10 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         if(lessonFifthCollege == null) {
             lessonFifthCollege = new LessonTime();
             lessonFifthCollege.setLessonNumber(55);
-            lessonFifthCollege.setTimeStart("15:45");
-            lessonFifthCollege.setTimeFinish("17:15");
+            lessonFifthCollege.setHourStart(15);
+            lessonFifthCollege.setMinuteStart(45);
+            lessonFifthCollege.setHourEnd(17);
+            lessonFifthCollege.setMinuteEnd(15);
             lessonTimeRepository.save(lessonFifthCollege);
             log.info("Init lesson fifth college");
         }

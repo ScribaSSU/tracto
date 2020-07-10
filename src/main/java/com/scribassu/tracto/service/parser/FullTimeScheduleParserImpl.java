@@ -56,6 +56,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
+            fullTimeLessonRepository.deleteByDepartmentURL(departmentURL);
             parseGroups(scheduleXml.groups, departmentURL);
 
             scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
@@ -122,20 +123,6 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lessonType = convertLessonType(les.type);
                 teacher = parseTeacher(les.teacher);
 
-
-                List<FullTimeLesson> oldLessons = fullTimeLessonRepository.findEqual(
-                        les.name,
-                        teacher,
-                        studentGroup,
-                        les.subgroup,
-                        studentGroup.getDepartment(),
-                        les.place,
-                        day,
-                        lessonTime,
-                        weekType,
-                        lessonType
-                );
-
                 FullTimeLesson lesson = new FullTimeLesson();
                 lesson.setStudentGroup(studentGroup);
                 lesson.setDepartment(studentGroup.getDepartment());
@@ -147,13 +134,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
-                lesson = fullTimeLessonRepository.save(lesson);
-
-                if(!oldLessons.isEmpty()) {
-                    UpdatedRow row = new UpdatedRow(oldLessons.get(0).getId(), lesson.getId(), "full_time_lesson");
-                    updatedRowRepository.save(row);
-                    log.info("Update detected. Table {}, old id - {}, updated id - {}", row.getUpdatedTable(), row.getOldId(), row.getUpdatedId());
-                }
+                fullTimeLessonRepository.save(lesson);
             }
         }
         else {
@@ -163,20 +144,6 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lessonType = convertLessonType(les.type);
                 teacher = parseTeacher(les.teacher);
 
-
-                List<FullTimeLesson> oldLessons = fullTimeLessonRepository.findEqual(
-                        les.name,
-                        teacher,
-                        studentGroup,
-                        les.subgroup,
-                        studentGroup.getDepartment(),
-                        les.place,
-                        day,
-                        lessonTime,
-                        weekType,
-                        lessonType
-                );
-
                 FullTimeLesson lesson = new FullTimeLesson();
                 lesson.setStudentGroup(studentGroup);
                 lesson.setDepartment(studentGroup.getDepartment());
@@ -188,13 +155,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
-                lesson = fullTimeLessonRepository.save(lesson);
-
-                if(!oldLessons.isEmpty()) {
-                    UpdatedRow row = new UpdatedRow(oldLessons.get(0).getId(), lesson.getId(), "full_time_lesson");
-                    updatedRowRepository.save(row);
-                    log.info("Update detected. Table {}, old id - {}, updated id - {}", row.getUpdatedTable(), row.getOldId(), row.getUpdatedId());
-                }
+                fullTimeLessonRepository.save(lesson);
             }
         }
     }

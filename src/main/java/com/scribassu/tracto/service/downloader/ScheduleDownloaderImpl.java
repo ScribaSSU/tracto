@@ -53,9 +53,11 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
                 stringBuilder.append(outLine);
             }
             return stringBuilder.toString();
-        } catch(IOException e) {
+        }
+        catch(IOException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             httpGet.abort();
         }
 

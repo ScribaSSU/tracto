@@ -46,7 +46,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             monday.setWeekDay(WeekDay.MONDAY);
             dayRepository.save(monday);
             log.info("Init monday");
-        } else {
+        }
+        else {
             log.info("No need to init monday");
         }
 
@@ -57,7 +58,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             tuesday.setWeekDay(WeekDay.TUESDAY);
             dayRepository.save(tuesday);
             log.info("Init tuesday");
-        } else {
+        }
+        else {
             log.info("No need to init tuesday");
         }
 
@@ -68,7 +70,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             wednesday.setWeekDay(WeekDay.WEDNESDAY);
             dayRepository.save(wednesday);
             log.info("Init wednesday");
-        } else {
+        }
+        else {
             log.info("No need to init wednesday");
         }
 
@@ -79,7 +82,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             thursday.setWeekDay(WeekDay.THURSDAY);
             dayRepository.save(thursday);
             log.info("Init thursday");
-        } else {
+        }
+        else {
             log.info("No need to init thursday");
         }
 
@@ -90,7 +94,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             friday.setWeekDay(WeekDay.FRIDAY);
             dayRepository.save(friday);
             log.info("Init friday");
-        } else {
+        }
+        else {
             log.info("No need to init friday");
         }
 
@@ -101,7 +106,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             saturday.setWeekDay(WeekDay.SATURDAY);
             dayRepository.save(saturday);
             log.info("Init saturday");
-        } else {
+        }
+        else {
             log.info("No need to init saturday");
         }
 
@@ -112,7 +118,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             sunday.setWeekDay(WeekDay.SUNDAY);
             dayRepository.save(sunday);
             log.info("Init sunday");
-        } else {
+        }
+        else {
             log.info("No need to init sunday");
         }
 
@@ -131,7 +138,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFirst.setMinuteEnd(50);
             lessonTimeRepository.save(lessonFirst);
             log.info("Init lesson first");
-        } else {
+        }
+        else {
             log.info("No need to init lesson first");
         }
 
@@ -145,7 +153,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonSecond.setMinuteEnd(35);
             lessonTimeRepository.save(lessonSecond);
             log.info("Init lesson second");
-        } else {
+        }
+        else {
             log.info("No need to init lesson second");
         }
 
@@ -159,7 +168,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonThird.setMinuteEnd(40);
             lessonTimeRepository.save(lessonThird);
             log.info("Init lesson third");
-        } else {
+        }
+        else {
             log.info("No need to init lesson third");
         }
 
@@ -173,7 +183,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFourth.setMinuteEnd(25);
             lessonTimeRepository.save(lessonFourth);
             log.info("Init lesson fourth");
-        } else {
+        }
+        else {
             log.info("No need to init lesson fourth");
         }
 
@@ -187,7 +198,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFifth.setMinuteEnd(10);
             lessonTimeRepository.save(lessonFifth);
             log.info("Init lesson fifth");
-        } else {
+        }
+        else {
             log.info("No need to init lesson fifth");
         }
 
@@ -201,7 +213,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonSix.setMinuteEnd(40);
             lessonTimeRepository.save(lessonSix);
             log.info("Init lesson six");
-        } else {
+        }
+        else {
             log.info("No need to init lesson six");
         }
 
@@ -215,7 +228,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonSeventh.setMinuteEnd(5);
             lessonTimeRepository.save(lessonSeventh);
             log.info("Init lesson seventh");
-        } else {
+        }
+        else {
             log.info("No need to init lesson seventh");
         }
 
@@ -229,7 +243,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonEighth.setHourEnd(30);
             lessonTimeRepository.save(lessonEighth);
             log.info("Init lesson eighth");
-        } else {
+        }
+        else {
             log.info("No need to init lesson eighth");
         }
 
@@ -243,7 +258,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFirstCollege.setMinuteEnd(15);
             lessonTimeRepository.save(lessonFirstCollege);
             log.info("Init lesson first college");
-        } else {
+        }
+        else {
             log.info("No need to init lesson first college");
         }
 
@@ -257,7 +273,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonSecondCollege.setMinuteEnd(55);
             lessonTimeRepository.save(lessonSecondCollege);
             log.info("Init lesson second college");
-        } else {
+        }
+        else {
             log.info("No need to init lesson second college");
         }
 
@@ -271,7 +288,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonThirdCollege.setMinuteEnd(55);
             lessonTimeRepository.save(lessonThirdCollege);
             log.info("Init lesson third college");
-        } else {
+        }
+        else {
             log.info("No need to init lesson third college");
         }
 
@@ -285,7 +303,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFourthCollege.setMinuteEnd(35);
             lessonTimeRepository.save(lessonFourthCollege);
             log.info("Init lesson fourth college");
-        } else {
+        }
+        else {
             log.info("No need to init lesson fourth college");
         }
 
@@ -299,7 +318,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonFifthCollege.setMinuteEnd(15);
             lessonTimeRepository.save(lessonFifthCollege);
             log.info("Init lesson fifth college");
-        } else {
+        }
+        else {
             log.info("No need to init lesson fifth college");
         }
 
@@ -316,7 +336,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             biofac.setURL("bf");
             departmentRepository.save(biofac);
             log.info("Init bf");
-        } else {
+        }
+        else {
             log.info("No need to init bf");
         }
 
@@ -328,7 +349,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             geofac.setURL("gf");
             departmentRepository.save(geofac);
             log.info("Init gf");
-        } else {
+        }
+        else {
             log.info("No need to init gf");
         }
 
@@ -340,7 +362,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             geolfac.setURL("gl");
             departmentRepository.save(geolfac);
             log.info("Init gl");
-        } else {
+        }
+        else {
             log.info("No need to init gl");
         }
 
@@ -352,7 +375,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             idpo.setURL("idpo");
             departmentRepository.save(idpo);
             log.info("Init idpo");
-        } else {
+        }
+        else {
             log.info("No need to init idpo");
         }
 
@@ -364,7 +388,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             instisk.setURL("ii");
             departmentRepository.save(instisk);
             log.info("Init ii");
-        } else {
+        }
+        else {
             log.info("No need to init ii");
         }
 
@@ -376,7 +401,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             iimo.setURL("imo");
             departmentRepository.save(iimo);
             log.info("Init imo");
-        } else {
+        }
+        else {
             log.info("No need to init imo");
         }
 
@@ -388,7 +414,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             ifkis.setURL("ifk");
             departmentRepository.save(ifkis);
             log.info("Init ifk");
-        } else {
+        }
+        else {
             log.info("No need to init ifk");
         }
 
@@ -400,7 +427,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             philological.setURL("ifg");
             departmentRepository.save(philological);
             log.info("Init ifg");
-        } else {
+        }
+        else {
             log.info("No need to init ifg");
         }
 
@@ -412,7 +440,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             chemical.setURL("ih");
             departmentRepository.save(chemical);
             log.info("Init ih");
-        } else {
+        }
+        else {
             log.info("No need to init ih");
         }
 
@@ -424,7 +453,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             mechmath.setURL("mm");
             departmentRepository.save(mechmath);
             log.info("Init mm");
-        } else {
+        }
+        else {
             log.info("No need to init mm");
         }
 
@@ -436,7 +466,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             sociological.setURL("sf");
             departmentRepository.save(sociological);
             log.info("Init sf");
-        } else {
+        }
+        else {
             log.info("No need to init sf");
         }
 
@@ -448,7 +479,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             fi.setURL("fi");
             departmentRepository.save(fi);
             log.info("Init fi");
-        } else {
+        }
+        else {
             log.info("No need to init fi");
         }
 
@@ -460,7 +492,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             csit.setURL("knt");
             departmentRepository.save(csit);
             log.info("Init knt");
-        } else {
+        }
+        else {
             log.info("No need to init knt");
         }
 
@@ -472,7 +505,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             nbmt.setURL("fn");
             departmentRepository.save(nbmt);
             log.info("Init fn");
-        } else {
+        }
+        else {
             log.info("No need to init fn");
         }
 
@@ -484,7 +518,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             fnp.setURL("fnp");
             departmentRepository.save(fnp);
             log.info("Init fnp");
-        } else {
+        }
+        else {
             log.info("No need to init fnp");
         }
 
@@ -496,7 +531,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             psych.setURL("fps");
             departmentRepository.save(psych);
             log.info("Init fps");
-        } else {
+        }
+        else {
             log.info("No need to init fps");
         }
 
@@ -508,7 +544,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             fppiso.setURL("fppso");
             departmentRepository.save(fppiso);
             log.info("Init fppso");
-        } else {
+        }
+        else {
             log.info("No need to init fppso");
         }
 
@@ -520,7 +557,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             phys.setURL("ff");
             departmentRepository.save(phys);
             log.info("Init ff");
-        } else {
+        }
+        else {
             log.info("No need to init ff");
         }
 
@@ -532,7 +570,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             philosophic.setURL("fp");
             departmentRepository.save(philosophic);
             log.info("Init fp");
-        } else {
+        }
+        else {
             log.info("No need to init fp");
         }
 
@@ -544,7 +583,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             economy.setURL("ef");
             departmentRepository.save(economy);
             log.info("Init ef");
-        } else {
+        }
+        else {
             log.info("No need to init ef");
         }
 
@@ -556,7 +596,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             jurist.setURL("uf");
             departmentRepository.save(jurist);
             log.info("Init uf");
-        } else {
+        }
+        else {
             log.info("No need to init uf");
         }
 
@@ -568,7 +609,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             geolCollege.setURL("kgl");
             departmentRepository.save(geolCollege);
             log.info("Init kgl");
-        } else {
+        }
+        else {
             log.info("No need to init kgl");
         }
 
@@ -580,7 +622,8 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             yablCollege.setURL("cre");
             departmentRepository.save(yablCollege);
             log.info("Init cre");
-        } else {
+        }
+        else {
             log.info("No need to init cre");
         }
 

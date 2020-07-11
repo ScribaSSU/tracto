@@ -11,6 +11,7 @@ import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.ExamPeriodEventRepository;
 import com.scribassu.tracto.repository.FullTimeLessonRepository;
 import com.scribassu.tracto.repository.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class TeacherService {
 
     private final ExamPeriodEventRepository examPeriodEventRepository;
 
+    @Autowired
     public TeacherService(DayRepository dayRepository,
                           TeacherRepository teacherRepository,
                           FullTimeLessonRepository fullTimeLessonRepository,
@@ -40,27 +42,37 @@ public class TeacherService {
     public TeacherListDto findByWord(String word) {
         String[] words = word.split(" "); //in case of more than one part of name
         if(words.length == 1) {
-            return new TeacherListDto(teacherRepository.findByAnyPartOfName(word, word, word));
-        } else {
+            List<Teacher> teachers = teacherRepository.findByAnyPartOfName(word, word, word);
+            if(teachers.isEmpty()) {
+                return new TeacherListDto();
+            }
+            else {
+                return new TeacherListDto(teachers);
+            }
+        }
+        else {
             StringBuilder stringBuilder = new StringBuilder();
             for(String w : words) {
                 stringBuilder.append(w).append(" ");
             }
             String fullName = stringBuilder.toString().trim();
-            if(words.length == 2) {
-                List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
+            List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
+            if(teachers.isEmpty()) {
+                if(words.length == 2) {
+                    teachers = teacherRepository.findByAnyPartOfName(words[0], words[1], words[0]);
+                }
+                else {
+                    teachers = teacherRepository.findByAnyPartOfName(words[0], words[1], words[2]);
+                }
                 if(teachers.isEmpty()) {
-                    return new TeacherListDto(teacherRepository.findByAnyPartOfName(words[0], words[1], words[0]));
-                } else {
+                    return new TeacherListDto();
+                }
+                else {
                     return new TeacherListDto(teachers);
                 }
-            } else {
-                List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
-                if(teachers.isEmpty()) {
-                    return new TeacherListDto(teacherRepository.findByAnyPartOfName(words[0], words[1], words[2]));
-                } else {
-                    return new TeacherListDto(teachers);
-                }
+            }
+            else {
+                return new TeacherListDto(teachers);
             }
         }
     }

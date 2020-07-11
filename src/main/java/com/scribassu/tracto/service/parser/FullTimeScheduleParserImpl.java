@@ -67,7 +67,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
             scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             e.printStackTrace();
             scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
@@ -141,7 +142,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setLessonType(lessonType);
                 fullTimeLessonRepository.save(lesson);
             }
-        } else {
+        }
+        else {
             for(LessonXml les : lessons) {
                 lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
                 weekType = convertWeekType(les.weekType);
@@ -184,7 +186,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
         if(CollectionUtils.isEmpty(tList)) {
             t = new Teacher();
-        } else {
+        }
+        else {
             t = tList.get(0);
         }
 

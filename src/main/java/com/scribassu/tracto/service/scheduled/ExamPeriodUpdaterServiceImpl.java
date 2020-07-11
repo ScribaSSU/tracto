@@ -54,11 +54,11 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
             for(StudentGroup studentGroup : studentGroups) {
                 String html = scheduleDownloader.downloadSchedule(String.format(
-                                sessionUrl,
-                                departmentURL,
-                                studentGroup.getEducationForm().toString().toLowerCase(),
-                                formatGroupNumber(studentGroup.getGroupNumber()))
-                        );
+                        sessionUrl,
+                        departmentURL,
+                        studentGroup.getEducationForm().toString().toLowerCase(),
+                        formatGroupNumber(studentGroup.getGroupNumber()))
+                );
                 ScheduleParserStatus status;
                 if(!StringUtils.isEmpty(html)) {
                     status = sessionParser.parseSchedule(html, departmentURL);

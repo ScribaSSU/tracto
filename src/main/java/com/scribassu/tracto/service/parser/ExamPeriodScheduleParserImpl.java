@@ -71,7 +71,8 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                     examPeriodEvent.setDay(Integer.parseInt(date[0]));
                                     examPeriodEvent.setMonth(date[1]);
                                     examPeriodEvent.setYear(date[2]);
-                                } catch(Exception e) {
+                                }
+                                catch(Exception e) {
                                     examPeriodEvent.setDay(-1);
                                     examPeriodEvent.setMonth(" ");
                                     examPeriodEvent.setYear(" ");
@@ -82,7 +83,8 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                     String[] time = tds.get(cell).text().split(":");
                                     examPeriodEvent.setHour(Integer.parseInt(time[0]));
                                     examPeriodEvent.setMinute(Integer.parseInt(time[1]));
-                                } catch(Exception e) {
+                                }
+                                catch(Exception e) {
                                     examPeriodEvent.setHour(-1);
                                     examPeriodEvent.setMinute(0);
                                 }
@@ -101,19 +103,22 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                         Teacher teacher = getTeacher(tds.get(1).text());
                         examPeriodEvent.setTeacher(teacher);
                         firstTd2 = false;
-                    } else {
+                    }
+                    else {
                         examPeriodEvent.setPlace(tds.get(1).text());
                         firstTd2 = true;
                         examPeriodEvent = examPeriodEventRepository.save(examPeriodEvent);
                         if(null != examPeriodEvent.getId()) {
                             status.setStatus("ok");
-                        } else {
+                        }
+                        else {
                             status.setStatus("fail");
                         }
                     }
                 }
             }
-        } catch(Exception e) {
+        }
+        catch(Exception e) {
             status.setStatus("fail");
         }
         status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
@@ -179,12 +184,15 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                 teacher.setName(teacherName[1]);
                 teacher.setPatronymic(teacherName[2]);
                 teacher = teacherRepository.save(teacher);
-            } else {
+            }
+            else {
                 teacher = teacherList.get(0);
             }
-        } else if(teacherName.length == 1) {
+        }
+        else if(teacherName.length == 1) {
             teacher = findTeacherBySurname(teacherName[0]);
-        } else {
+        }
+        else {
             teacher = findTeacherBySurname(" ");
         }
         return teacher;
@@ -197,7 +205,8 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             teacher = new Teacher();
             teacher.setSurname(surname);
             teacher = teacherRepository.save(teacher);
-        } else {
+        }
+        else {
             teacher = teacherList.get(0);
         }
         return teacher;

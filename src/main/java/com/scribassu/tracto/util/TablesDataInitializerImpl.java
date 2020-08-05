@@ -1,15 +1,15 @@
 package com.scribassu.tracto.util;
 
-import com.scribassu.tracto.domain.Day;
-import com.scribassu.tracto.domain.Department;
-import com.scribassu.tracto.domain.LessonTime;
-import com.scribassu.tracto.domain.WeekDay;
+import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.repository.DayRepository;
 import com.scribassu.tracto.repository.DepartmentRepository;
+import com.scribassu.tracto.repository.ExamPeriodMonthRepository;
 import com.scribassu.tracto.repository.LessonTimeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -21,13 +21,17 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
     private final DepartmentRepository departmentRepository;
 
+    private final ExamPeriodMonthRepository examPeriodMonthRepository;
+
     @Autowired
     public TablesDataInitializerImpl(DayRepository dayRepository,
                                      LessonTimeRepository lessonTimeRepository,
-                                     DepartmentRepository departmentRepository) {
+                                     DepartmentRepository departmentRepository,
+                                     ExamPeriodMonthRepository examPeriodMonthRepository) {
         this.dayRepository = dayRepository;
         this.lessonTimeRepository = lessonTimeRepository;
         this.departmentRepository = departmentRepository;
+        this.examPeriodMonthRepository = examPeriodMonthRepository;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         initDays();
         initTimes();
         initDepartments();
+        initExamPeriodMonths();
     }
 
     private void initDays() {
@@ -628,5 +633,142 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         log.info("End init departments");
+    }
+
+    private void initExamPeriodMonths() {
+        log.info("Start init exam period months");
+        Optional<ExamPeriodMonth> monthOpt = examPeriodMonthRepository.findByNumber(1);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(1);
+            month.setEng("january");
+            month.setRusNominative("январь");
+            month.setRusGenitive("января");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(2);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(2);
+            month.setEng("february");
+            month.setRusNominative("февраль");
+            month.setRusGenitive("февраля");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(3);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(3);
+            month.setEng("march");
+            month.setRusNominative("март");
+            month.setRusGenitive("марта");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(4);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(4);
+            month.setEng("april");
+            month.setRusNominative("апрель");
+            month.setRusGenitive("апреля");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(5);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(5);
+            month.setEng("may");
+            month.setRusNominative("май");
+            month.setRusGenitive("мая");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(6);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(6);
+            month.setEng("june");
+            month.setRusNominative("июнь");
+            month.setRusGenitive("июня");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(7);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(7);
+            month.setEng("jule");
+            month.setRusNominative("июль");
+            month.setRusGenitive("июля");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(8);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(8);
+            month.setEng("august");
+            month.setRusNominative("август");
+            month.setRusGenitive("августа");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(9);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(9);
+            month.setEng("september");
+            month.setRusNominative("сентябрь");
+            month.setRusGenitive("сентября");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(10);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(10);
+            month.setEng("october");
+            month.setRusNominative("октябрь");
+            month.setRusGenitive("октября");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(11);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(11);
+            month.setEng("november");
+            month.setRusNominative("ноябрь");
+            month.setRusGenitive("ноября");
+            examPeriodMonthRepository.save(month);
+        }
+
+        monthOpt = examPeriodMonthRepository.findByNumber(12);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(12);
+            month.setEng("december");
+            month.setRusNominative("декабрь");
+            month.setRusGenitive("декабря");
+            examPeriodMonthRepository.save(month);
+        }
+
+        log.info("End init exam period months");
     }
 }

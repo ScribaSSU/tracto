@@ -10,3 +10,4 @@ Saratov State University. Produces JSON.
 * Full time schedule
 * Exam period events
 * Teacher's schedule
+* Numbers of student groups

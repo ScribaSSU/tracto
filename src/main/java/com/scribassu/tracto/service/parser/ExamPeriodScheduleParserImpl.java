@@ -29,17 +29,21 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
+    private final ExamPeriodMonthRepository examPeriodMonthRepository;
+
     @Autowired
     public ExamPeriodScheduleParserImpl(TeacherRepository teacherRepository,
                                         DepartmentRepository departmentRepository,
                                         StudentGroupRepository studentGroupRepository,
                                         ExamPeriodEventRepository examPeriodEventRepository,
-                                        ScheduleParserStatusRepository scheduleParserStatusRepository) {
+                                        ScheduleParserStatusRepository scheduleParserStatusRepository,
+                                        ExamPeriodMonthRepository examPeriodMonthRepository) {
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
         this.studentGroupRepository = studentGroupRepository;
         this.examPeriodEventRepository = examPeriodEventRepository;
         this.scheduleParserStatusRepository = scheduleParserStatusRepository;
+        this.examPeriodMonthRepository = examPeriodMonthRepository;
     }
 
     @Override
@@ -69,12 +73,12 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                                 String[] date = tds.get(cell).text().split(" ");
                                 try {
                                     examPeriodEvent.setDay(Integer.parseInt(date[0]));
-                                    examPeriodEvent.setMonth(date[1]);
+                                    examPeriodEvent.setMonth(examPeriodMonthRepository.findByRusGenitive(date[1]).get(0));
                                     examPeriodEvent.setYear(date[2]);
                                 }
                                 catch(Exception e) {
                                     examPeriodEvent.setDay(-1);
-                                    examPeriodEvent.setMonth(" ");
+                                    examPeriodEvent.setMonth(examPeriodMonthRepository.findByNumber(0).orElseThrow(IllegalArgumentException::new));
                                     examPeriodEvent.setYear(" ");
                                 }
                                 break;

@@ -24,4 +24,12 @@ public class FullTimeExamPeriodController {
                                                     @PathVariable("groupNumber") String groupNumber) {
         return fullTimeExamPeriodService.getFullTimeExamPeriodByGroup(department, groupNumber);
     }
+
+    @GetMapping("/{department}/{groupNumber}/{month}/{day}")
+    public ExamPeriodEventDto getFullTimeExamPeriodByDay(@PathVariable("department") String department,
+                                                         @PathVariable("groupNumber") String groupNumber,
+                                                         @PathVariable("month") Integer month,
+                                                         @PathVariable("day") Integer day) {
+        return fullTimeExamPeriodService.getFullTimeExamPeriodByGroupAndDay(department, groupNumber, month, day);
+    }
 }

@@ -769,6 +769,17 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             examPeriodMonthRepository.save(month);
         }
 
+        monthOpt = examPeriodMonthRepository.findByNumber(0);
+
+        if(!monthOpt.isPresent()) {
+            ExamPeriodMonth month = new ExamPeriodMonth();
+            month.setNumber(0);
+            month.setEng(" ");
+            month.setRusNominative(" ");
+            month.setRusGenitive(" ");
+            examPeriodMonthRepository.save(month);
+        }
+
         log.info("End init exam period months");
     }
 }

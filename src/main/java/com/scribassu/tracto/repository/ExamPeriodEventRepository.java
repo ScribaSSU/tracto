@@ -1,6 +1,7 @@
 package com.scribassu.tracto.repository;
 
 import com.scribassu.tracto.domain.ExamPeriodEvent;
+import com.scribassu.tracto.domain.ExamPeriodMonth;
 import com.scribassu.tracto.domain.StudentGroup;
 import com.scribassu.tracto.domain.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,5 +26,10 @@ public interface ExamPeriodEventRepository extends JpaRepository<ExamPeriodEvent
 
     @Query("select epe from ExamPeriodEvent epe where epe.teacher = :teacher")
     List<ExamPeriodEvent> findByTeacher(@Param("teacher") Teacher teacher);
+
+    @Query("select epe from ExamPeriodEvent epe where epe.studentGroup = :studentGroup and epe.month = :month and epe.day = :day")
+    List<ExamPeriodEvent> findByStudentGroupAndMonthAndDay(@Param("studentGroup") StudentGroup studentGroup,
+                                                           @Param("month") ExamPeriodMonth month,
+                                                           @Param("day") Integer day);
 }
 

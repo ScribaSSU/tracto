@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -21,8 +22,11 @@ import java.util.List;
 public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final ScheduleDownloader scheduleDownloader;
+
     private final ExamPeriodScheduleParserImpl sessionParser;
 
     @Value("${tracto.download-schedule.exam-period-url}")
@@ -49,14 +53,21 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
             for(StudentGroup studentGroup : studentGroups) {
-                ScheduleParserStatus status = sessionParser.parseSchedule(scheduleDownloader.downloadSchedule(
-                        String.format(
-                                sessionUrl,
-                                departmentURL,
-                                studentGroup.getEducationForm().toString().toLowerCase(),
-                                formatGroupNumber(studentGroup.getGroupNumber())
-                        )
-                ), departmentURL);
+                String html = scheduleDownloader.downloadSchedule(String.format(
+                        sessionUrl,
+                        departmentURL,
+                        studentGroup.getEducationForm().toString().toLowerCase(),
+                        formatGroupNumber(studentGroup.getGroupNumber()))
+                );
+                ScheduleParserStatus status;
+                if(!StringUtils.isEmpty(html)) {
+                    status = sessionParser.parseSchedule(html, departmentURL);
+                }
+                else {
+                    status = new ScheduleParserStatus();
+                    status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
+                    status.setStatus("fail");
+                }
                 log.info(status.getSchedule() + " " + status.getStatus());
             }
         }

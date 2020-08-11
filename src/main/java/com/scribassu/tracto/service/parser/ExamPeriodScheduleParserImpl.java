@@ -15,26 +15,35 @@ import java.util.List;
 @Service
 public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
+    private static final String PAGE_TITLE_CLASS = "page-title";
+
+    private static final String SESSION_ID = "session";
+
     private final TeacherRepository teacherRepository;
+
     private final DepartmentRepository departmentRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final ExamPeriodEventRepository examPeriodEventRepository;
+
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
-    private static final String PAGE_TITLE_CLASS = "page-title";
-    private static final String SESSION_ID = "session";
+    private final ExamPeriodMonthRepository examPeriodMonthRepository;
 
     @Autowired
     public ExamPeriodScheduleParserImpl(TeacherRepository teacherRepository,
                                         DepartmentRepository departmentRepository,
                                         StudentGroupRepository studentGroupRepository,
                                         ExamPeriodEventRepository examPeriodEventRepository,
-                                        ScheduleParserStatusRepository scheduleParserStatusRepository) {
+                                        ScheduleParserStatusRepository scheduleParserStatusRepository,
+                                        ExamPeriodMonthRepository examPeriodMonthRepository) {
         this.teacherRepository = teacherRepository;
         this.departmentRepository = departmentRepository;
         this.studentGroupRepository = studentGroupRepository;
         this.examPeriodEventRepository = examPeriodEventRepository;
         this.scheduleParserStatusRepository = scheduleParserStatusRepository;
+        this.examPeriodMonthRepository = examPeriodMonthRepository;
     }
 
     @Override
@@ -53,6 +62,11 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             examPeriodEventRepository.deleteByStudentGroup(studentGroup);
             ExamPeriodEvent examPeriodEvent = null;
             boolean firstTd2 = true;
+            int lastCorrectDay = -1;
+            ExamPeriodMonth lastCorrectExamPeriodMonth = examPeriodMonthRepository.findByNumber(0).orElseThrow(IllegalArgumentException::new);
+            String lastCorrectYear = " ";
+            int lastCorrectHour = 0;
+            int lastCorrectMinute = 0;
             for(Element tr : trs) {
                 Elements tds = tr.children();
                 if(tds.size() == 4) {
@@ -63,25 +77,35 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                             case 0:
                                 String[] date = tds.get(cell).text().split(" ");
                                 try {
-                                    examPeriodEvent.setDay(Integer.parseInt(date[0]));
-                                    examPeriodEvent.setMonth(date[1]);
-                                    examPeriodEvent.setYear(date[2]);
+                                    int day = Integer.parseInt(date[0]);
+                                    ExamPeriodMonth examPeriodMonth = examPeriodMonthRepository.findByRusGenitive(date[1]).get(0);
+                                    String year = date[2];
+                                    examPeriodEvent.setDay(day);
+                                    examPeriodEvent.setMonth(examPeriodMonth);
+                                    examPeriodEvent.setYear(year);
+                                    lastCorrectDay = day;
+                                    lastCorrectExamPeriodMonth = examPeriodMonth;
+                                    lastCorrectYear = year;
                                 }
                                 catch(Exception e) {
-                                    examPeriodEvent.setDay(-1);
-                                    examPeriodEvent.setMonth(" ");
-                                    examPeriodEvent.setYear(" ");
+                                    examPeriodEvent.setDay(lastCorrectDay);
+                                    examPeriodEvent.setMonth(lastCorrectExamPeriodMonth);
+                                    examPeriodEvent.setYear(lastCorrectYear);
                                 }
                                 break;
                             case 1:
                                 try {
                                     String[] time = tds.get(cell).text().split(":");
-                                    examPeriodEvent.setHour(Integer.parseInt(time[0]));
-                                    examPeriodEvent.setMinute(Integer.parseInt(time[1]));
+                                    int hour = Integer.parseInt(time[0]);
+                                    int minute = Integer.parseInt(time[1]);
+                                    examPeriodEvent.setHour(hour);
+                                    examPeriodEvent.setMinute(minute);
+                                    lastCorrectHour = hour;
+                                    lastCorrectMinute = minute;
                                 }
                                 catch(Exception e) {
-                                    examPeriodEvent.setHour(-1);
-                                    examPeriodEvent.setMinute(0);
+                                    examPeriodEvent.setHour(lastCorrectHour);
+                                    examPeriodEvent.setMinute(lastCorrectMinute);
                                 }
                                 break;
                             case 2:
@@ -98,13 +122,15 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                         Teacher teacher = getTeacher(tds.get(1).text());
                         examPeriodEvent.setTeacher(teacher);
                         firstTd2 = false;
-                    } else {
+                    }
+                    else {
                         examPeriodEvent.setPlace(tds.get(1).text());
                         firstTd2 = true;
                         examPeriodEvent = examPeriodEventRepository.save(examPeriodEvent);
                         if(null != examPeriodEvent.getId()) {
                             status.setStatus("ok");
-                        } else {
+                        }
+                        else {
                             status.setStatus("fail");
                         }
                     }
@@ -139,7 +165,6 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
 
         text = text.replace("отделение:", "");
         String groupNumber = text.trim();
-        System.out.println(";"+groupNumber+";");
 
         return studentGroupRepository.findByNumberAndEducationFormAndDepartment(
                 groupNumber,
@@ -153,7 +178,6 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             return ExamPeriodEventType.MIDTERM;
         }
         if("Дифференцированный зачет:".equalsIgnoreCase(eventType)) {
-            System.out.println("DIFFFFF");
             return ExamPeriodEventType.MIDTERM_WITH_MARK;
         }
         if("Консультация:".equalsIgnoreCase(eventType)) {
@@ -184,7 +208,7 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                 teacher = teacherList.get(0);
             }
         }
-        else if (teacherName.length == 1) {
+        else if(teacherName.length == 1) {
             teacher = findTeacherBySurname(teacherName[0]);
         }
         else {

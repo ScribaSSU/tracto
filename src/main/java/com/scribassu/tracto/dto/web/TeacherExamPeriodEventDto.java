@@ -1,7 +1,7 @@
 package com.scribassu.tracto.dto.web;
 
 import com.scribassu.tracto.domain.ExamPeriodEvent;
-import com.scribassu.tracto.domain.StudentGroup;
+import com.scribassu.tracto.domain.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,15 +9,15 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ExamPeriodEventDto {
+public class TeacherExamPeriodEventDto {
 
     private List<ExamPeriodEvent> examPeriodEvents;
 
-    private StudentGroup studentGroup;
+    private Teacher teacher;
 
-    public ExamPeriodEventDto(List<ExamPeriodEvent> examPeriodEvents,
-                              StudentGroup studentGroup) {
+    public TeacherExamPeriodEventDto(List<ExamPeriodEvent> examPeriodEvents,
+                                     Teacher teacher) {
         this.examPeriodEvents = examPeriodEvents;
-        this.studentGroup = studentGroup;
+        this.teacher = teacher;
     }
 }

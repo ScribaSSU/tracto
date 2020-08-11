@@ -14,16 +14,18 @@ import java.io.InputStreamReader;
 @Service
 public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
+    private final String authorization = "Authorization";
+
     @Value("${tracto.download-schedule.url}")
     private String fullTimeScheduleUrl;
 
     @Value("${tracto.download-schedule.auth-header}")
     private String authHeader;
 
-    private final String authorization = "Authorization";
-
     private HttpClient httpClient = HttpClientBuilder.create().build();
+
     private HttpResponse httpResponse;
+
     private HttpGet httpGet;
 
     /**

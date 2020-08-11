@@ -3,7 +3,6 @@ package com.scribassu.tracto.service.parser;
 import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
-import com.scribassu.tracto.entity.UpdatedRow;
 import com.scribassu.tracto.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +19,19 @@ import java.util.List;
 public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
+
     private final DayRepository dayRepository;
+
     private final LessonTimeRepository lessonTimeRepository;
+
     private final StudentGroupRepository studentGroupRepository;
+
     private final DepartmentRepository departmentRepository;
+
     private final TeacherRepository teacherRepository;
+
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
+
     private final UpdatedRowRepository updatedRowRepository;
 
     @Autowired
@@ -56,6 +62,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
+            fullTimeLessonRepository.deleteByDepartmentURL(departmentURL);
             parseGroups(scheduleXml.groups, departmentURL);
 
             scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
@@ -122,20 +129,6 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lessonType = convertLessonType(les.type);
                 teacher = parseTeacher(les.teacher);
 
-
-                List<FullTimeLesson> oldLessons = fullTimeLessonRepository.findEqual(
-                        les.name,
-                        teacher,
-                        studentGroup,
-                        les.subgroup,
-                        studentGroup.getDepartment(),
-                        les.place,
-                        day,
-                        lessonTime,
-                        weekType,
-                        lessonType
-                );
-
                 FullTimeLesson lesson = new FullTimeLesson();
                 lesson.setStudentGroup(studentGroup);
                 lesson.setDepartment(studentGroup.getDepartment());
@@ -147,13 +140,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
-                lesson = fullTimeLessonRepository.save(lesson);
-
-                if(!oldLessons.isEmpty()) {
-                    UpdatedRow row = new UpdatedRow(oldLessons.get(0).getId(), lesson.getId(), "full_time_lesson");
-                    updatedRowRepository.save(row);
-                    log.info("Update detected. Table {}, old id - {}, updated id - {}", row.getUpdatedTable(), row.getOldId(), row.getUpdatedId());
-                }
+                fullTimeLessonRepository.save(lesson);
             }
         }
         else {
@@ -163,20 +150,6 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lessonType = convertLessonType(les.type);
                 teacher = parseTeacher(les.teacher);
 
-
-                List<FullTimeLesson> oldLessons = fullTimeLessonRepository.findEqual(
-                        les.name,
-                        teacher,
-                        studentGroup,
-                        les.subgroup,
-                        studentGroup.getDepartment(),
-                        les.place,
-                        day,
-                        lessonTime,
-                        weekType,
-                        lessonType
-                );
-
                 FullTimeLesson lesson = new FullTimeLesson();
                 lesson.setStudentGroup(studentGroup);
                 lesson.setDepartment(studentGroup.getDepartment());
@@ -188,13 +161,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
-                lesson = fullTimeLessonRepository.save(lesson);
-
-                if(!oldLessons.isEmpty()) {
-                    UpdatedRow row = new UpdatedRow(oldLessons.get(0).getId(), lesson.getId(), "full_time_lesson");
-                    updatedRowRepository.save(row);
-                    log.info("Update detected. Table {}, old id - {}, updated id - {}", row.getUpdatedTable(), row.getOldId(), row.getUpdatedId());
-                }
+                fullTimeLessonRepository.save(lesson);
             }
         }
     }
@@ -232,11 +199,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private LessonType convertLessonType(String type) {
-        switch (type) {
-            case "lecture": return LessonType.LECTURE;
-            case "practice": return LessonType.PRACTICE;
-            case "laboratory": return LessonType.LABORATORY;
-            default: return null;
+        switch(type) {
+            case "lecture":
+                return LessonType.LECTURE;
+            case "practice":
+                return LessonType.PRACTICE;
+            case "laboratory":
+                return LessonType.LABORATORY;
+            default:
+                return null;
         }
     }
 
@@ -246,20 +217,29 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private GroupType convertGroupType(int groupType) {
         switch(groupType) {
-            case 0: return GroupType.SPECIALTY;
-            case 1: return GroupType.BACHELOR;
-            case 2: return GroupType.MASTER;
-            case 3: return GroupType.GRADUATE_SCHOOL;
-            default: return null;
+            case 0:
+                return GroupType.SPECIALTY;
+            case 1:
+                return GroupType.BACHELOR;
+            case 2:
+                return GroupType.MASTER;
+            case 3:
+                return GroupType.GRADUATE_SCHOOL;
+            default:
+                return null;
         }
     }
 
     private EducationForm convertEducationForm(int educationForm) {
         switch(educationForm) {
-            case 0: return EducationForm.DO;
-            case 1: return EducationForm.ZO;
-            case 2: return EducationForm.VO;
-            default: return null;
+            case 0:
+                return EducationForm.DO;
+            case 1:
+                return EducationForm.ZO;
+            case 2:
+                return EducationForm.VO;
+            default:
+                return null;
         }
     }
 }

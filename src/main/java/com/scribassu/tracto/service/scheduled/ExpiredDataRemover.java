@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 public class ExpiredDataRemover {
 
     private final UpdatedRowRepository updatedRowRepository;
+
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
     @Autowired

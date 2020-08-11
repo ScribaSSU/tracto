@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, Long> {
@@ -25,6 +24,10 @@ public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, 
     List<FullTimeLesson> findByDayAndLessonTimeAndGroup(@Param("day") Day day,
                                                         @Param("lessonTime") LessonTime lessonTime,
                                                         @Param("studentGroup") StudentGroup studentGroup);
+
+    @Query("select ftl from FullTimeLesson ftl where ftl.teacher = :teacher and ftl.day = :day")
+    List<FullTimeLesson> findByTeacher(@Param("teacher") Teacher teacher,
+                                       @Param("day") Day day);
 
     @Query("select ftl from FullTimeLesson ftl where " +
             "ftl.name = :name " +

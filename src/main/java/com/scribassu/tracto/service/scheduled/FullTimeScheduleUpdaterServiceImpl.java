@@ -3,8 +3,8 @@ package com.scribassu.tracto.service.scheduled;
 import com.scribassu.tracto.domain.Department;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
-import com.scribassu.tracto.service.parser.FullTimeScheduleParserImpl;
 import com.scribassu.tracto.service.downloader.ScheduleDownloader;
+import com.scribassu.tracto.service.parser.FullTimeScheduleParserImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,9 @@ import java.util.List;
 public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
+
     private final ScheduleDownloader scheduleDownloader;
+
     private final FullTimeScheduleParserImpl fullTimeScheduleParser;
 
     @Value("${tracto.download-schedule.url}")

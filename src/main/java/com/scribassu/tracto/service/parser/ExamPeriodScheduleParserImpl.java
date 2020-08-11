@@ -62,6 +62,11 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
             examPeriodEventRepository.deleteByStudentGroup(studentGroup);
             ExamPeriodEvent examPeriodEvent = null;
             boolean firstTd2 = true;
+            int lastCorrectDay = -1;
+            ExamPeriodMonth lastCorrectExamPeriodMonth = examPeriodMonthRepository.findByNumber(0).orElseThrow(IllegalArgumentException::new);
+            String lastCorrectYear = " ";
+            int lastCorrectHour = 0;
+            int lastCorrectMinute = 0;
             for(Element tr : trs) {
                 Elements tds = tr.children();
                 if(tds.size() == 4) {
@@ -72,25 +77,35 @@ public class ExamPeriodScheduleParserImpl implements ScheduleParser {
                             case 0:
                                 String[] date = tds.get(cell).text().split(" ");
                                 try {
-                                    examPeriodEvent.setDay(Integer.parseInt(date[0]));
-                                    examPeriodEvent.setMonth(examPeriodMonthRepository.findByRusGenitive(date[1]).get(0));
-                                    examPeriodEvent.setYear(date[2]);
+                                    int day = Integer.parseInt(date[0]);
+                                    ExamPeriodMonth examPeriodMonth = examPeriodMonthRepository.findByRusGenitive(date[1]).get(0);
+                                    String year = date[2];
+                                    examPeriodEvent.setDay(day);
+                                    examPeriodEvent.setMonth(examPeriodMonth);
+                                    examPeriodEvent.setYear(year);
+                                    lastCorrectDay = day;
+                                    lastCorrectExamPeriodMonth = examPeriodMonth;
+                                    lastCorrectYear = year;
                                 }
                                 catch(Exception e) {
-                                    examPeriodEvent.setDay(-1);
-                                    examPeriodEvent.setMonth(examPeriodMonthRepository.findByNumber(0).orElseThrow(IllegalArgumentException::new));
-                                    examPeriodEvent.setYear(" ");
+                                    examPeriodEvent.setDay(lastCorrectDay);
+                                    examPeriodEvent.setMonth(lastCorrectExamPeriodMonth);
+                                    examPeriodEvent.setYear(lastCorrectYear);
                                 }
                                 break;
                             case 1:
                                 try {
                                     String[] time = tds.get(cell).text().split(":");
-                                    examPeriodEvent.setHour(Integer.parseInt(time[0]));
-                                    examPeriodEvent.setMinute(Integer.parseInt(time[1]));
+                                    int hour = Integer.parseInt(time[0]);
+                                    int minute = Integer.parseInt(time[1]);
+                                    examPeriodEvent.setHour(hour);
+                                    examPeriodEvent.setMinute(minute);
+                                    lastCorrectHour = hour;
+                                    lastCorrectMinute = minute;
                                 }
                                 catch(Exception e) {
-                                    examPeriodEvent.setHour(-1);
-                                    examPeriodEvent.setMinute(0);
+                                    examPeriodEvent.setHour(lastCorrectHour);
+                                    examPeriodEvent.setMinute(lastCorrectMinute);
                                 }
                                 break;
                             case 2:

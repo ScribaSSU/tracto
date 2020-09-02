@@ -5,6 +5,7 @@ import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.domain.StudentGroup;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
+import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
 import com.scribassu.tracto.service.downloader.ScheduleDownloader;
 import com.scribassu.tracto.service.parser.ExamPeriodScheduleParserImpl;
@@ -29,6 +30,8 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
 
     private final ExamPeriodScheduleParserImpl sessionParser;
 
+    private final ScheduleParserStatusRepository scheduleParserStatusRepository;
+
     @Value("${tracto.download-schedule.exam-period-url}")
     private String sessionUrl;
 
@@ -36,11 +39,13 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
     public ExamPeriodUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                         StudentGroupRepository studentGroupRepository,
                                         ScheduleDownloader scheduleDownloader,
-                                        ExamPeriodScheduleParserImpl sessionParser) {
+                                        ExamPeriodScheduleParserImpl sessionParser,
+                                        ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.departmentRepository = departmentRepository;
         this.studentGroupRepository = studentGroupRepository;
         this.scheduleDownloader = scheduleDownloader;
         this.sessionParser = sessionParser;
+        this.scheduleParserStatusRepository = scheduleParserStatusRepository;
     }
 
     @Scheduled(cron = "${tracto.time-update-exam-period}")
@@ -66,7 +71,8 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
                 else {
                     status = new ScheduleParserStatus();
                     status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
-                    status.setStatus("fail");
+                    status.setStatus("fail to dwnld html");
+                    status = scheduleParserStatusRepository.save(status);
                 }
                 log.info(status.getSchedule() + " " + status.getStatus());
             }

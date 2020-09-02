@@ -23,38 +23,55 @@ public class StudentGroupService {
     public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(String url,
                                                                                    EducationForm educationForm,
                                                                                    String course) {
-        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationFormAndCourse(
-                url,
-                educationForm,
-                course
-        );
-        return new GroupNumbersDto(
-                groups.stream().map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
-                url,
-                educationForm.name()
-        );
-    }
-
-    public GroupNumbersDto getOtherGroupNumbersByDepartmentUrlAndEducationForm(String url,
-                                                                               EducationForm educationForm) {
-        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
-        if(url.equals("cre") || url.equals("kgl")) {
+        if(url.equals("cre")) {
+            List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
+            return new GroupNumbersDto(
+                    groups
+                            .stream()
+                            .filter(s ->
+                                    String.valueOf(s.getGroupNumberRus().charAt(s.getGroupNumberRus().length() - 3))
+                                            .equalsIgnoreCase(course))
+                            .map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
+                    url,
+                    educationForm.name()
+            );
+        }
+        else if(url.equals("kgl")) {
+            List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
+            return new GroupNumbersDto(
+                    groups
+                            .stream()
+                            .filter(s -> String.valueOf(s.getGroupNumberRus().charAt(1)).equalsIgnoreCase(course))
+                            .map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
+                    url,
+                    educationForm.name()
+            );
+        }
+        else {
+            List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationFormAndCourse(
+                    url,
+                    educationForm,
+                    course
+            );
             return new GroupNumbersDto(
                     groups.stream().map(StudentGroup::getGroupNumberRus).collect(Collectors.toList()),
                     url,
                     educationForm.name()
             );
         }
-        else {
-            return new GroupNumbersDto(
-                    groups
-                            .stream()
-                            .filter(s -> !Character.isDigit(s.getGroupNumberRus().charAt(0)))
-                            .map(StudentGroup::getGroupNumberRus)
-                            .collect(Collectors.toList()),
-                    url,
-                    educationForm.name()
-            );
-        }
+    }
+
+    public GroupNumbersDto getOtherGroupNumbersByDepartmentUrlAndEducationForm(String url,
+                                                                               EducationForm educationForm) {
+        List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
+        return new GroupNumbersDto(
+                groups
+                        .stream()
+                        .filter(s -> !Character.isDigit(s.getGroupNumberRus().charAt(0)))
+                        .map(StudentGroup::getGroupNumberRus)
+                        .collect(Collectors.toList()),
+                url,
+                educationForm.name()
+        );
     }
 }

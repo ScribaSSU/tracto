@@ -217,6 +217,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private GroupType convertGroupType(int groupType) {
         switch(groupType) {
+            case -1:
+                return GroupType.COLLEGE;
             case 0:
                 return GroupType.SPECIALTY;
             case 1:

@@ -253,79 +253,184 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             log.info("No need to init lesson eighth");
         }
 
-        LessonTime lessonFirstCollege = lessonTimeRepository.findByLessonNumber(11);
-        if(lessonFirstCollege == null) {
-            lessonFirstCollege = new LessonTime();
-            lessonFirstCollege.setLessonNumber(11);
-            lessonFirstCollege.setHourStart(8);
-            lessonFirstCollege.setMinuteStart(45);
-            lessonFirstCollege.setHourEnd(10);
-            lessonFirstCollege.setMinuteEnd(15);
-            lessonTimeRepository.save(lessonFirstCollege);
-            log.info("Init lesson first college");
+        LessonTime lessonFirstCollegeCre = lessonTimeRepository.findByLessonNumber(11);
+        if(lessonFirstCollegeCre == null) {
+            lessonFirstCollegeCre = new LessonTime();
+            lessonFirstCollegeCre.setLessonNumber(11);
+            lessonFirstCollegeCre.setHourStart(8);
+            lessonFirstCollegeCre.setMinuteStart(45);
+            lessonFirstCollegeCre.setHourEnd(10);
+            lessonFirstCollegeCre.setMinuteEnd(15);
+            lessonTimeRepository.save(lessonFirstCollegeCre);
+            log.info("Init lesson first CollegeCre");
         }
         else {
-            log.info("No need to init lesson first college");
+            log.info("No need to init lesson first CollegeCre");
         }
 
-        LessonTime lessonSecondCollege = lessonTimeRepository.findByLessonNumber(22);
-        if(lessonSecondCollege == null) {
-            lessonSecondCollege = new LessonTime();
-            lessonSecondCollege.setLessonNumber(22);
-            lessonSecondCollege.setHourStart(10);
-            lessonSecondCollege.setMinuteStart(25);
-            lessonSecondCollege.setHourEnd(11);
-            lessonSecondCollege.setMinuteEnd(55);
-            lessonTimeRepository.save(lessonSecondCollege);
-            log.info("Init lesson second college");
+        LessonTime lessonSecondCollegeCre = lessonTimeRepository.findByLessonNumber(22);
+        if(lessonSecondCollegeCre == null) {
+            lessonSecondCollegeCre = new LessonTime();
+            lessonSecondCollegeCre.setLessonNumber(22);
+            lessonSecondCollegeCre.setHourStart(10);
+            lessonSecondCollegeCre.setMinuteStart(25);
+            lessonSecondCollegeCre.setHourEnd(11);
+            lessonSecondCollegeCre.setMinuteEnd(55);
+            lessonTimeRepository.save(lessonSecondCollegeCre);
+            log.info("Init lesson second CollegeCre");
         }
         else {
-            log.info("No need to init lesson second college");
+            log.info("No need to init lesson second CollegeCre");
         }
 
-        LessonTime lessonThirdCollege = lessonTimeRepository.findByLessonNumber(33);
-        if(lessonThirdCollege == null) {
-            lessonThirdCollege = new LessonTime();
-            lessonThirdCollege.setLessonNumber(33);
-            lessonThirdCollege.setHourStart(12);
-            lessonThirdCollege.setMinuteStart(25);
-            lessonThirdCollege.setHourEnd(13);
-            lessonThirdCollege.setMinuteEnd(55);
-            lessonTimeRepository.save(lessonThirdCollege);
-            log.info("Init lesson third college");
+        LessonTime lessonThirdCollegeCre = lessonTimeRepository.findByLessonNumber(33);
+        if(lessonThirdCollegeCre == null) {
+            lessonThirdCollegeCre = new LessonTime();
+            lessonThirdCollegeCre.setLessonNumber(33);
+            lessonThirdCollegeCre.setHourStart(12);
+            lessonThirdCollegeCre.setMinuteStart(25);
+            lessonThirdCollegeCre.setHourEnd(13);
+            lessonThirdCollegeCre.setMinuteEnd(55);
+            lessonTimeRepository.save(lessonThirdCollegeCre);
+            log.info("Init lesson third CollegeCre");
         }
         else {
-            log.info("No need to init lesson third college");
+            log.info("No need to init lesson third CollegeCre");
         }
 
-        LessonTime lessonFourthCollege = lessonTimeRepository.findByLessonNumber(44);
-        if(lessonFourthCollege == null) {
-            lessonFourthCollege = new LessonTime();
-            lessonFourthCollege.setLessonNumber(44);
-            lessonFourthCollege.setHourStart(14);
-            lessonFourthCollege.setMinuteStart(5);
-            lessonFourthCollege.setHourEnd(15);
-            lessonFourthCollege.setMinuteEnd(35);
-            lessonTimeRepository.save(lessonFourthCollege);
-            log.info("Init lesson fourth college");
+        LessonTime lessonFourthCollegeCre = lessonTimeRepository.findByLessonNumber(44);
+        if(lessonFourthCollegeCre == null) {
+            lessonFourthCollegeCre = new LessonTime();
+            lessonFourthCollegeCre.setLessonNumber(44);
+            lessonFourthCollegeCre.setHourStart(14);
+            lessonFourthCollegeCre.setMinuteStart(5);
+            lessonFourthCollegeCre.setHourEnd(15);
+            lessonFourthCollegeCre.setMinuteEnd(35);
+            lessonTimeRepository.save(lessonFourthCollegeCre);
+            log.info("Init lesson fourth CollegeCre");
         }
         else {
-            log.info("No need to init lesson fourth college");
+            log.info("No need to init lesson fourth CollegeCre");
         }
 
-        LessonTime lessonFifthCollege = lessonTimeRepository.findByLessonNumber(55);
-        if(lessonFifthCollege == null) {
-            lessonFifthCollege = new LessonTime();
-            lessonFifthCollege.setLessonNumber(55);
-            lessonFifthCollege.setHourStart(15);
-            lessonFifthCollege.setMinuteStart(45);
-            lessonFifthCollege.setHourEnd(17);
-            lessonFifthCollege.setMinuteEnd(15);
-            lessonTimeRepository.save(lessonFifthCollege);
-            log.info("Init lesson fifth college");
+        LessonTime lessonFifthCollegeCre = lessonTimeRepository.findByLessonNumber(55);
+        if(lessonFifthCollegeCre == null) {
+            lessonFifthCollegeCre = new LessonTime();
+            lessonFifthCollegeCre.setLessonNumber(55);
+            lessonFifthCollegeCre.setHourStart(15);
+            lessonFifthCollegeCre.setMinuteStart(45);
+            lessonFifthCollegeCre.setHourEnd(17);
+            lessonFifthCollegeCre.setMinuteEnd(15);
+            lessonTimeRepository.save(lessonFifthCollegeCre);
+            log.info("Init lesson fifth CollegeCre");
         }
         else {
-            log.info("No need to init lesson fifth college");
+            log.info("No need to init lesson fifth CollegeCre");
+        }
+
+        LessonTime lessonFirstCollegeKgl = lessonTimeRepository.findByLessonNumber(101);
+        if(lessonFirstCollegeKgl == null) {
+            lessonFirstCollegeKgl = new LessonTime();
+            lessonFirstCollegeKgl.setLessonNumber(101);
+            lessonFirstCollegeKgl.setHourStart(9);
+            lessonFirstCollegeKgl.setMinuteStart(0);
+            lessonFirstCollegeKgl.setHourEnd(10);
+            lessonFirstCollegeKgl.setMinuteEnd(30);
+            lessonTimeRepository.save(lessonFirstCollegeKgl);
+            log.info("Init lesson first CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson first CollegeKgl");
+        }
+
+        LessonTime lessonSecondCollegeKgl = lessonTimeRepository.findByLessonNumber(202);
+        if(lessonSecondCollegeKgl == null) {
+            lessonSecondCollegeKgl = new LessonTime();
+            lessonSecondCollegeKgl.setLessonNumber(202);
+            lessonSecondCollegeKgl.setHourStart(10);
+            lessonSecondCollegeKgl.setMinuteStart(40);
+            lessonSecondCollegeKgl.setHourEnd(12);
+            lessonSecondCollegeKgl.setMinuteEnd(10);
+            lessonTimeRepository.save(lessonSecondCollegeKgl);
+            log.info("Init lesson second CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson second CollegeKgl");
+        }
+
+        LessonTime lessonThirdCollegeKgl = lessonTimeRepository.findByLessonNumber(303);
+        if(lessonThirdCollegeKgl == null) {
+            lessonThirdCollegeKgl = new LessonTime();
+            lessonThirdCollegeKgl.setLessonNumber(303);
+            lessonThirdCollegeKgl.setHourStart(12);
+            lessonThirdCollegeKgl.setMinuteStart(30);
+            lessonThirdCollegeKgl.setHourEnd(14);
+            lessonThirdCollegeKgl.setMinuteEnd(00);
+            lessonTimeRepository.save(lessonThirdCollegeKgl);
+            log.info("Init lesson third CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson third CollegeKgl");
+        }
+
+        LessonTime lessonFourthCollegeKgl = lessonTimeRepository.findByLessonNumber(404);
+        if(lessonFourthCollegeKgl == null) {
+            lessonFourthCollegeKgl = new LessonTime();
+            lessonFourthCollegeKgl.setLessonNumber(404);
+            lessonFourthCollegeKgl.setHourStart(14);
+            lessonFourthCollegeKgl.setMinuteStart(10);
+            lessonFourthCollegeKgl.setHourEnd(15);
+            lessonFourthCollegeKgl.setMinuteEnd(40);
+            lessonTimeRepository.save(lessonFourthCollegeKgl);
+            log.info("Init lesson fourth CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson fourth CollegeKgl");
+        }
+
+        LessonTime lessonFifthCollegeKgl = lessonTimeRepository.findByLessonNumber(505);
+        if(lessonFifthCollegeKgl == null) {
+            lessonFifthCollegeKgl = new LessonTime();
+            lessonFifthCollegeKgl.setLessonNumber(505);
+            lessonFifthCollegeKgl.setHourStart(15);
+            lessonFifthCollegeKgl.setMinuteStart(50);
+            lessonFifthCollegeKgl.setHourEnd(17);
+            lessonFifthCollegeKgl.setMinuteEnd(20);
+            lessonTimeRepository.save(lessonFifthCollegeKgl);
+            log.info("Init lesson fifth CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson fifth CollegeKgl");
+        }
+
+        LessonTime lessonSixthCollegeKgl = lessonTimeRepository.findByLessonNumber(606);
+        if(lessonSixthCollegeKgl == null) {
+            lessonSixthCollegeKgl = new LessonTime();
+            lessonSixthCollegeKgl.setLessonNumber(606);
+            lessonSixthCollegeKgl.setHourStart(17);
+            lessonSixthCollegeKgl.setMinuteStart(30);
+            lessonSixthCollegeKgl.setHourEnd(19);
+            lessonSixthCollegeKgl.setMinuteEnd(0);
+            lessonTimeRepository.save(lessonSixthCollegeKgl);
+            log.info("Init lesson sixth CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson sixth CollegeKgl");
+        }
+
+        LessonTime lessonSevethCollegeKgl = lessonTimeRepository.findByLessonNumber(707);
+        if(lessonSevethCollegeKgl == null) {
+            lessonSevethCollegeKgl = new LessonTime();
+            lessonSevethCollegeKgl.setLessonNumber(707);
+            lessonSevethCollegeKgl.setHourStart(19);
+            lessonSevethCollegeKgl.setMinuteStart(10);
+            lessonSevethCollegeKgl.setHourEnd(20);
+            lessonSevethCollegeKgl.setMinuteEnd(40);
+            lessonTimeRepository.save(lessonSevethCollegeKgl);
+            log.info("Init lesson seventh CollegeKgl");
+        }
+        else {
+            log.info("No need to init lesson seventh CollegeKgl");
         }
 
         log.info("End init lesson times");

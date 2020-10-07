@@ -122,9 +122,30 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
         LessonType lessonType;
         Teacher teacher;
 
-        if(isFromCollege(studentGroup)) {
+        if(isFromCollegeCre(studentGroup)) {
             for(LessonXml les : lessons) {
-                lessonTime = lessonTimeRepository.findByLessonNumber(collegeLessonNumber(les));
+                lessonTime = lessonTimeRepository.findByLessonNumber(collegeCreLessonNumber(les));
+                weekType = convertWeekType(les.weekType);
+                lessonType = convertLessonType(les.type);
+                teacher = parseTeacher(les.teacher);
+
+                FullTimeLesson lesson = new FullTimeLesson();
+                lesson.setStudentGroup(studentGroup);
+                lesson.setDepartment(studentGroup.getDepartment());
+                lesson.setName(les.name);
+                lesson.setPlace(les.place);
+                lesson.setSubGroup(les.subgroup);
+                lesson.setDay(day);
+                lesson.setLessonTime(lessonTime);
+                lesson.setWeekType(weekType);
+                lesson.setTeacher(teacher);
+                lesson.setLessonType(lessonType);
+                fullTimeLessonRepository.save(lesson);
+            }
+        }
+        else if(isFromCollegeKgl(studentGroup)) {
+            for(LessonXml les : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(collegeKglLessonNumber(les));
                 weekType = convertWeekType(les.weekType);
                 lessonType = convertLessonType(les.type);
                 teacher = parseTeacher(les.teacher);
@@ -166,13 +187,20 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
         }
     }
 
-    private boolean isFromCollege(StudentGroup studentGroup) {
-        return studentGroup.getDepartment().getURL().equals("kgl")
-                || studentGroup.getDepartment().getURL().equals("cre");
+    private boolean isFromCollegeCre(StudentGroup studentGroup) {
+        return studentGroup.getDepartment().getURL().equals("cre");
     }
 
-    private int collegeLessonNumber(LessonXml lessonXml) {
+    private boolean isFromCollegeKgl(StudentGroup studentGroup) {
+        return studentGroup.getDepartment().getURL().equals("kgl");
+    }
+
+    private int collegeCreLessonNumber(LessonXml lessonXml) {
         return lessonXml.number * 10 + lessonXml.number;
+    }
+
+    private int collegeKglLessonNumber(LessonXml lessonXml) {
+        return lessonXml.number * 100 + lessonXml.number;
     }
 
     private Teacher parseTeacher(TeacherXml teacher) {

@@ -2,17 +2,26 @@ package com.scribassu.tracto.service.parser;
 
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.domain.ExamPeriodMonth;
+import com.scribassu.tracto.domain.ExtramuralEventType;
 import com.scribassu.tracto.domain.StudentGroup;
-//import com.scribassu.tracto.domain.ExtramuralEvent; //Fixme
+import com.scribassu.tracto.domain.ExtramuralEvent;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
+import com.scribassu.tracto.repository.ExamPeriodMonthRepository;
+import com.scribassu.tracto.repository.ExtramuralEventRepository;
 import com.scribassu.tracto.repository.LessonTimeRepository;
+import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Slf4j
+@Service
 public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
     private static final String PAGE_TITLE_CLASS = "page-title";
@@ -20,14 +29,25 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
     private final StudentGroupRepository studentGroupRepository;
     private final DepartmentRepository departmentRepository;
     private final LessonTimeRepository lessonTimeRepository;
+    private final ExamPeriodMonthRepository examPeriodMonthRepository;
+    private final ScheduleParserStatusRepository scheduleParserStatusRepository;
+    private final ExtramuralEventRepository extramuralEventRepository;
 
+    @Autowired
     public ExtramuralScheduleParserImpl(StudentGroupRepository studentGroupRepository,
                                         DepartmentRepository departmentRepository,
-                                        LessonTimeRepository lessonTimeRepository) {
+                                        LessonTimeRepository lessonTimeRepository,
+                                        ExamPeriodMonthRepository examPeriodMonthRepository,
+                                        ScheduleParserStatusRepository scheduleParserStatusRepository,
+                                        ExtramuralEventRepository extramuralEventRepository) {
         this.studentGroupRepository = studentGroupRepository;
         this.departmentRepository = departmentRepository;
         this.lessonTimeRepository = lessonTimeRepository;
+        this.examPeriodMonthRepository = examPeriodMonthRepository;
+        this.scheduleParserStatusRepository = scheduleParserStatusRepository;
+        this.extramuralEventRepository = extramuralEventRepository;
     }
+
 
     @Override
     public ScheduleParserStatus parseSchedule(String schedule, String departmentURL) {
@@ -54,10 +74,11 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                 Element sessionTable = document.getElementsByTag("table").first();
                 Elements trs = sessionTable.child(0).children();
 
-//                extramuralRepository.deleteByStudentGroup(studentGroup); //TODO: extramural schedule repository
+                extramuralEventRepository.deleteByStudentGroup(studentGroup);
                 ExtramuralEvent extramuralEvent = null;
 
                 for (Element tr : trs) {
+                    extramuralEvent = new ExtramuralEvent();
                     Elements tds = tr.children();
                     String time = tds.get(1).text();
                     String[] infos = tds.get(2).outerHtml()
@@ -92,7 +113,7 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                             extramuralEvent.setName(strings[1]);
                         }
                     }
-//                    extramuralEvent = extramuralEventRepository.save(extramuralEvent); //TODO: extramural schedule repository
+                    extramuralEvent = extramuralEventRepository.save(extramuralEvent);
                     if (extramuralEvent.getId() != null) {
                         status.setStatus("ok");
                     } else {
@@ -103,6 +124,8 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                 status.setStatus("fail " + e);
             }
         }
+
+        status = scheduleParserStatusRepository.save(status);
 
 
         return status;

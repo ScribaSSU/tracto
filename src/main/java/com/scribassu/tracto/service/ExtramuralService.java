@@ -53,7 +53,7 @@ public class ExtramuralService {
                 extramuralEventRepository.findByStudentGroupAndMonthAndDay(studentGroup, examPeriodMonth, day),
                 studentGroup
         );
-        log.info("Get extramural event dto for day: {}", examPeriodEventDto);
+        log.info("Get extramural event dto for day: {}", extramuralDto);
         return extramuralDto;
     }
 }

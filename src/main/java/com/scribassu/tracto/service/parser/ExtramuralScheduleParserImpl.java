@@ -1,5 +1,6 @@
 package com.scribassu.tracto.service.parser;
 
+import com.scribassu.tracto.domain.Department;
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.domain.ExamPeriodMonth;
 import com.scribassu.tracto.domain.ExtramuralEventType;
@@ -55,8 +56,8 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
         Document document = Jsoup.parse(schedule);
         Elements title = document.getElementsByClass(PAGE_TITLE_CLASS);
         Element pageTitle = title.get(0);
-
-        StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), departmentURL);
+        Department department = departmentRepository.findByURL(departmentURL);
+        StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), department);
 
         if (studentGroup == null) {
             log.error("Fail to find some student group for " + departmentURL);
@@ -79,6 +80,8 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
                 for (Element tr : trs) {
                     extramuralEvent = new ExtramuralEvent();
+                    extramuralEvent.setStudentGroup(studentGroup);
+                    extramuralEvent.setDepartment(department);
                     Elements tds = tr.children();
                     String time = tds.get(1).text();
                     String[] infos = tds.get(2).outerHtml()
@@ -121,7 +124,8 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                     }
                 }
             } catch (Exception e) {
-                status.setStatus("fail " + e);
+                log.error("Error while parsing schedule " + e);
+                status.setStatus("fail with exception");
             }
         }
 
@@ -154,7 +158,7 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
         }
     }
 
-    private StudentGroup getStudentGroupByPageTitleText(String text, String departmentURL) {
+    private StudentGroup getStudentGroupByPageTitleText(String text, Department department) {
         EducationForm educationForm = EducationForm.ZO;
         text = text.replace(" группа", "");
         String[] educationForms = {"Дневное", "Заочное", "Вечернее"};
@@ -177,7 +181,7 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
         return studentGroupRepository.findByNumberAndEducationFormAndDepartment(
                 groupNumber,
                 educationForm,
-                departmentRepository.findByURL(departmentURL)
+                department
         );
     }
 }

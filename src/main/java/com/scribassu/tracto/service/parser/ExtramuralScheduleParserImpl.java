@@ -21,6 +21,9 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Service
 public class ExtramuralScheduleParserImpl implements ScheduleParser {
@@ -73,6 +76,12 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                     return status;
                 }
                 Element sessionTable = document.getElementsByTag("table").first();
+                if (sessionTable == null) {
+                    log.error("Schedule page does not contain schedule table " + studentGroup);
+                    status.setStatus("fail no schedule");
+                    status.setSchedule("s-unknown" + "-" + departmentURL);
+                    return status;
+                }
                 Elements trs = sessionTable.child(0).children();
 
                 extramuralEventRepository.deleteByStudentGroup(studentGroup);
@@ -102,25 +111,72 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                     extramuralEvent.setMonth(examPeriodMonth);
                     extramuralEvent.setYear(year);
 
-                    extramuralEvent.setLessonTime(lessonTimeRepository.findByLessonNumber(getLessonNumber(time)));
+                    String[] times = time.split("-");
+                    int startHour = Integer.parseInt(times[0].split(":")[0]);
+                    int startMinute = Integer.parseInt(times[0].split(":")[1]);
+                    int endHour = -1;
+                    int endMinute = -1;
+                    if (times.length == 2) {
+                        endHour = Integer.parseInt(times[1].split(":")[0]);
+                        endMinute = Integer.parseInt(times[1].split(":")[1]);
+                    }
+                    extramuralEvent.setStartHour(startHour);
+                    extramuralEvent.setStartMinute(startMinute);
+                    extramuralEvent.setEndHour(endHour);
+                    extramuralEvent.setEndMinute(endMinute);
 
+                    List<ExtramuralEvent> possibleEvents = new ArrayList<>();
                     for (String info : infos) {
-                        String[] strings = info.split(": ");
-                        if (" Преподаватель".equalsIgnoreCase(strings[0])) {
-                            extramuralEvent.setTeacher(strings[1]);
-                        } else if (" Место проведения".equalsIgnoreCase(strings[0])) {
-                            extramuralEvent.setPlace(strings[1]);
+                        String[] strings;
+                        if (info.contains(": ")) {
+                            strings = info.split(": ");
+                        } else if (info.contains(":")) {
+                            strings = info.split(":");
                         } else {
+                            break;
+                        }
+                        if (" Преподаватель".equalsIgnoreCase(strings[0])) {
+                            if (strings.length > 1) {
+                                extramuralEvent.setTeacher(strings[1]);
+                            }
+                        } else if (" Место проведения".equalsIgnoreCase(strings[0])) {
+                            if (strings.length > 1) {
+                                extramuralEvent.setPlace(strings[1]);
+                            }
+                        } else {
+                            if (extramuralEvent.getEventType() != null) {
+                                possibleEvents.add(extramuralEvent);
+                                extramuralEvent = extramuralEvent.clone();
+                            }
+
                             ExtramuralEventType eventType = ExtramuralEventType.getExtramuralEventType(strings[0]);
                             extramuralEvent.setEventType(eventType);
-                            extramuralEvent.setName(strings[1]);
+                            if (strings.length > 1) {
+                                extramuralEvent.setName(strings[1]);
+                            }
+
                         }
                     }
-                    extramuralEvent = extramuralEventRepository.save(extramuralEvent);
-                    if (extramuralEvent.getId() != null) {
-                        status.setStatus("ok");
+                    if (possibleEvents.isEmpty()) {
+                        extramuralEvent = extramuralEventRepository.save(extramuralEvent);
+                        if (extramuralEvent.getId() != null) {
+                            status.setStatus("ok");
+                        } else {
+                            status.setStatus("fail to save");
+                        }
                     } else {
-                        status.setStatus("fail to save");
+                        long success = 0;
+                        long fail = 0;
+                        for (ExtramuralEvent e : possibleEvents) {
+                            e = extramuralEventRepository.save(e);
+                            if (e.getId() != null) {
+                                success++;
+                            } else {
+                                fail++;
+                            }
+                        }
+                        String message = (success != 0 ? ("ok-" + success) : "") + (fail != 0 ? ("failed to save-" + fail) : "");
+                        status.setStatus(message);
                     }
                 }
             } catch (Exception e) {
@@ -133,29 +189,6 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
 
         return status;
-    }
-
-    private int getLessonNumber(String time) throws IllegalArgumentException {
-        switch (time) {
-            case "8:20-9:50":
-                return 1;
-            case "10:00-11:35":
-                return 2;
-            case "12:05-13:40":
-                return 3;
-            case "13:50-15:25":
-                return 4;
-            case "15:35-17:10":
-                return 5;
-            case "17:20-18:40":
-                return 6;
-            case "18:45-20:05":
-                return 7;
-            case "20:10-21:30":
-                return 8;
-            default:
-                throw new IllegalArgumentException("Unknown lesson time " + time);
-        }
     }
 
     private StudentGroup getStudentGroupByPageTitleText(String text, Department department) {

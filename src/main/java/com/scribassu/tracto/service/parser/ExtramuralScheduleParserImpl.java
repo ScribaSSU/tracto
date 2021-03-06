@@ -165,6 +165,7 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                             status.setStatus("fail to save");
                         }
                     } else {
+                        possibleEvents.add(extramuralEvent);
                         long success = 0;
                         long fail = 0;
                         for (ExtramuralEvent e : possibleEvents) {

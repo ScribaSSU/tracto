@@ -72,14 +72,14 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                 if (div == null) {
                     log.error("Schedule page is empty for group " + studentGroup);
                     status.setStatus("fail no schedule");
-                    status.setSchedule("s-unknown" + "-" + departmentURL);
+                    status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
                     return status;
                 }
                 Element sessionTable = document.getElementsByTag("table").first();
                 if (sessionTable == null) {
                     log.error("Schedule page does not contain schedule table " + studentGroup);
                     status.setStatus("fail no schedule");
-                    status.setSchedule("s-unknown" + "-" + departmentURL);
+                    status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
                     return status;
                 }
                 Elements trs = sessionTable.child(0).children();
@@ -184,6 +184,7 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                 log.error("Error while parsing schedule " + e);
                 status.setStatus("fail with exception");
             }
+            status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
         }
 
         status = scheduleParserStatusRepository.save(status);

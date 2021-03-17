@@ -29,6 +29,7 @@ import java.util.List;
 public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
     private static final String PAGE_TITLE_CLASS = "page-title";
+    private static final String NOT_SPECIFIED = "Не указано";
 
     private final StudentGroupRepository studentGroupRepository;
     private final DepartmentRepository departmentRepository;
@@ -133,15 +134,21 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
                         } else if (info.contains(":")) {
                             strings = info.split(":");
                         } else {
-                            break;
+                            continue;
                         }
-                        if (" Преподаватель".equalsIgnoreCase(strings[0])) {
+                        if (" Преподаватель".equalsIgnoreCase(strings[0])
+                                || "преподаватель".equalsIgnoreCase(strings[0])) {
                             if (strings.length > 1) {
                                 extramuralEvent.setTeacher(strings[1]);
+                            } else {
+                                extramuralEvent.setTeacher(NOT_SPECIFIED);
                             }
-                        } else if (" Место проведения".equalsIgnoreCase(strings[0])) {
+                        } else if (" Место проведения".equalsIgnoreCase(strings[0])
+                                || "Место проведения".equalsIgnoreCase(strings[0])) {
                             if (strings.length > 1) {
                                 extramuralEvent.setPlace(strings[1]);
+                            } else {
+                                extramuralEvent.setPlace(NOT_SPECIFIED);
                             }
                         } else {
                             if (extramuralEvent.getEventType() != null) {

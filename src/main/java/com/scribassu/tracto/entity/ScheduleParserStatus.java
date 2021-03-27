@@ -22,7 +22,7 @@ public class ScheduleParserStatus {
     @CreatedDate
     private OffsetDateTime lastUpdateTime;
 
-    @Column(length = 10)
+    @Column(length = 50)
     private String status;
 
     @Column(length = 50)

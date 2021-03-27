@@ -20,5 +20,7 @@ tracto:
     url:
     auth-header:
     exam-period-url:
+    extramural-url:
   time-update-schedule:
   time-update-exam-period:
+  time-update-extramural:

@@ -6,9 +6,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.scribassu.tracto.domain.StudentGroup;
 import com.scribassu.tracto.dto.web.CsvDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -17,6 +19,9 @@ import java.util.Date;
 
 @Service
 public class ParseLessonsAndCreateCsv {
+    @Value("${tracto.save-csv-url}")
+    private String pathForSavingCsv;
+
     private String formatTime(String hour, String minute) {
         StringBuilder sb = new StringBuilder();
         if (hour.length() == 1) {
@@ -59,7 +64,8 @@ public class ParseLessonsAndCreateCsv {
     }
 
     public CsvDto generateCsvFile(JsonObject jsonObject) {
-        try (PrintWriter writer = new PrintWriter(new File("schedule.csv"))) {
+        try {
+            FileWriter writer = new FileWriter(new File(pathForSavingCsv + "schedule.csv"));
             JsonArray jsonArray = jsonObject.getAsJsonArray("lessons");
             Calendar c = Calendar.getInstance();
             Integer dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
@@ -75,9 +81,10 @@ public class ParseLessonsAndCreateCsv {
             } else {
                 cAdd.add(Calendar.DATE, -dayOfWeek + 2);
             }
-            Date date;
+            dayOfWeek = 2;
+            Date date = c.getTime();
             DateFormat targetFormat = new SimpleDateFormat("dd/MM/yyyy");
-            String formattedDate;
+            String formattedDate = targetFormat.format(date);
             StringBuilder scheduleBuilder = new StringBuilder();
             scheduleBuilder.append("Subject");
             scheduleBuilder.append(",");
@@ -99,7 +106,7 @@ public class ParseLessonsAndCreateCsv {
                 JsonObject day = jo.getAsJsonObject("day");
                 JsonObject teacher = jo.getAsJsonObject("teacher");
                 JsonPrimitive dayNumer = day.getAsJsonPrimitive("dayNumber");
-                cAdd.add(Calendar.DATE, dayNumer.getAsInt()-1);
+                cAdd.add(Calendar.DATE, dayNumer.getAsInt() - 1);
                 date = cAdd.getTime();
                 formattedDate = targetFormat.format(date);
                 scheduleBuilder.append(jo.get("name").toString().replaceAll("\"", ""));
@@ -129,10 +136,10 @@ public class ParseLessonsAndCreateCsv {
                 }
             }
             writer.write(scheduleBuilder.toString());
-        }
-        catch (Exception e){
+            writer.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return new CsvDto(new StudentGroup(), "https://run.mocky.io/v3/a6f35057-1437-43ab-8884-bbd7300b13a7");
+        return new CsvDto(pathForSavingCsv + "schedule.csv");
     }
 }

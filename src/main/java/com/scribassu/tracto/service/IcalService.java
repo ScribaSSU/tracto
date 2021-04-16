@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 @Service
 public class IcalService {
-    @Value("${tracto.save-ical-url}")
+    @Value("${tracto.save-ics-url}")
     private String pathForSavingIcal;
 
     private String formatDescription(String lessonType, String surname, String name, String patronymic, String subgroup) {
@@ -26,6 +26,8 @@ public class IcalService {
         sb.append("\"");
         if (lessonType.replaceAll("\"", "").equals("PRACTICE"))
             sb.append("Практика");
+        else if (lessonType.replaceAll("\"", "").equals("LABORATORY"))
+            sb.append("Лабораторная");
         else
             sb.append("Лекция");
         sb.append(", ");

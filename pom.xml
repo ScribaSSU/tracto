@@ -25,8 +25,7 @@
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>my-repo1</id>
-            <name>your custom repo</name>
+            <id>juplo.de</id>
             <url>https://juplo.de/maven2/</url>
         </repository>
     </repositories>

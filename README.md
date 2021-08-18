@@ -8,6 +8,8 @@ Saratov State University. Produces JSON.
 ## Features
 
 * Full time schedule
+* Extramural schedule  
 * Exam period events
 * Teacher's schedule
 * Numbers of student groups
+* Departments

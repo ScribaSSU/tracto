@@ -365,7 +365,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonThirdCollegeKgl.setHourStart(12);
             lessonThirdCollegeKgl.setMinuteStart(30);
             lessonThirdCollegeKgl.setHourEnd(14);
-            lessonThirdCollegeKgl.setMinuteEnd(00);
+            lessonThirdCollegeKgl.setMinuteEnd(0);
             lessonTimeRepository.save(lessonThirdCollegeKgl);
             log.info("Init lesson third CollegeKgl");
         }
@@ -516,6 +516,19 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             log.info("No need to init imo");
         }
 
+        dep = departmentRepository.findByURL("ff");
+        if(dep == null) {
+            Department phys = new Department();
+            phys.setFullName("Институт физики");
+            phys.setShortName("И-Т ФИЗИКИ");
+            phys.setURL("ff");
+            departmentRepository.save(phys);
+            log.info("Init ff");
+        }
+        else {
+            log.info("No need to init ff");
+        }
+
         dep = departmentRepository.findByURL("ifk");
         if(dep == null) {
             Department ifkis = new Department();
@@ -657,19 +670,6 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
         else {
             log.info("No need to init fppso");
-        }
-
-        dep = departmentRepository.findByURL("ff");
-        if(dep == null) {
-            Department phys = new Department();
-            phys.setFullName("Физический факультет");
-            phys.setShortName("ФИЗФАК");
-            phys.setURL("ff");
-            departmentRepository.save(phys);
-            log.info("Init ff");
-        }
-        else {
-            log.info("No need to init ff");
         }
 
         dep = departmentRepository.findByURL("fp");

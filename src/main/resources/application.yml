@@ -8,6 +8,7 @@ spring:
     url:
     username:
     password:
+    driver-class-name:
   jpa:
     properties:
       hibernate:

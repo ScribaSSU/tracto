@@ -2,13 +2,11 @@ package com.scribassu.tracto;
 
 import com.scribassu.tracto.dto.xml.ScheduleXml;
 import com.scribassu.tracto.service.downloader.ScheduleDownloaderImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,11 +14,10 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ActiveProfiles(profiles = "dev")
 @SpringBootTest
-@RunWith(SpringRunner.class)
+@ActiveProfiles(profiles = {"dev"})
 public class ScheduleDownloaderTests {
 
     @Autowired

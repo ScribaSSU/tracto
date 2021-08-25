@@ -18,6 +18,9 @@ public interface ExtramuralEventRepository extends JpaRepository<ExtramuralEvent
     @Query("select e from ExtramuralEvent e where e.studentGroup = :studentGroup")
     List<ExtramuralEvent> findByStudentGroup(@Param("studentGroup") StudentGroup studentGroup);
 
+    @Query("select e from ExtramuralEvent e where e.teacher = :teacher")
+    List<ExtramuralEvent> findByTeacher(@Param("teacher") String teacher);
+
     @Modifying
     @Transactional
     @Query("delete from ExtramuralEvent e where e.studentGroup = :studentGroup")
@@ -27,6 +30,4 @@ public interface ExtramuralEventRepository extends JpaRepository<ExtramuralEvent
     List<ExtramuralEvent> findByStudentGroupAndMonthAndDay(@Param("studentGroup") StudentGroup studentGroup,
                                                            @Param("month") ExamPeriodMonth month,
                                                            @Param("day") Integer day);
-
-
 }

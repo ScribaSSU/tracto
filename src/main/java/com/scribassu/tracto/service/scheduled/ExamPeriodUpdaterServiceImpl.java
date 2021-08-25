@@ -54,10 +54,10 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
         long start = System.currentTimeMillis();
         List<Department> departments = departmentRepository.findAll();
 
-        for(Department department : departments) {
+        for (Department department : departments) {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
-            for(StudentGroup studentGroup : studentGroups) {
+            for (StudentGroup studentGroup : studentGroups) {
                 String html = scheduleDownloader.downloadSchedule(String.format(
                         sessionUrl,
                         departmentURL,
@@ -65,10 +65,9 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
                         formatGroupNumber(studentGroup.getGroupNumber()))
                 );
                 ScheduleParserStatus status;
-                if(!StringUtils.isEmpty(html)) {
+                if (!StringUtils.isEmpty(html)) {
                     status = sessionParser.parseSchedule(html, departmentURL);
-                }
-                else {
+                } else {
                     status = new ScheduleParserStatus();
                     status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
                     status.setStatus("fail to dwnld html");

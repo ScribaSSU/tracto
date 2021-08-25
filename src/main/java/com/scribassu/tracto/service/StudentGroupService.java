@@ -23,7 +23,7 @@ public class StudentGroupService {
     public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(String url,
                                                                                    EducationForm educationForm,
                                                                                    String course) {
-        if(url.equals("cre")) {
+        if (url.equals("cre")) {
             List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
             return new GroupNumbersDto(
                     groups
@@ -35,8 +35,7 @@ public class StudentGroupService {
                     url,
                     educationForm.name()
             );
-        }
-        else if(url.equals("kgl")) {
+        } else if (url.equals("kgl")) {
             List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationForm(url, educationForm);
             return new GroupNumbersDto(
                     groups
@@ -46,8 +45,7 @@ public class StudentGroupService {
                     url,
                     educationForm.name()
             );
-        }
-        else {
+        } else {
             List<StudentGroup> groups = studentGroupRepository.findByDepartmentUrlAndEducationFormAndCourse(
                     url,
                     educationForm,

@@ -1,6 +1,9 @@
 package com.scribassu.tracto.service;
 
-import com.scribassu.tracto.domain.*;
+import com.scribassu.tracto.domain.Department;
+import com.scribassu.tracto.domain.EducationForm;
+import com.scribassu.tracto.domain.ExamPeriodMonth;
+import com.scribassu.tracto.domain.StudentGroup;
 import com.scribassu.tracto.dto.web.ExamPeriodEventDto;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ExamPeriodEventRepository;
@@ -9,8 +12,6 @@ import com.scribassu.tracto.repository.StudentGroupRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service

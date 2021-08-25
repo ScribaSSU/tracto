@@ -41,37 +41,32 @@ public class TeacherService {
 
     public TeacherListDto findByWord(String word) {
         String[] words = word.split(" "); //in case of more than one part of name
-        if(words.length == 1) {
+        if (words.length == 1) {
             List<Teacher> teachers = teacherRepository.findByAnyPartOfName(word, word, word);
-            if(teachers.isEmpty()) {
+            if (teachers.isEmpty()) {
                 return new TeacherListDto();
-            }
-            else {
+            } else {
                 return new TeacherListDto(teachers);
             }
-        }
-        else {
+        } else {
             StringBuilder stringBuilder = new StringBuilder();
-            for(String w : words) {
+            for (String w : words) {
                 stringBuilder.append(w).append(" ");
             }
             String fullName = stringBuilder.toString().trim();
             List<Teacher> teachers = teacherRepository.findByFullNameLike(fullName);
-            if(teachers.isEmpty()) {
-                if(words.length == 2) {
+            if (teachers.isEmpty()) {
+                if (words.length == 2) {
                     teachers = teacherRepository.findByAnyPartOfName(words[0], words[1], words[0]);
-                }
-                else {
+                } else {
                     teachers = teacherRepository.findByAnyPartOfName(words[0], words[1], words[2]);
                 }
-                if(teachers.isEmpty()) {
+                if (teachers.isEmpty()) {
                     return new TeacherListDto();
-                }
-                else {
+                } else {
                     return new TeacherListDto(teachers);
                 }
-            }
-            else {
+            } else {
                 return new TeacherListDto(teachers);
             }
         }

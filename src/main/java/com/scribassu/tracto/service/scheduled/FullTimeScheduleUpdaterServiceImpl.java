@@ -41,7 +41,7 @@ public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
         long start = System.currentTimeMillis();
         List<Department> departments = departmentRepository.findAll();
 
-        for(Department department : departments) {
+        for (Department department : departments) {
             String departmentURL = department.getURL();
             ScheduleParserStatus status = fullTimeScheduleParser.parseSchedule(
                     scheduleDownloader.downloadSchedule(fullTimeScheduleUrl + departmentURL),

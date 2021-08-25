@@ -11,6 +11,9 @@ import java.util.List;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
+    @Query("select t from Teacher t where t.id = :id")
+    Teacher getById(@Param("id") Long id);
+
     @Query("select t from Teacher t where t.surname = :surname and t.name = :name and t.patronymic = :patronymic")
     List<Teacher> findBySurnameAndNameAndPatronymic(@Param("surname") String surname,
                                                     @Param("name") String name,

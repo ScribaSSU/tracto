@@ -37,7 +37,7 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
         try {
             httpGet = new HttpGet(url);
 
-            if(url.startsWith(fullTimeScheduleUrl)) {
+            if (url.startsWith(fullTimeScheduleUrl)) {
                 httpGet.addHeader(authorization, authHeader);
             }
             httpResponse = httpClient.execute(httpGet);
@@ -49,15 +49,13 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
             StringBuilder stringBuilder = new StringBuilder();
             String outLine;
 
-            while((outLine = bufferedReader.readLine()) != null) {
+            while ((outLine = bufferedReader.readLine()) != null) {
                 stringBuilder.append(outLine);
             }
             return stringBuilder.toString();
-        }
-        catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             httpGet.abort();
         }
 

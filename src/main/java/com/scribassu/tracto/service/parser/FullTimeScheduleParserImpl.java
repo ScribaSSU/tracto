@@ -67,8 +67,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
             scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
             scheduleParserStatusRepository.save(scheduleParserStatus);
@@ -80,14 +79,14 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     private void parseGroups(List<GroupXml> groups, String department) {
         Department dep = departmentRepository.findByURL(department);
 
-        if(dep == null) {
+        if (dep == null) {
             throw new IllegalArgumentException("Wrong department!");
         }
 
-        for(GroupXml group : groups) {
+        for (GroupXml group : groups) {
             EducationForm educationForm = convertEducationForm(group.eduForm);
             StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus.trim(), educationForm, dep);
-            if(studentGroup == null) {
+            if (studentGroup == null) {
                 studentGroup = new StudentGroup();
             }
             studentGroup.setDepartment(dep);
@@ -102,15 +101,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private void parseDays(List<DayXml> days, StudentGroup studentGroup) {
-        for(DayXml d : days) {
+        for (DayXml d : days) {
             Day day = dayRepository.findByDayNumber(d.id);
 
-            if(day == null) {
+            if (day == null) {
                 throw new IllegalArgumentException("Wrong day!");
             }
 
             LessonsXml lessonsXml = d.lessons;
-            if(!CollectionUtils.isEmpty(lessonsXml.lessons)) {
+            if (!CollectionUtils.isEmpty(lessonsXml.lessons)) {
                 parseLessons(lessonsXml.lessons, day, studentGroup);
             }
         }
@@ -122,8 +121,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
         LessonType lessonType;
         Teacher teacher;
 
-        if(isFromCollegeCre(studentGroup)) {
-            for(LessonXml les : lessons) {
+        if (isFromCollegeCre(studentGroup)) {
+            for (LessonXml les : lessons) {
                 lessonTime = lessonTimeRepository.findByLessonNumber(collegeCreLessonNumber(les));
                 weekType = convertWeekType(les.weekType);
                 lessonType = convertLessonType(les.type);
@@ -142,9 +141,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setLessonType(lessonType);
                 fullTimeLessonRepository.save(lesson);
             }
-        }
-        else if(isFromCollegeKgl(studentGroup)) {
-            for(LessonXml les : lessons) {
+        } else if (isFromCollegeKgl(studentGroup)) {
+            for (LessonXml les : lessons) {
                 lessonTime = lessonTimeRepository.findByLessonNumber(collegeKglLessonNumber(les));
                 weekType = convertWeekType(les.weekType);
                 lessonType = convertLessonType(les.type);
@@ -163,9 +161,8 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setLessonType(lessonType);
                 fullTimeLessonRepository.save(lesson);
             }
-        }
-        else {
-            for(LessonXml les : lessons) {
+        } else {
+            for (LessonXml les : lessons) {
                 lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
                 weekType = convertWeekType(les.weekType);
                 lessonType = convertLessonType(les.type);
@@ -206,16 +203,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     private Teacher parseTeacher(TeacherXml teacher) {
         List<Teacher> tList = teacherRepository.findBySurnameAndNameAndPatronymic(teacher.lastname, teacher.name, teacher.patronymic);
 
-        if(tList.size() > 1) {
+        if (tList.size() > 1) {
             log.warn("Find more than 1 teacher for surname {}, name {}, patronymic {}", teacher.lastname, teacher.name, teacher.patronymic);
         }
 
         Teacher t;
 
-        if(CollectionUtils.isEmpty(tList)) {
+        if (CollectionUtils.isEmpty(tList)) {
             t = new Teacher();
-        }
-        else {
+        } else {
             t = tList.get(0);
         }
 
@@ -227,7 +223,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private LessonType convertLessonType(String type) {
-        switch(type) {
+        switch (type) {
             case "lecture":
                 return LessonType.LECTURE;
             case "practice":
@@ -244,7 +240,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private GroupType convertGroupType(int groupType) {
-        switch(groupType) {
+        switch (groupType) {
             case -1:
                 return GroupType.COLLEGE;
             case 0:
@@ -261,7 +257,7 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
     }
 
     private EducationForm convertEducationForm(int educationForm) {
-        switch(educationForm) {
+        switch (educationForm) {
             case 0:
                 return EducationForm.DO;
             case 1:

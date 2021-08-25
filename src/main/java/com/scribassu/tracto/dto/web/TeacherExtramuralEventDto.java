@@ -1,7 +1,7 @@
 package com.scribassu.tracto.dto.web;
 
 import com.scribassu.tracto.domain.ExtramuralEvent;
-import com.scribassu.tracto.domain.StudentGroup;
+import com.scribassu.tracto.domain.Teacher;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,13 +9,14 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ExtramuralDto {
-    private List<ExtramuralEvent> extramuralEvents;
-    private StudentGroup studentGroup;
+public class TeacherExtramuralEventDto {
 
-    public ExtramuralDto(List<ExtramuralEvent> extramuralEvents,
-                         StudentGroup studentGroup) {
+    private List<ExtramuralEvent> extramuralEvents;
+    private Teacher teacher;
+
+    public TeacherExtramuralEventDto(List<ExtramuralEvent> extramuralEvents,
+                                     Teacher teacher) {
         this.extramuralEvents = extramuralEvents;
-        this.studentGroup = studentGroup;
+        this.teacher = teacher;
     }
 }

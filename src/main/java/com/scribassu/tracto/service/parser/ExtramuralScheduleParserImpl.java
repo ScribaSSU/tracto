@@ -1,18 +1,8 @@
 package com.scribassu.tracto.service.parser;
 
-import com.scribassu.tracto.domain.Department;
-import com.scribassu.tracto.domain.EducationForm;
-import com.scribassu.tracto.domain.ExamPeriodMonth;
-import com.scribassu.tracto.domain.ExtramuralEventType;
-import com.scribassu.tracto.domain.StudentGroup;
-import com.scribassu.tracto.domain.ExtramuralEvent;
+import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
-import com.scribassu.tracto.repository.DepartmentRepository;
-import com.scribassu.tracto.repository.ExamPeriodMonthRepository;
-import com.scribassu.tracto.repository.ExtramuralEventRepository;
-import com.scribassu.tracto.repository.LessonTimeRepository;
-import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
-import com.scribassu.tracto.repository.StudentGroupRepository;
+import com.scribassu.tracto.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

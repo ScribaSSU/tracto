@@ -231,7 +231,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
             lessonEighth.setHourStart(20);
             lessonEighth.setMinuteStart(10);
             lessonEighth.setHourEnd(21);
-            lessonEighth.setHourEnd(30);
+            lessonEighth.setMinuteEnd(30);
             lessonTimeRepository.save(lessonEighth);
             log.info("Init lesson eighth");
         } else {

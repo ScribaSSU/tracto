@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -139,6 +140,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
+                if (!les.updated.isBlank()) {
+                    lesson.setUpdatedTimestamp(Long.valueOf(les.updated));
+                }
+                if (!les.dateBegin.isBlank()) {
+                    lesson.setBeginTimestamp(Long.valueOf(les.dateBegin));
+                }
+                if (!les.dateEnd.isBlank()) {
+                    lesson.setEndTimestamp(Long.valueOf(les.dateEnd));
+                }
                 fullTimeLessonRepository.save(lesson);
             }
         } else if (isFromCollegeKgl(studentGroup)) {
@@ -159,6 +169,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
+                if (!les.updated.isBlank()) {
+                    lesson.setUpdatedTimestamp(Long.valueOf(les.updated));
+                }
+                if (!les.dateBegin.isBlank()) {
+                    lesson.setBeginTimestamp(Long.valueOf(les.dateBegin));
+                }
+                if (!les.dateEnd.isBlank()) {
+                    lesson.setEndTimestamp(Long.valueOf(les.dateEnd));
+                }
                 fullTimeLessonRepository.save(lesson);
             }
         } else {
@@ -179,6 +198,15 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
                 lesson.setWeekType(weekType);
                 lesson.setTeacher(teacher);
                 lesson.setLessonType(lessonType);
+                if (!les.updated.isBlank()) {
+                    lesson.setUpdatedTimestamp(Long.valueOf(les.updated));
+                }
+                if (!les.dateBegin.isBlank()) {
+                    lesson.setBeginTimestamp(Long.valueOf(les.dateBegin));
+                }
+                if (!les.dateEnd.isBlank()) {
+                    lesson.setEndTimestamp(Long.valueOf(les.dateEnd));
+                }
                 fullTimeLessonRepository.save(lesson);
             }
         }

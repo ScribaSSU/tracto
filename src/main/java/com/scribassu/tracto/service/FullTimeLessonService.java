@@ -32,6 +32,11 @@ public class FullTimeLessonService {
         this.fullTimeLessonRepository = fullTimeLessonRepository;
     }
 
+    public FullTimeLessonDto getFullTimeLessonByDepartment(String department) {
+        Department dep = departmentRepository.findByURL(department);
+        return new FullTimeLessonDto(fullTimeLessonRepository.findByDepartment(dep), null, null);
+    }
+
     public FullTimeLessonDto getFullTimeLessonByGroup(String department,
                                                       String groupNumber) {
         Department dep = departmentRepository.findByURL(department);

@@ -13,6 +13,9 @@ import java.util.List;
 @Repository
 public interface FullTimeLessonRepository extends JpaRepository<FullTimeLesson, Long> {
 
+    @Query("select ftl from FullTimeLesson ftl where ftl.department = :department")
+    List<FullTimeLesson> findByDepartment(@Param("department") Department department);
+
     @Query("select ftl from FullTimeLesson ftl where ftl.studentGroup = :studentGroup")
     List<FullTimeLesson> findByStudentGroup(@Param("studentGroup") StudentGroup studentGroup);
 

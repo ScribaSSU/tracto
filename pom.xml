@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.scribassu</groupId>
     <artifactId>tracto</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.2</version>
     <name>tracto</name>
     <description>Tracto: REST API for sgu.ru</description>
 
@@ -18,9 +18,10 @@
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
         <jsoup.version>1.13.1</jsoup.version>
+        <ical4j.version>3.2.2</ical4j.version>
         <lombok.version>1.18.20</lombok.version>
         <springfox.version>2.9.2</springfox.version>
-        <tracto-domain.version>1.0.13</tracto-domain.version>
+        <tracto-domain.version>1.0.14</tracto-domain.version>
         <mysql-connector.version>5.1.45</mysql-connector.version>
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <spring-boot-maven-plugin.version>2.5.1</spring-boot-maven-plugin.version>
@@ -55,6 +56,12 @@
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>${ical4j.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>io.springfox</groupId>

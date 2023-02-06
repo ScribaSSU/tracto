@@ -1,8 +1,4 @@
-package com.scribassu.tracto.config;
-
-/*
-Configuration for @CreatedBy and @CreatedDate
- */
+package com.scribassu.tracto.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +12,14 @@ import org.springframework.transaction.support.TransactionTemplate;
 import java.time.OffsetDateTime;
 import java.util.Optional;
 
+/**
+ * Configuration for @CreatedBy and @CreatedDate
+ */
 @Configuration
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 @EnableJpaRepositories("com.scribassu.tracto.repository")
 @Component
-public class JpaConfig {
+public class JpaConfiguration {
 
     @Bean(name = "auditingDateTimeProvider")
     public DateTimeProvider dateTimeProvider() {

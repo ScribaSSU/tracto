@@ -4,23 +4,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+// TODO rewrite with WebClient
 @Service
-public class ScheduleDownloaderImpl implements ScheduleDownloader {
-
-    private final String authorization = "Authorization";
-
-    @Value("${tracto.download-schedule.url}")
-    private String fullTimeScheduleUrl;
-
-    @Value("${tracto.download-schedule.auth-header}")
-    private String authHeader;
+public class ExtramuralScheduleDownloaderImpl implements ScheduleDownloader {
 
     private HttpClient httpClient = HttpClientBuilder.create().build();
 
@@ -36,10 +28,6 @@ public class ScheduleDownloaderImpl implements ScheduleDownloader {
 
         try {
             httpGet = new HttpGet(url);
-
-            if (url.startsWith(fullTimeScheduleUrl)) {
-                httpGet.addHeader(authorization, authHeader);
-            }
             httpResponse = httpClient.execute(httpGet);
 
             BufferedReader bufferedReader = new BufferedReader(

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.scribassu</groupId>
     <artifactId>tracto</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
     <name>tracto</name>
     <description>Tracto: REST API for sgu.ru</description>
 
@@ -21,10 +21,12 @@
         <ical4j.version>3.2.2</ical4j.version>
         <lombok.version>1.18.20</lombok.version>
         <springfox.version>2.9.2</springfox.version>
+        <springdoc.version>1.6.2</springdoc.version>
         <tracto-domain.version>1.0.14</tracto-domain.version>
         <mysql-connector.version>5.1.45</mysql-connector.version>
         <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
         <spring-boot-maven-plugin.version>2.5.1</spring-boot-maven-plugin.version>
+        <pl.project13.maven.git-commit-id-plugin.version>4.9.10</pl.project13.maven.git-commit-id-plugin.version>
     </properties>
 
     <repositories>
@@ -62,16 +64,18 @@
             <version>${ical4j.version}</version>
         </dependency>
 
-
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -110,6 +114,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>${pl.project13.maven.git-commit-id-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

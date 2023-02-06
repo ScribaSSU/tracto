@@ -1,6 +1,5 @@
 package com.scribassu.tracto.controller;
 
-import com.scribassu.tracto.config.DocSwagger;
 import com.scribassu.tracto.domain.EducationForm;
 import com.scribassu.tracto.dto.web.GroupNumbersDto;
 import com.scribassu.tracto.service.StudentGroupService;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@DocSwagger
 @RestController
 @RequestMapping("/v1.0/group")
 public class StudentGroupController {

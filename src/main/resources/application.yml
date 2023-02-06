@@ -18,10 +18,38 @@ spring:
 
 tracto:
   download-schedule:
-    url:
+    base-url:
     auth-header:
+    full-time-url:
     exam-period-url:
     extramural-url:
   time-update-schedule:
   time-update-exam-period:
   time-update-extramural:
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+    disable-swagger-default-url: true
+  api-docs:
+    path: /api-docs
+
+project:
+  version: '@project.version@'
+
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    git:
+      enabled: true
+      mode: full
+    build:
+      enabled: true
+    env:
+      enabled: true

@@ -1,6 +1,5 @@
 package com.scribassu.tracto.controller;
 
-import com.scribassu.tracto.config.DocSwagger;
 import com.scribassu.tracto.dto.web.TeacherExamPeriodEventDto;
 import com.scribassu.tracto.dto.web.TeacherFullTimeLessonDto;
 import com.scribassu.tracto.dto.web.TeacherListDto;
@@ -8,7 +7,6 @@ import com.scribassu.tracto.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@DocSwagger
 @RestController
 @RequestMapping("/v1.0/teacher")
 public class TeacherController {

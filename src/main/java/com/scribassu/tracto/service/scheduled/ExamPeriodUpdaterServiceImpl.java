@@ -7,7 +7,7 @@ import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
-import com.scribassu.tracto.service.downloader.ScheduleDownloader;
+import com.scribassu.tracto.service.downloader.ExamPeriodScheduleDownloaderImpl;
 import com.scribassu.tracto.service.parser.ExamPeriodScheduleParserImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
 
     private final StudentGroupRepository studentGroupRepository;
 
-    private final ScheduleDownloader scheduleDownloader;
+    private final ExamPeriodScheduleDownloaderImpl scheduleDownloader;
 
     private final ExamPeriodScheduleParserImpl sessionParser;
 
@@ -38,7 +38,7 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
     @Autowired
     public ExamPeriodUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                         StudentGroupRepository studentGroupRepository,
-                                        ScheduleDownloader scheduleDownloader,
+                                        ExamPeriodScheduleDownloaderImpl scheduleDownloader,
                                         ExamPeriodScheduleParserImpl sessionParser,
                                         ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.departmentRepository = departmentRepository;

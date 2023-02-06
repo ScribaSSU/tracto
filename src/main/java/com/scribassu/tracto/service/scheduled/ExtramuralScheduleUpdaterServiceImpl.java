@@ -7,10 +7,12 @@ import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
+import com.scribassu.tracto.service.downloader.ExtramuralScheduleDownloaderImpl;
 import com.scribassu.tracto.service.downloader.ScheduleDownloader;
 import com.scribassu.tracto.service.parser.ExtramuralScheduleParserImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,7 +26,7 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
     private final StudentGroupRepository studentGroupRepository;
-    private final ScheduleDownloader scheduleDownloader;
+    private final ExtramuralScheduleDownloaderImpl scheduleDownloader;
     private final ExtramuralScheduleParserImpl extramuralScheduleParser;
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
@@ -34,7 +36,7 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
     @Autowired
     public ExtramuralScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                                 StudentGroupRepository studentGroupRepository,
-                                                ScheduleDownloader scheduleDownloader,
+                                                ExtramuralScheduleDownloaderImpl scheduleDownloader,
                                                 ExtramuralScheduleParserImpl extramuralScheduleParser,
                                                 ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.departmentRepository = departmentRepository;

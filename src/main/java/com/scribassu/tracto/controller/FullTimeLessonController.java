@@ -1,6 +1,5 @@
 package com.scribassu.tracto.controller;
 
-import com.scribassu.tracto.config.DocSwagger;
 import com.scribassu.tracto.dto.web.FullTimeLessonDto;
 import com.scribassu.tracto.service.FullTimeLessonService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@DocSwagger
 @RestController
 @RequestMapping("/v1.0/schedule/full")
 public class FullTimeLessonController {

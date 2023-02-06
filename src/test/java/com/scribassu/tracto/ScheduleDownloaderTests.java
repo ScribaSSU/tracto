@@ -1,7 +1,7 @@
 package com.scribassu.tracto;
 
 import com.scribassu.tracto.dto.xml.ScheduleXml;
-import com.scribassu.tracto.service.downloader.ScheduleDownloaderImpl;
+import com.scribassu.tracto.service.downloader.ExamPeriodScheduleDownloaderImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ScheduleDownloaderTests {
 
     @Autowired
-    private ScheduleDownloaderImpl scheduleDownloader;
+    private ExamPeriodScheduleDownloaderImpl scheduleDownloader;
 
     @Value("${tracto.download-schedule.url}")
     private String url;

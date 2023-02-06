@@ -3,7 +3,7 @@
 Tracto is the REST API for the schedule of 
 Saratov State University. Produces JSON.
 
-[Documentation (based on Swagger)](https://scribabot.ml/api/swagger)
+[Documentation (based on Swagger)](https://scribabot.tk/api/swagger)
 
 ## Features
 

@@ -26,9 +26,6 @@ public class WebClientConfiguration {
     @Value("${tracto.download-schedule.base-url}")
     private String fullTimeScheduleUrl;
 
-    @Value("${tracto.download-schedule.auth-header}")
-    private String authHeader;
-
     @Bean
     @Qualifier("sguFullTimeScheduleWebClient")
     public WebClient sguFullTimeScheduleWebClient() throws SSLException {
@@ -51,7 +48,6 @@ public class WebClientConfiguration {
                 });
         return WebClient.builder()
                 .baseUrl(fullTimeScheduleUrl)
-                .defaultHeaders(httpHeaders -> httpHeaders.setBasicAuth(authHeader))
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .exchangeStrategies(exchangeStrategies)
                 .filter((clientRequest, nextFilter) -> {

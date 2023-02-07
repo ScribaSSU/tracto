@@ -15,6 +15,10 @@ public class FullTimeScheduleDownloaderImpl implements ScheduleDownloader {
     @Value("${tracto.download-schedule.full-time-url}")
     private String fullTimeScheduleUrl;
 
+
+    @Value("${tracto.download-schedule.auth-header}")
+    private String authHeader;
+
     @Autowired
     public FullTimeScheduleDownloaderImpl(WebClient sguFullTimeScheduleWebClient) {
         this.sguFullTimeScheduleWebClient = sguFullTimeScheduleWebClient;
@@ -30,6 +34,7 @@ public class FullTimeScheduleDownloaderImpl implements ScheduleDownloader {
                         .path(fullTimeScheduleUrl)
                         .queryParam("dep", department)
                         .build())
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(authHeader))
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

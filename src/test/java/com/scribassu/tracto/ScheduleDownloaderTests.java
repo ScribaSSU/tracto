@@ -1,7 +1,6 @@
 package com.scribassu.tracto;
 
 import com.scribassu.tracto.dto.xml.ScheduleXml;
-import com.scribassu.tracto.service.downloader.ExamPeriodScheduleDownloaderImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -19,13 +19,27 @@ spring:
 tracto:
   download-schedule:
     base-url:
-    auth-header:
-    full-time-url:
-    exam-period-url:
-    extramural-url:
-  time-update-schedule:
-  time-update-exam-period:
-  time-update-extramural:
+    query-timeout:
+    max-in-memory-size:
+    full-time:
+      path:
+      auth-header:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
+    exam-period:
+      path:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
+    extramural:
+      path:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
 
 springdoc:
   swagger-ui:

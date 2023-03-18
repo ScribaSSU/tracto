@@ -7,11 +7,10 @@ import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
-import com.scribassu.tracto.service.downloader.ExamPeriodScheduleDownloaderImpl;
+import com.scribassu.tracto.service.ScheduleDownloader;
 import com.scribassu.tracto.service.parser.ExamPeriodScheduleParserImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -20,27 +19,24 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
+public class ExamPeriodScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
 
     private final StudentGroupRepository studentGroupRepository;
 
-    private final ExamPeriodScheduleDownloaderImpl scheduleDownloader;
+    private final ScheduleDownloader scheduleDownloader;
 
     private final ExamPeriodScheduleParserImpl sessionParser;
 
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
-    @Value("${tracto.download-schedule.exam-period-url}")
-    private String sessionUrl;
-
     @Autowired
-    public ExamPeriodUpdaterServiceImpl(DepartmentRepository departmentRepository,
-                                        StudentGroupRepository studentGroupRepository,
-                                        ExamPeriodScheduleDownloaderImpl scheduleDownloader,
-                                        ExamPeriodScheduleParserImpl sessionParser,
-                                        ScheduleParserStatusRepository scheduleParserStatusRepository) {
+    public ExamPeriodScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
+                                                StudentGroupRepository studentGroupRepository,
+                                                ScheduleDownloader scheduleDownloader,
+                                                ExamPeriodScheduleParserImpl sessionParser,
+                                                ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.departmentRepository = departmentRepository;
         this.studentGroupRepository = studentGroupRepository;
         this.scheduleDownloader = scheduleDownloader;
@@ -48,7 +44,7 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
         this.scheduleParserStatusRepository = scheduleParserStatusRepository;
     }
 
-    @Scheduled(cron = "${tracto.time-update-exam-period}")
+    @Scheduled(cron = "${tracto.download-schedule.exam-period.time-update}")
     public void updateSchedule() {
         log.info("START to parse exam period schedule");
         long start = System.currentTimeMillis();
@@ -58,12 +54,10 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
             for (StudentGroup studentGroup : studentGroups) {
-                String html = scheduleDownloader.downloadSchedule(String.format(
-                        sessionUrl,
+                String html = scheduleDownloader.downloadExamPeriodSchedule(
                         departmentURL,
                         studentGroup.getEducationForm().toString().toLowerCase(),
-                        formatGroupNumber(studentGroup.getGroupNumber()))
-                );
+                        formatGroupNumber(studentGroup.getGroupNumber()));
                 ScheduleParserStatus status;
                 if (!StringUtils.isEmpty(html)) {
                     status = sessionParser.parseSchedule(html, departmentURL);
@@ -82,11 +76,10 @@ public class ExamPeriodUpdaterServiceImpl implements ScheduleUpdater {
     }
 
     private String formatGroupNumber(String groupNumber) {
-        String a = groupNumber
+        return groupNumber
                 .replace(" ", "%20")
                 .replace("(", "%28")
                 .replace(")", "%29")
                 .replace("+", "%2B");
-        return a;
     }
 }

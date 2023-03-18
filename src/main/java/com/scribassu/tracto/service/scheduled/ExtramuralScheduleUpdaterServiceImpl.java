@@ -7,12 +7,10 @@ import com.scribassu.tracto.entity.ScheduleParserStatus;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.repository.ScheduleParserStatusRepository;
 import com.scribassu.tracto.repository.StudentGroupRepository;
-import com.scribassu.tracto.service.downloader.ExtramuralScheduleDownloaderImpl;
-import com.scribassu.tracto.service.downloader.ScheduleDownloader;
+import com.scribassu.tracto.service.ScheduleDownloader;
 import com.scribassu.tracto.service.parser.ExtramuralScheduleParserImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -26,17 +24,14 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
     private final StudentGroupRepository studentGroupRepository;
-    private final ExtramuralScheduleDownloaderImpl scheduleDownloader;
+    private final ScheduleDownloader scheduleDownloader;
     private final ExtramuralScheduleParserImpl extramuralScheduleParser;
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
-
-    @Value("${tracto.download-schedule.extramural-url}")
-    private String extramuralUrl;
 
     @Autowired
     public ExtramuralScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                                 StudentGroupRepository studentGroupRepository,
-                                                ExtramuralScheduleDownloaderImpl scheduleDownloader,
+                                                ScheduleDownloader scheduleDownloader,
                                                 ExtramuralScheduleParserImpl extramuralScheduleParser,
                                                 ScheduleParserStatusRepository scheduleParserStatusRepository) {
         this.departmentRepository = departmentRepository;
@@ -46,7 +41,7 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
         this.scheduleParserStatusRepository = scheduleParserStatusRepository;
     }
 
-    @Scheduled(cron = "${tracto.time-update-extramural}")
+    @Scheduled(cron = "${tracto.download-schedule.extramural.time-update}")
     public void updateSchedule() {
         log.info("START to parse extramural schedule");
         long start = System.currentTimeMillis();
@@ -56,11 +51,10 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.ZO);
             for (StudentGroup studentGroup : studentGroups) {
-                String html = scheduleDownloader.downloadSchedule(String.format(
-                        extramuralUrl,
+                String html = scheduleDownloader.downloadExtramuralSchedule(
                         departmentURL,
                         studentGroup.getEducationForm().toString().toLowerCase(),
-                        formatGroupNumber(studentGroup.getGroupNumber()))
+                        formatGroupNumber(studentGroup.getGroupNumber())
                 );
                 ScheduleParserStatus status;
                 if (!StringUtils.isEmpty(html)) {

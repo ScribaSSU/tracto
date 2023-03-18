@@ -30,7 +30,10 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
     private final ExtramuralScheduleParserImpl extramuralScheduleParser;
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
-    @Value("${tracto.download-schedule.extramural-url}")
+    @Value("${tracto.download-schedule.base-url}")
+    private String baseUrl;
+
+    @Value("${tracto.download-schedule.extramural.path}")
     private String extramuralUrl;
 
     @Autowired
@@ -46,7 +49,7 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
         this.scheduleParserStatusRepository = scheduleParserStatusRepository;
     }
 
-    @Scheduled(cron = "${tracto.time-update-extramural}")
+    @Scheduled(cron = "${tracto.download-schedule.extramural.time-update}")
     public void updateSchedule() {
         log.info("START to parse extramural schedule");
         long start = System.currentTimeMillis();
@@ -56,7 +59,7 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.ZO);
             for (StudentGroup studentGroup : studentGroups) {
-                String html = scheduleDownloader.downloadSchedule(String.format(
+                String html = scheduleDownloader.downloadSchedule(baseUrl + String.format(
                         extramuralUrl,
                         departmentURL,
                         studentGroup.getEducationForm().toString().toLowerCase(),

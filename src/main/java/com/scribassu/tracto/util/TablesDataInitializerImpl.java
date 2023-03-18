@@ -1,14 +1,13 @@
 package com.scribassu.tracto.util;
 
 import com.scribassu.tracto.domain.*;
-import com.scribassu.tracto.repository.DayRepository;
-import com.scribassu.tracto.repository.DepartmentRepository;
-import com.scribassu.tracto.repository.ExamPeriodMonthRepository;
-import com.scribassu.tracto.repository.LessonTimeRepository;
+import com.scribassu.tracto.entity.WeekShift;
+import com.scribassu.tracto.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -23,15 +22,19 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
     private final ExamPeriodMonthRepository examPeriodMonthRepository;
 
+    private final WeekShiftRepository weekShiftRepository;
+
     @Autowired
     public TablesDataInitializerImpl(DayRepository dayRepository,
                                      LessonTimeRepository lessonTimeRepository,
                                      DepartmentRepository departmentRepository,
-                                     ExamPeriodMonthRepository examPeriodMonthRepository) {
+                                     ExamPeriodMonthRepository examPeriodMonthRepository,
+                                     WeekShiftRepository weekShiftRepository) {
         this.dayRepository = dayRepository;
         this.lessonTimeRepository = lessonTimeRepository;
         this.departmentRepository = departmentRepository;
         this.examPeriodMonthRepository = examPeriodMonthRepository;
+        this.weekShiftRepository = weekShiftRepository;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         initTimes();
         initDepartments();
         initExamPeriodMonths();
+        initWeekShift();
     }
 
     private void initDays() {
@@ -694,7 +698,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         log.info("Start init exam period months");
         Optional<ExamPeriodMonth> monthOpt = examPeriodMonthRepository.findByNumber(1);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(1);
             month.setEng("january");
@@ -705,7 +709,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(2);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(2);
             month.setEng("february");
@@ -716,7 +720,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(3);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(3);
             month.setEng("march");
@@ -727,7 +731,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(4);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(4);
             month.setEng("april");
@@ -738,7 +742,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(5);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(5);
             month.setEng("may");
@@ -749,7 +753,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(6);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(6);
             month.setEng("june");
@@ -760,7 +764,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(7);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(7);
             month.setEng("jule");
@@ -771,7 +775,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(8);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(8);
             month.setEng("august");
@@ -782,7 +786,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(9);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(9);
             month.setEng("september");
@@ -793,7 +797,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(10);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(10);
             month.setEng("october");
@@ -804,7 +808,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(11);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(11);
             month.setEng("november");
@@ -815,7 +819,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(12);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(12);
             month.setEng("december");
@@ -826,7 +830,7 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
 
         monthOpt = examPeriodMonthRepository.findByNumber(0);
 
-        if (!monthOpt.isPresent()) {
+        if (monthOpt.isEmpty()) {
             ExamPeriodMonth month = new ExamPeriodMonth();
             month.setNumber(0);
             month.setEng(" ");
@@ -836,5 +840,16 @@ public class TablesDataInitializerImpl implements TablesDataInitializer {
         }
 
         log.info("End init exam period months");
+    }
+
+    private void initWeekShift() {
+        List<Department> departmentList = departmentRepository.findAll();
+        for (Department department : departmentList) {
+            String departmentURL = department.getURL();
+            Optional<WeekShift> weekShift = weekShiftRepository.findByDepartment(departmentURL);
+            if (weekShift.isEmpty()) {
+                weekShiftRepository.save(new WeekShift(0, departmentURL));
+            }
+        }
     }
 }

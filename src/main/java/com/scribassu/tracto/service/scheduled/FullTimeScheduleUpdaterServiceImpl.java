@@ -35,7 +35,7 @@ public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
         this.fullTimeScheduleParser = fullTimeScheduleParser;
     }
 
-    @Scheduled(cron = "${tracto.time-update-schedule}")
+    @Scheduled(cron = "${tracto.download-schedule.full-time.time-update}")
     public void updateSchedule() {
         log.info("START to parse full-time schedule");
         long start = System.currentTimeMillis();

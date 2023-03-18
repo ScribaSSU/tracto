@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.scribassu</groupId>
     <artifactId>tracto</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <name>tracto</name>
     <description>Tracto: REST API for sgu.ru</description>
 

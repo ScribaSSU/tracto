@@ -12,7 +12,7 @@ public class FullTimeScheduleDownloaderImpl implements ScheduleDownloader {
     @Qualifier("sguFullTimeScheduleWebClient")
     private final WebClient sguFullTimeScheduleWebClient;
 
-    @Value("${tracto.download-schedule.full-time-url}")
+    @Value("${tracto.download-schedule.full-time.path}")
     private String fullTimeScheduleUrl;
 
 

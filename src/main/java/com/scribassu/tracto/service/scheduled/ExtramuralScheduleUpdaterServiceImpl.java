@@ -28,6 +28,12 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
     private final ExtramuralScheduleParserImpl extramuralScheduleParser;
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
+    @Value("${tracto.download-schedule.base-url}")
+    private String baseUrl;
+
+    @Value("${tracto.download-schedule.extramural.path}")
+    private String extramuralUrl;
+
     @Autowired
     public ExtramuralScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                                 StudentGroupRepository studentGroupRepository,
@@ -51,7 +57,8 @@ public class ExtramuralScheduleUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.ZO);
             for (StudentGroup studentGroup : studentGroups) {
-                String html = scheduleDownloader.downloadExtramuralSchedule(
+                String html = scheduleDownloader.downloadSchedule(baseUrl + String.format(
+                        extramuralUrl,
                         departmentURL,
                         studentGroup.getEducationForm().toString().toLowerCase(),
                         formatGroupNumber(studentGroup.getGroupNumber())

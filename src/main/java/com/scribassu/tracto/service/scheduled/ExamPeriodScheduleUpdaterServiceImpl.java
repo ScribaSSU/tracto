@@ -31,6 +31,12 @@ public class ExamPeriodScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
+    @Value("${tracto.download-schedule.base-url}")
+    private String baseUrl;
+
+    @Value("${tracto.download-schedule.exam-period.path}")
+    private String sessionUrl;
+
     @Autowired
     public ExamPeriodScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
                                                 StudentGroupRepository studentGroupRepository,
@@ -54,7 +60,8 @@ public class ExamPeriodScheduleUpdaterServiceImpl implements ScheduleUpdater {
             String departmentURL = department.getURL();
             List<StudentGroup> studentGroups = studentGroupRepository.findByDepartmentUrlAndEducationForm(departmentURL, EducationForm.DO);
             for (StudentGroup studentGroup : studentGroups) {
-                String html = scheduleDownloader.downloadExamPeriodSchedule(
+                String html = scheduleDownloader.downloadSchedule(baseUrl + String.format(
+                        sessionUrl,
                         departmentURL,
                         studentGroup.getEducationForm().toString().toLowerCase(),
                         formatGroupNumber(studentGroup.getGroupNumber()));

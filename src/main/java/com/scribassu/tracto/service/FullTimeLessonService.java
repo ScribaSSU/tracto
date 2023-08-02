@@ -19,17 +19,21 @@ public class FullTimeLessonService {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
 
+    private final WeekShiftRepository weekShiftRepository;
+
     @Autowired
     public FullTimeLessonService(DayRepository dayRepository,
                                  DepartmentRepository departmentRepository,
                                  LessonTimeRepository lessonTimeRepository,
                                  StudentGroupRepository studentGroupRepository,
-                                 FullTimeLessonRepository fullTimeLessonRepository) {
+                                 FullTimeLessonRepository fullTimeLessonRepository,
+                                 WeekShiftRepository weekShiftRepository) {
         this.dayRepository = dayRepository;
         this.departmentRepository = departmentRepository;
         this.lessonTimeRepository = lessonTimeRepository;
         this.studentGroupRepository = studentGroupRepository;
         this.fullTimeLessonRepository = fullTimeLessonRepository;
+        this.weekShiftRepository = weekShiftRepository;
     }
 
     public FullTimeLessonDto getFullTimeLessonByDepartment(String department) {
@@ -43,7 +47,8 @@ public class FullTimeLessonService {
         StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(groupNumber, EducationForm.DO, dep);
         return new FullTimeLessonDto(
                 fullTimeLessonRepository.findByStudentGroup(studentGroup),
-                studentGroup
+                studentGroup,
+                weekShiftRepository.findByDepartment(dep.getURL()).get()
         );
     }
 
@@ -56,7 +61,8 @@ public class FullTimeLessonService {
         return new FullTimeLessonDto(
                 fullTimeLessonRepository.findByDayAndStudentGroup(day, studentGroup),
                 studentGroup,
-                day
+                day,
+                weekShiftRepository.findByDepartment(dep.getURL()).get()
         );
     }
 
@@ -72,7 +78,8 @@ public class FullTimeLessonService {
         return new FullTimeLessonDto(
                 fullTimeLessonRepository.findByDayAndLessonTimeAndGroup(day, lessonTime, studentGroup),
                 studentGroup,
-                day
+                day,
+                weekShiftRepository.findByDepartment(dep.getURL()).get()
         );
     }
 }

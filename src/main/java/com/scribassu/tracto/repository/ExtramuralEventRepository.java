@@ -1,8 +1,8 @@
 package com.scribassu.tracto.repository;
 
-import com.scribassu.tracto.domain.ExamPeriodMonth;
-import com.scribassu.tracto.domain.ExtramuralEvent;
-import com.scribassu.tracto.domain.StudentGroup;
+import com.scribassu.tracto.entity.schedule.ExamPeriodMonth;
+import com.scribassu.tracto.entity.schedule.ExtramuralEvent;
+import com.scribassu.tracto.entity.schedule.StudentGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

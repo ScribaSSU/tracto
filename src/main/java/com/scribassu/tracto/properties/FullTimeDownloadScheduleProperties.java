@@ -1,19 +1,19 @@
 package com.scribassu.tracto.properties;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-@Data
+@ConfigurationProperties(prefix = "tracto.download-schedule.full-time")
 @NoArgsConstructor
 @ConstructorBinding
-public class FullTimeDownloadScheduleProperties {
-    private String path;
+public class FullTimeDownloadScheduleProperties extends AbstractDownloadScheduleProperties {
+
+    @Getter
+    @Setter
     private String authHeader;
-    private String timeUpdate;
-    private int connectionTimeout;
-    private int readTimeout;
-    private int writeTimeout;
 
     public FullTimeDownloadScheduleProperties(String path,
                                               String authHeader,
@@ -21,11 +21,7 @@ public class FullTimeDownloadScheduleProperties {
                                               int connectionTimeout,
                                               int readTimeout,
                                               int writeTimeout) {
-        this.path = path;
+        super(path, timeUpdate, connectionTimeout, readTimeout, writeTimeout);
         this.authHeader = authHeader;
-        this.timeUpdate = timeUpdate;
-        this.connectionTimeout = connectionTimeout;
-        this.readTimeout = readTimeout;
-        this.writeTimeout = writeTimeout;
     }
 }

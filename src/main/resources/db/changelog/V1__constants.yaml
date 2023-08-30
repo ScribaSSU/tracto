@@ -1,0 +1,236 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Dzeru
+      changes:
+        - createSequence:
+            cacheSize: 1
+            cycle: false
+            dataType: BIGINT
+            incrementBy: 1
+            maxValue: 9223372036854775807
+            minValue: 1
+            sequenceName: hibernate_sequence
+            startValue: 1
+  - changeSet:
+      id: 2
+      author: Dzeru
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: day_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: day_number
+                  type: INT
+              - column:
+                  name: week_day
+                  type: VARCHAR(20)
+            tableName: day
+  - changeSet:
+      id: 3
+      author: Dzeru
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: id
+                  name: id
+                  type: NUMERIC
+              - column:
+                  header: day_number
+                  name: day_number
+                  type: NUMERIC
+              - column:
+                  header: week_day
+                  name: week_day
+                  type: STRING
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/day.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            tableName: day
+  - changeSet:
+      id: 4
+      author: Dzeru
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: day_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: lesson_number
+                  type: INT
+              - column:
+                  name: hour_start
+                  type: INT
+              - column:
+                  name: minute_start
+                  type: INT
+              - column:
+                  name: hour_end
+                  type: INT
+              - column:
+                  name: minute_end
+                  type: INT
+            tableName: lesson_time
+  - changeSet:
+      id: 5
+      author: Dzeru
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: id
+                  name: id
+                  type: NUMERIC
+              - column:
+                  header: lesson_number
+                  name: lesson_number
+                  type: NUMERIC
+              - column:
+                  header: hour_start
+                  name: hour_start
+                  type: NUMERIC
+              - column:
+                  header: minute_start
+                  name: minute_start
+                  type: NUMERIC
+              - column:
+                  header: hour_end
+                  name: hour_end
+                  type: NUMERIC
+              - column:
+                  header: minute_end
+                  name: minute_end
+                  type: NUMERIC
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/lesson_time.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            tableName: lesson_time
+  - changeSet:
+      id: 6
+      author: Dzeru
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: day_pkey
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: full_name
+                  type: VARCHAR(100)
+              - column:
+                  name: short_name
+                  type: VARCHAR(50)
+              - column:
+                  name: url
+                  type: VARCHAR(10)
+              - column:
+                  name: week_shift
+                  type: BOOLEAN
+            tableName: department
+  - changeSet:
+      id: 7
+      author: Dzeru
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: id
+                  name: id
+                  type: NUMERIC
+              - column:
+                  header: full_name
+                  name: full_name
+                  type: STRING
+              - column:
+                  header: short_name
+                  name: short_name
+                  type: STRING
+              - column:
+                  header: url
+                  name: url
+                  type: STRING
+              - column:
+                  header: week_shift
+                  name: week_shift
+                  type: BOOLEAN
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/department.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            tableName: department
+  - changeSet:
+      id: 8
+      author: Dzeru
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: day_pkey
+                  name: month_number
+                  type: INT
+              - column:
+                  name: rus_nominative
+                  type: VARCHAR(50)
+              - column:
+                  name: rus_genitive
+                  type: VARCHAR(50)
+              - column:
+                  name: english
+                  type: VARCHAR(50)
+            tableName: exam_period_month
+  - changeSet:
+      id: 9
+      author: Dzeru
+      changes:
+        - loadData:
+            columns:
+              - column:
+                  header: month_number
+                  name: month_number
+                  type: NUMERIC
+              - column:
+                  header: rus_nominative
+                  name: rus_nominative
+                  type: STRING
+              - column:
+                  header: rus_genitive
+                  name: rus_genitive
+                  type: STRING
+              - column:
+                  header: english
+                  name: english
+                  type: STRING
+            commentLineStartsWith: '#'
+            encoding: UTF-8
+            file: data/exam_period_month.csv
+            quotchar: '"'
+            separator: ','
+            relativeToChangelogFile: true
+            tableName: exam_period_month

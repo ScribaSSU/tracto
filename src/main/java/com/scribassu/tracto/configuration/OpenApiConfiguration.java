@@ -5,21 +5,17 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Collections;
 
 @Configuration
+@AllArgsConstructor
 public class OpenApiConfiguration {
 
     private final ProjectProperties projectProperties;
-
-    @Autowired
-    public OpenApiConfiguration(ProjectProperties projectProperties) {
-        this.projectProperties = projectProperties;
-    }
 
     @Bean
     public OpenAPI api() {

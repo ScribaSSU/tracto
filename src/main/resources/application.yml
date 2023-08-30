@@ -15,6 +15,9 @@ spring:
         dialect:
     hibernate:
       ddl-auto:
+#  liquibase:
+#    enabled:
+#    change-log: classpath:db/db.changelog-master.yaml
 
 tracto:
   download-schedule:

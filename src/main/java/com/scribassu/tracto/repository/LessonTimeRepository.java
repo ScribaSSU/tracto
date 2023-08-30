@@ -1,6 +1,6 @@
 package com.scribassu.tracto.repository;
 
-import com.scribassu.tracto.domain.LessonTime;
+import com.scribassu.tracto.entity.schedule.LessonTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

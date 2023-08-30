@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;
 
-@Data
-@NoArgsConstructor
 @ConstructorBinding
 @ConfigurationProperties(prefix = "project")
+@Data
+@NoArgsConstructor
 public class ProjectProperties {
 
     private String version;

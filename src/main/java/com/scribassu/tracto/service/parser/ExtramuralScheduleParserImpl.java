@@ -1,21 +1,22 @@
 package com.scribassu.tracto.service.parser;
 
-import com.scribassu.tracto.domain.*;
+import com.scribassu.tracto.entity.ScheduleParserResult;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
+import com.scribassu.tracto.entity.schedule.*;
 import com.scribassu.tracto.repository.*;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
     private static final String PAGE_TITLE_CLASS = "page-title";
@@ -23,171 +24,166 @@ public class ExtramuralScheduleParserImpl implements ScheduleParser {
 
     private final StudentGroupRepository studentGroupRepository;
     private final DepartmentRepository departmentRepository;
-    private final LessonTimeRepository lessonTimeRepository;
     private final ExamPeriodMonthRepository examPeriodMonthRepository;
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
     private final ExtramuralEventRepository extramuralEventRepository;
 
-    @Autowired
-    public ExtramuralScheduleParserImpl(StudentGroupRepository studentGroupRepository,
-                                        DepartmentRepository departmentRepository,
-                                        LessonTimeRepository lessonTimeRepository,
-                                        ExamPeriodMonthRepository examPeriodMonthRepository,
-                                        ScheduleParserStatusRepository scheduleParserStatusRepository,
-                                        ExtramuralEventRepository extramuralEventRepository) {
-        this.studentGroupRepository = studentGroupRepository;
-        this.departmentRepository = departmentRepository;
-        this.lessonTimeRepository = lessonTimeRepository;
-        this.examPeriodMonthRepository = examPeriodMonthRepository;
-        this.scheduleParserStatusRepository = scheduleParserStatusRepository;
-        this.extramuralEventRepository = extramuralEventRepository;
-    }
-
-
+    private final Map<String, String> scheduleParsingResultMap = new HashMap<>();
+// 2023-08-31 01:35:14,357 [http-nio-9001-exec-1] ERROR c.s.t.s.p.ExtramuralScheduleParserImpl - Error while parsing schedule org.springframework.dao.IncorrectResultSizeDataAccessException: query did not return a unique result: 2; nested exception is javax.persistence.NonUniqueResultException: query did not return a unique result: 2
     @Override
-    public ScheduleParserStatus parseSchedule(String schedule, String departmentURL) {
-        ScheduleParserStatus status = new ScheduleParserStatus();
-        Document document = Jsoup.parse(schedule);
-        Elements title = document.getElementsByClass(PAGE_TITLE_CLASS);
-        Element pageTitle = title.get(0);
-        Department department = departmentRepository.findByURL(departmentURL);
-        StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), department);
+    public ScheduleParserResult parseSchedule(String schedule, String departmentUrl) {
+        ScheduleParserResult scheduleParserResult;
+        try {
+            Document document = Jsoup.parse(schedule);
+            Elements title = document.getElementsByClass(PAGE_TITLE_CLASS);
+            Element pageTitle = title.get(0);
+            Department department = departmentRepository.findByUrl(departmentUrl);
+            StudentGroup studentGroup = getStudentGroupByPageTitleText(pageTitle.text(), department);
 
-        if (studentGroup == null) {
-            log.error("Fail to find some student group for " + departmentURL);
-            status.setStatus("fail no group");
-            status.setSchedule("s-unknown" + "-" + departmentURL);
-        } else {
-            try {
-                Element div = document.getElementById("schedule_page");
-                if (div == null) {
-                    log.error("Schedule page is empty for group " + studentGroup);
-                    status.setStatus("fail no schedule");
-                    status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
-                    return status;
-                }
-                Element sessionTable = document.getElementsByTag("table").first();
-                if (sessionTable == null) {
-                    log.error("Schedule page does not contain schedule table " + studentGroup);
-                    status.setStatus("fail no schedule");
-                    status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
-                    return status;
-                }
-                Elements trs = sessionTable.child(0).children();
+            scheduleParsingResultMap.put("scheduleType", ScheduleType.EXTRAMURAL.name());
+            scheduleParsingResultMap.put("department", departmentUrl);
 
-                extramuralEventRepository.deleteByStudentGroup(studentGroup);
-                ExtramuralEvent extramuralEvent = null;
-
-                for (Element tr : trs) {
-                    extramuralEvent = new ExtramuralEvent();
-                    extramuralEvent.setStudentGroup(studentGroup);
-                    extramuralEvent.setDepartment(department);
-                    Elements tds = tr.children();
-                    String time = tds.get(1).text();
-                    String[] infos = tds.get(2).outerHtml()
-                            .replaceAll("<td>", "")
-                            .replaceAll("</td>", "")
-                            .split("<br>");
-                    String[] date = tds.get(0).text().split(" ");
-
-                    if (date[0].startsWith("0")) {
-                        date[0] = date[0].substring(1);
+            if (studentGroup == null) {
+                log.error("Fail to find some student group for " + departmentUrl);
+                scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
+            } else {
+                scheduleParsingResultMap.put("educationForm", studentGroup.getEducationForm().name());
+                scheduleParsingResultMap.put("studentGroup", studentGroup.getGroupNumberRus());
+                try {
+                    Element div = document.getElementById("schedule_page");
+                    if (div == null) {
+                        log.error("Schedule page is empty for group " + studentGroup);
+                        scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
                     }
-                    int day = Integer.parseInt(date[0]);
-
-                    ExamPeriodMonth examPeriodMonth = examPeriodMonthRepository.findByRusGenitive(date[1]).get(0);
-                    String year = date[2];
-
-                    extramuralEvent.setDay(day);
-                    extramuralEvent.setMonth(examPeriodMonth);
-                    extramuralEvent.setYear(year);
-
-                    String[] times = time.split("-");
-                    int startHour = Integer.parseInt(times[0].split(":")[0]);
-                    int startMinute = Integer.parseInt(times[0].split(":")[1]);
-                    int endHour = -1;
-                    int endMinute = -1;
-                    if (times.length == 2) {
-                        endHour = Integer.parseInt(times[1].split(":")[0]);
-                        endMinute = Integer.parseInt(times[1].split(":")[1]);
+                    Element sessionTable = document.getElementsByTag("table").first();
+                    if (sessionTable == null) {
+                        log.error("Schedule page does not contain schedule table " + studentGroup);
+                        scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
                     }
-                    extramuralEvent.setStartHour(startHour);
-                    extramuralEvent.setStartMinute(startMinute);
-                    extramuralEvent.setEndHour(endHour);
-                    extramuralEvent.setEndMinute(endMinute);
+                    Elements trs = sessionTable.child(0).children();
 
-                    List<ExtramuralEvent> possibleEvents = new ArrayList<>();
-                    for (String info : infos) {
-                        String[] strings;
-                        if (info.contains(": ")) {
-                            strings = info.split(": ");
-                        } else if (info.contains(":")) {
-                            strings = info.split(":");
-                        } else {
-                            continue;
+                    extramuralEventRepository.deleteByStudentGroup(studentGroup);
+                    ExtramuralEvent extramuralEvent = null;
+
+                    for (Element tr : trs) {
+                        extramuralEvent = new ExtramuralEvent();
+                        extramuralEvent.setStudentGroup(studentGroup);
+                        extramuralEvent.setDepartment(department);
+                        Elements tds = tr.children();
+                        String time = tds.get(1).text();
+                        String[] infos = tds.get(2).outerHtml()
+                                .replaceAll("<td>", "")
+                                .replaceAll("</td>", "")
+                                .split("<br>");
+                        String[] date = tds.get(0).text().split(" ");
+
+                        if (date[0].startsWith("0")) {
+                            date[0] = date[0].substring(1);
                         }
-                        if (" Преподаватель".equalsIgnoreCase(strings[0])
-                                || "преподаватель".equalsIgnoreCase(strings[0])) {
-                            if (strings.length > 1) {
-                                extramuralEvent.setTeacher(strings[1]);
+                        int day = Integer.parseInt(date[0]);
+
+                        ExamPeriodMonth examPeriodMonth = examPeriodMonthRepository.findByRusGenitive(date[1]).get(0);
+                        String year = date[2];
+
+                        extramuralEvent.setDay(day);
+                        extramuralEvent.setMonth(examPeriodMonth);
+                        extramuralEvent.setYear(year);
+
+                        String[] times = time.split("-");
+                        int startHour = Integer.parseInt(times[0].split(":")[0]);
+                        int startMinute = Integer.parseInt(times[0].split(":")[1]);
+                        int endHour = -1;
+                        int endMinute = -1;
+                        if (times.length == 2) {
+                            endHour = Integer.parseInt(times[1].split(":")[0]);
+                            endMinute = Integer.parseInt(times[1].split(":")[1]);
+                        }
+                        extramuralEvent.setStartHour(startHour);
+                        extramuralEvent.setStartMinute(startMinute);
+                        extramuralEvent.setEndHour(endHour);
+                        extramuralEvent.setEndMinute(endMinute);
+
+                        List<ExtramuralEvent> possibleEvents = new ArrayList<>();
+                        for (String info : infos) {
+                            String[] strings;
+                            if (info.contains(": ")) {
+                                strings = info.split(": ");
+                            } else if (info.contains(":")) {
+                                strings = info.split(":");
                             } else {
-                                extramuralEvent.setTeacher(NOT_SPECIFIED);
+                                continue;
                             }
-                        } else if (" Место проведения".equalsIgnoreCase(strings[0])
-                                || "Место проведения".equalsIgnoreCase(strings[0])) {
-                            if (strings.length > 1) {
-                                extramuralEvent.setPlace(strings[1]);
+                            if (" Преподаватель".equalsIgnoreCase(strings[0])
+                                    || "преподаватель".equalsIgnoreCase(strings[0])) {
+                                if (strings.length > 1) {
+                                    extramuralEvent.setTeacher(strings[1]);
+                                } else {
+                                    extramuralEvent.setTeacher(NOT_SPECIFIED);
+                                }
+                            } else if (" Место проведения".equalsIgnoreCase(strings[0])
+                                    || "Место проведения".equalsIgnoreCase(strings[0])) {
+                                if (strings.length > 1) {
+                                    extramuralEvent.setPlace(strings[1]);
+                                } else {
+                                    extramuralEvent.setPlace(NOT_SPECIFIED);
+                                }
                             } else {
-                                extramuralEvent.setPlace(NOT_SPECIFIED);
+                                if (extramuralEvent.getEventType() != null) {
+                                    possibleEvents.add(extramuralEvent);
+                                    extramuralEvent = extramuralEvent.clone();
+                                }
+
+                                ExtramuralEventType eventType = ExtramuralEventType.getExtramuralEventType(strings[0]);
+                                extramuralEvent.setEventType(eventType);
+                                if (strings.length > 1) {
+                                    extramuralEvent.setName(strings[1]);
+                                }
+
+                            }
+                        }
+                        if (possibleEvents.isEmpty()) {
+                            extramuralEvent = extramuralEventRepository.save(extramuralEvent);
+                            if (extramuralEvent.getId() != null) {
+                                scheduleParsingResultMap.put("status", ScheduleParserStatus.OK.name());
+                            } else {
+                                scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
                             }
                         } else {
-                            if (extramuralEvent.getEventType() != null) {
-                                possibleEvents.add(extramuralEvent);
-                                extramuralEvent = extramuralEvent.clone();
+                            possibleEvents.add(extramuralEvent);
+                            long success = 0;
+                            long fail = 0;
+                            for (ExtramuralEvent e : possibleEvents) {
+                                e = extramuralEventRepository.save(e);
+                                if (e.getId() != null) {
+                                    success++;
+                                } else {
+                                    fail++;
+                                }
                             }
-
-                            ExtramuralEventType eventType = ExtramuralEventType.getExtramuralEventType(strings[0]);
-                            extramuralEvent.setEventType(eventType);
-                            if (strings.length > 1) {
-                                extramuralEvent.setName(strings[1]);
-                            }
-
-                        }
-                    }
-                    if (possibleEvents.isEmpty()) {
-                        extramuralEvent = extramuralEventRepository.save(extramuralEvent);
-                        if (extramuralEvent.getId() != null) {
-                            status.setStatus("ok");
-                        } else {
-                            status.setStatus("fail to save");
-                        }
-                    } else {
-                        possibleEvents.add(extramuralEvent);
-                        long success = 0;
-                        long fail = 0;
-                        for (ExtramuralEvent e : possibleEvents) {
-                            e = extramuralEventRepository.save(e);
-                            if (e.getId() != null) {
-                                success++;
+                            if (fail > 0) {
+                                scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
                             } else {
-                                fail++;
+                                scheduleParsingResultMap.put("status", ScheduleParserStatus.OK.name());
                             }
                         }
-                        String message = (success != 0 ? ("ok-" + success) : "") + (fail != 0 ? ("failed to save-" + fail) : "");
-                        status.setStatus(message);
                     }
+                } catch (Exception e) {
+                    log.error("Error while parsing schedule " + e);
+                    e.printStackTrace();
+                    scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
                 }
-            } catch (Exception e) {
-                log.error("Error while parsing schedule " + e);
-                status.setStatus("fail with exception");
             }
-            status.setSchedule("s-" + studentGroup.getGroupNumber() + "-" + departmentURL);
+        } catch(Exception e) {
+            log.error("Error while parsing schedule " + e);
+            e.printStackTrace();
+            scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
+        } finally {
+            scheduleParserResult = new ScheduleParserResult(scheduleParsingResultMap);
+            scheduleParserResult = scheduleParserStatusRepository.save(scheduleParserResult);
+            scheduleParsingResultMap.clear();
         }
 
-        status = scheduleParserStatusRepository.save(status);
-
-
-        return status;
+        return scheduleParserResult;
     }
 
     private StudentGroup getStudentGroupByPageTitleText(String text, Department department) {

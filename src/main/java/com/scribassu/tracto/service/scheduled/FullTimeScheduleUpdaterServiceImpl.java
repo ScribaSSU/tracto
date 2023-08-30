@@ -1,19 +1,20 @@
 package com.scribassu.tracto.service.scheduled;
 
-import com.scribassu.tracto.domain.Department;
-import com.scribassu.tracto.entity.ScheduleParserStatus;
+import com.scribassu.tracto.entity.ScheduleParserResult;
+import com.scribassu.tracto.entity.schedule.Department;
 import com.scribassu.tracto.repository.DepartmentRepository;
 import com.scribassu.tracto.service.ScheduleDownloader;
 import com.scribassu.tracto.service.parser.FullTimeScheduleParserImpl;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Slf4j
 @Service
+@Slf4j
+@AllArgsConstructor
 public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final DepartmentRepository departmentRepository;
@@ -22,29 +23,21 @@ public class FullTimeScheduleUpdaterServiceImpl implements ScheduleUpdater {
 
     private final FullTimeScheduleParserImpl fullTimeScheduleParser;
 
-    @Autowired
-    public FullTimeScheduleUpdaterServiceImpl(DepartmentRepository departmentRepository,
-                                              ScheduleDownloader scheduleDownloader,
-                                              FullTimeScheduleParserImpl fullTimeScheduleParser) {
-        this.departmentRepository = departmentRepository;
-        this.scheduleDownloader = scheduleDownloader;
-        this.fullTimeScheduleParser = fullTimeScheduleParser;
-    }
-
+    //TODO save time as metric
+    @Override
     @Scheduled(cron = "${tracto.download-schedule.full-time.time-update}")
     public void updateSchedule() {
-        log.info("START to parse full-time schedule");
+        log.info("Start to parse full-time schedule");
         long start = System.currentTimeMillis();
         List<Department> departments = departmentRepository.findAll();
         for (Department department : departments) {
-            String departmentURL = department.getURL();
-            String schedule = scheduleDownloader.downloadFullTimeSchedule(departmentURL);
-            log.info("Download full-time schedule of " + departmentURL);
-            ScheduleParserStatus status = fullTimeScheduleParser.parseSchedule(schedule, departmentURL);
-            log.info(status.getSchedule() + " " + status.getStatus());
+            String departmentUrl = department.getUrl();
+            String schedule = scheduleDownloader.downloadFullTimeSchedule(departmentUrl);
+            log.info("Download full-time schedule of " + departmentUrl);
+            ScheduleParserResult status = fullTimeScheduleParser.parseSchedule(schedule, departmentUrl);
+            log.info("Finish parse full-time entry with status " + status);
         }
         long end = System.currentTimeMillis();
-        log.info("Time: " + ((end - start) / 1000) + " s");
-        log.info("DOOOOOOOOOOOOOOOOOOOOONE parsing full time schedule");
+        log.info("Finish parsing full-time schedule, time: " + ((end - start) / 1000) + " s");
     }
 }

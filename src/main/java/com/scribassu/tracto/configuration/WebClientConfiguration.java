@@ -4,8 +4,8 @@ import com.scribassu.tracto.properties.DownloadScheduleProperties;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -16,18 +16,14 @@ import reactor.netty.http.client.HttpClient;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import static com.scribassu.tracto.util.WebClientUtil.INSECURE_SSL_CONTEXT;
+import static com.scribassu.tracto.configuration.WebClientSslContext.INSECURE_SSL_CONTEXT;
 
-@Slf4j
 @Configuration
+@Slf4j
+@AllArgsConstructor
 public class WebClientConfiguration {
 
     private final DownloadScheduleProperties downloadScheduleProperties;
-
-    @Autowired
-    public WebClientConfiguration(DownloadScheduleProperties downloadScheduleProperties) {
-        this.downloadScheduleProperties = downloadScheduleProperties;
-    }
 
     @Bean
     public WebClient fullTimeScheduleWebClient() {

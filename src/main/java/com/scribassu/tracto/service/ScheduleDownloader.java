@@ -1,11 +1,15 @@
 package com.scribassu.tracto.service;
 
 import com.scribassu.tracto.properties.DownloadScheduleProperties;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
+@Slf4j
+@AllArgsConstructor
 public class ScheduleDownloader {
 
     private final WebClient fullTimeScheduleWebClient;
@@ -15,21 +19,11 @@ public class ScheduleDownloader {
 
     private static final String DEPARTMENT_PARAM = "dep";
 
-    @Autowired
-    public ScheduleDownloader(WebClient fullTimeScheduleWebClient,
-                              WebClient examPeriodScheduleWebClient,
-                              WebClient extramuralScheduleWebClient,
-                              DownloadScheduleProperties downloadScheduleProperties) {
-        this.fullTimeScheduleWebClient = fullTimeScheduleWebClient;
-        this.examPeriodScheduleWebClient = examPeriodScheduleWebClient;
-        this.extramuralScheduleWebClient = extramuralScheduleWebClient;
-        this.downloadScheduleProperties = downloadScheduleProperties;
-    }
-
     /**
      * @return Downloaded full-time schedule
      */
     public String downloadFullTimeSchedule(String department) {
+        log.info(String.format("Download full-time schedule for department %s", department));
         return fullTimeScheduleWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -45,6 +39,7 @@ public class ScheduleDownloader {
     public String downloadExamPeriodSchedule(String department,
                                              String educationForm,
                                              String groupNumber) {
+        log.info(String.format("Download exam period schedule for department %s, education form %s, student group %s", department, educationForm, groupNumber));
         return examPeriodScheduleWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -58,6 +53,7 @@ public class ScheduleDownloader {
     public String downloadExtramuralSchedule(String department,
                                              String educationForm,
                                              String groupNumber) {
+        log.info(String.format("Download extramural schedule for department %s, education form %s, student group %s", department, educationForm, groupNumber));
         return extramuralScheduleWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder

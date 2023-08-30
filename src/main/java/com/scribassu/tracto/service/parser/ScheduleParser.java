@@ -1,8 +1,7 @@
 package com.scribassu.tracto.service.parser;
 
-import com.scribassu.tracto.entity.ScheduleParserStatus;
+import com.scribassu.tracto.entity.ScheduleParserResult;
 
 public interface ScheduleParser {
-
-    ScheduleParserStatus parseSchedule(String schedule, String department);
+    ScheduleParserResult parseSchedule(String schedule, String department);
 }

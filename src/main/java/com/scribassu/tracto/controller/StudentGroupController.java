@@ -1,26 +1,21 @@
 package com.scribassu.tracto.controller;
 
-import com.scribassu.tracto.config.DocSwagger;
-import com.scribassu.tracto.domain.EducationForm;
-import com.scribassu.tracto.dto.web.GroupNumbersDto;
-import com.scribassu.tracto.service.StudentGroupService;
+import com.scribassu.tracto.dto.GroupNumbersDto;
+import com.scribassu.tracto.entity.schedule.EducationForm;
+import com.scribassu.tracto.service.api.StudentGroupService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@DocSwagger
 @RestController
 @RequestMapping("/v1.0/group")
+@AllArgsConstructor
 public class StudentGroupController {
 
     private final StudentGroupService studentGroupService;
-
-    @Autowired
-    public StudentGroupController(StudentGroupService studentGroupService) {
-        this.studentGroupService = studentGroupService;
-    }
 
     @GetMapping("/number/{departmentUrl}/{educationForm}/{course}")
     public GroupNumbersDto getGroupNumbersByDepartmentUrlAndEducationFormAndCourse(

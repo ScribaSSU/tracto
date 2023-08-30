@@ -8,17 +8,65 @@ spring:
     url:
     username:
     password:
+    driver-class-name:
   jpa:
     properties:
       hibernate:
         dialect:
     hibernate:
       ddl-auto:
+#  liquibase:
+#    enabled:
+#    change-log: classpath:db/db.changelog-master.yaml
 
 tracto:
   download-schedule:
-    url:
-    auth-header:
-    exam-period-url:
-  time-update-schedule:
-  time-update-exam-period:
+    base-url:
+    query-timeout:
+    max-in-memory-size:
+    full-time:
+      path:
+      auth-header:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
+    exam-period:
+      path:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
+    extramural:
+      path:
+      time-update:
+      connection-timeout:
+      read-timeout:
+      write-timeout:
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+    disable-swagger-default-url: true
+  api-docs:
+    path: /api-docs
+
+project:
+  version: '@project.version@'
+
+management:
+  endpoint:
+    health:
+      show-details: "ALWAYS"
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  info:
+    git:
+      enabled: true
+      mode: full
+    build:
+      enabled: true
+    env:
+      enabled: true

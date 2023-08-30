@@ -5,18 +5,28 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.0.RELEASE</version>
+        <version>2.5.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.scribassu</groupId>
     <artifactId>tracto</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>2.0.0</version>
     <name>tracto</name>
     <description>Tracto: REST API for sgu.ru</description>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.release>11</maven.compiler.release>
+        <jsoup.version>1.13.1</jsoup.version>
+        <ical4j.version>3.2.2</ical4j.version>
+        <lombok.version>1.18.20</lombok.version>
         <springfox.version>2.9.2</springfox.version>
+        <springdoc.version>1.6.2</springdoc.version>
+        <tracto-dto.version>2.0.1</tracto-dto.version>
+        <mysql-connector.version>5.1.45</mysql-connector.version>
+        <apache.httpcomponents.version>4.5.13</apache.httpcomponents.version>
+        <spring-boot-maven-plugin.version>2.5.1</spring-boot-maven-plugin.version>
+        <pl.project13.maven.git-commit-id-plugin.version>4.9.10</pl.project13.maven.git-commit-id-plugin.version>
     </properties>
 
     <repositories>
@@ -35,29 +45,32 @@
     <dependencies>
         <dependency>
             <groupId>com.github.ScribaSSU</groupId>
-            <artifactId>tracto-domain</artifactId>
-            <version>1.0.11</version>
+            <artifactId>tracto-dto</artifactId>
+            <version>${tracto-dto.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.10</version>
+            <version>${apache.httpcomponents.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.13.1</version>
+            <version>${jsoup.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
 
         <dependency>
@@ -67,14 +80,18 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.45</version>
+            <version>${mysql-connector.version}</version>
             <scope>runtime</scope>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.liquibase</groupId>-->
+<!--            <artifactId>liquibase-core</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -95,6 +112,12 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>${pl.project13.maven.git-commit-id-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

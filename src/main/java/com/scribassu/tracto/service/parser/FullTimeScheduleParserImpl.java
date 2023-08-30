@@ -1,21 +1,26 @@
 package com.scribassu.tracto.service.parser;
 
-import com.scribassu.tracto.domain.*;
 import com.scribassu.tracto.dto.xml.*;
+import com.scribassu.tracto.entity.ScheduleParserResult;
 import com.scribassu.tracto.entity.ScheduleParserStatus;
+import com.scribassu.tracto.entity.schedule.*;
+import com.scribassu.tracto.mapper.XmlMapper;
 import com.scribassu.tracto.repository.*;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Slf4j
 @Service
+@Slf4j
+@AllArgsConstructor
 public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final FullTimeLessonRepository fullTimeLessonRepository;
@@ -32,85 +37,70 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private final ScheduleParserStatusRepository scheduleParserStatusRepository;
 
-    private final UpdatedRowRepository updatedRowRepository;
+    private final XmlMapper xmlMapper;
 
-    @Autowired
-    public FullTimeScheduleParserImpl(FullTimeLessonRepository fullTimeLessonRepository,
-                                      DayRepository dayRepository,
-                                      LessonTimeRepository lessonTimeRepository,
-                                      StudentGroupRepository studentGroupRepository,
-                                      DepartmentRepository departmentRepository,
-                                      TeacherRepository teacherRepository,
-                                      ScheduleParserStatusRepository scheduleParserStatusRepository,
-                                      UpdatedRowRepository updatedRowRepository) {
-        this.dayRepository = dayRepository;
-        this.fullTimeLessonRepository = fullTimeLessonRepository;
-        this.lessonTimeRepository = lessonTimeRepository;
-        this.studentGroupRepository = studentGroupRepository;
-        this.departmentRepository = departmentRepository;
-        this.teacherRepository = teacherRepository;
-        this.scheduleParserStatusRepository = scheduleParserStatusRepository;
-        this.updatedRowRepository = updatedRowRepository;
-    }
+    private final Map<String, String> scheduleParsingResultMap = new HashMap<>();
 
     @Override
-    public ScheduleParserStatus parseSchedule(String schedule, String departmentURL) {
-        ScheduleParserStatus scheduleParserStatus;
+    public ScheduleParserResult parseSchedule(String schedule, String departmentUrl) {
+        ScheduleParserResult scheduleParserResult;
         try {
             StringReader stringReader = new StringReader(schedule);
             JAXBContext jaxbContext = JAXBContext.newInstance(ScheduleXml.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ScheduleXml scheduleXml = (ScheduleXml) unmarshaller.unmarshal(stringReader);
 
-            fullTimeLessonRepository.deleteByDepartmentURL(departmentURL);
-            parseGroups(scheduleXml.groups, departmentURL);
+            scheduleParsingResultMap.put("scheduleType", ScheduleType.FULL_TIME.name());
+            scheduleParsingResultMap.put("department", departmentUrl);
 
-            scheduleParserStatus = new ScheduleParserStatus("ok", departmentURL);
-            scheduleParserStatusRepository.save(scheduleParserStatus);
-        }
-        catch(Exception e) {
+            // TODO drop almost all database and fill it with new values?
+            fullTimeLessonRepository.deleteByDepartmentUrl(departmentUrl);
+            //studentGroupRepository.deleteByEducationForm(EducationForm.DO);
+
+            parseGroups(scheduleXml.groups, departmentUrl);
+        } catch (Exception e) {
             e.printStackTrace();
-            scheduleParserStatus = new ScheduleParserStatus("fail", departmentURL);
-            scheduleParserStatusRepository.save(scheduleParserStatus);
+            scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
+        } finally {
+            scheduleParserResult = new ScheduleParserResult(scheduleParsingResultMap);
+            scheduleParserStatusRepository.save(scheduleParserResult);
+            scheduleParsingResultMap.clear();
         }
 
-        return scheduleParserStatus;
+        return scheduleParserResult;
     }
 
-    private void parseGroups(List<GroupXml> groups, String department) {
-        Department dep = departmentRepository.findByURL(department);
+    private void parseGroups(List<GroupXml> groups, String departmentUrl) {
+        Department department = departmentRepository.findByUrl(departmentUrl);
 
-        if(dep == null) {
-            throw new IllegalArgumentException("Wrong department!");
+        if (department == null) {
+            scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
+            throw new IllegalArgumentException("Get a wrong department during parse days for full-time lessons!");
         }
 
-        for(GroupXml group : groups) {
-            EducationForm educationForm = convertEducationForm(group.eduForm);
-            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus.trim(), educationForm, dep);
-            if(studentGroup == null) {
-                studentGroup = new StudentGroup();
-            }
-            studentGroup.setDepartment(dep);
-            studentGroup.setGroupNumber(group.number.trim());
-            studentGroup.setGroupNumberRus(group.numberRus.trim());
-            studentGroup.setGroupType(convertGroupType(group.groupType));
-            studentGroup.setEducationForm(educationForm);
+        for (GroupXml group : groups) {
+            var studentGroup = xmlMapper.toStudentGroup(group, department);
             studentGroupRepository.save(studentGroup);
-
-            parseDays(group.days, studentGroup);
+            log.info("Save student group {}", studentGroup);
+            if (studentGroup.getEducationForm().equals(EducationForm.DO)) {
+                parseDays(group.days, studentGroup);
+            }
         }
     }
 
     private void parseDays(List<DayXml> days, StudentGroup studentGroup) {
-        for(DayXml d : days) {
+        scheduleParsingResultMap.put("educationForm",  studentGroup.getEducationForm().name());
+        scheduleParsingResultMap.put("studentGroup", studentGroup.getGroupNumberRus());
+        for (DayXml d : days) {
             Day day = dayRepository.findByDayNumber(d.id);
 
-            if(day == null) {
-                throw new IllegalArgumentException("Wrong day!");
+            if (day == null) {
+                scheduleParsingResultMap.put("status", ScheduleParserStatus.ERROR.name());
+                throw new IllegalArgumentException("Get a wrong day during parse days for full-time lessons!");
             }
 
             LessonsXml lessonsXml = d.lessons;
-            if(!CollectionUtils.isEmpty(lessonsXml.lessons)) {
+            if (!CollectionUtils.isEmpty(lessonsXml.lessons)) {
                 parseLessons(lessonsXml.lessons, day, studentGroup);
             }
         }
@@ -118,81 +108,42 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
 
     private void parseLessons(List<LessonXml> lessons, Day day, StudentGroup studentGroup) {
         LessonTime lessonTime;
-        WeekType weekType;
-        LessonType lessonType;
         Teacher teacher;
 
-        if(isFromCollegeCre(studentGroup)) {
-            for(LessonXml les : lessons) {
-                lessonTime = lessonTimeRepository.findByLessonNumber(collegeCreLessonNumber(les));
-                weekType = convertWeekType(les.weekType);
-                lessonType = convertLessonType(les.type);
-                teacher = parseTeacher(les.teacher);
+        if (isFromCollegeCre(studentGroup)) {
+            for (LessonXml lessonXml : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(collegeCreLessonNumber(lessonXml));
+                teacher = parseTeacher(lessonXml.teacher);
 
-                FullTimeLesson lesson = new FullTimeLesson();
-                lesson.setStudentGroup(studentGroup);
-                lesson.setDepartment(studentGroup.getDepartment());
-                lesson.setName(les.name);
-                lesson.setPlace(les.place);
-                lesson.setSubGroup(les.subgroup);
-                lesson.setDay(day);
-                lesson.setLessonTime(lessonTime);
-                lesson.setWeekType(weekType);
-                lesson.setTeacher(teacher);
-                lesson.setLessonType(lessonType);
+                var lesson = xmlMapper.toFullTimeLesson(lessonXml, day, lessonTime, teacher, studentGroup);
+                fullTimeLessonRepository.save(lesson);
+            }
+        } else if (isFromCollegeKgl(studentGroup)) {
+            for (LessonXml lessonXml : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(collegeKglLessonNumber(lessonXml));
+                teacher = parseTeacher(lessonXml.teacher);
+
+                var lesson = xmlMapper.toFullTimeLesson(lessonXml, day, lessonTime, teacher, studentGroup);
+                fullTimeLessonRepository.save(lesson);
+            }
+        } else {
+            for (LessonXml lessonXml : lessons) {
+                lessonTime = lessonTimeRepository.findByLessonNumber(lessonXml.number);
+                teacher = parseTeacher(lessonXml.teacher);
+
+                var lesson = xmlMapper.toFullTimeLesson(lessonXml, day, lessonTime, teacher, studentGroup);
                 fullTimeLessonRepository.save(lesson);
             }
         }
-        else if(isFromCollegeKgl(studentGroup)) {
-            for(LessonXml les : lessons) {
-                lessonTime = lessonTimeRepository.findByLessonNumber(collegeKglLessonNumber(les));
-                weekType = convertWeekType(les.weekType);
-                lessonType = convertLessonType(les.type);
-                teacher = parseTeacher(les.teacher);
-
-                FullTimeLesson lesson = new FullTimeLesson();
-                lesson.setStudentGroup(studentGroup);
-                lesson.setDepartment(studentGroup.getDepartment());
-                lesson.setName(les.name);
-                lesson.setPlace(les.place);
-                lesson.setSubGroup(les.subgroup);
-                lesson.setDay(day);
-                lesson.setLessonTime(lessonTime);
-                lesson.setWeekType(weekType);
-                lesson.setTeacher(teacher);
-                lesson.setLessonType(lessonType);
-                fullTimeLessonRepository.save(lesson);
-            }
-        }
-        else {
-            for(LessonXml les : lessons) {
-                lessonTime = lessonTimeRepository.findByLessonNumber(les.number);
-                weekType = convertWeekType(les.weekType);
-                lessonType = convertLessonType(les.type);
-                teacher = parseTeacher(les.teacher);
-
-                FullTimeLesson lesson = new FullTimeLesson();
-                lesson.setStudentGroup(studentGroup);
-                lesson.setDepartment(studentGroup.getDepartment());
-                lesson.setName(les.name);
-                lesson.setPlace(les.place);
-                lesson.setSubGroup(les.subgroup);
-                lesson.setDay(day);
-                lesson.setLessonTime(lessonTime);
-                lesson.setWeekType(weekType);
-                lesson.setTeacher(teacher);
-                lesson.setLessonType(lessonType);
-                fullTimeLessonRepository.save(lesson);
-            }
-        }
+        scheduleParsingResultMap.put("status", ScheduleParserStatus.OK.name());
     }
 
     private boolean isFromCollegeCre(StudentGroup studentGroup) {
-        return studentGroup.getDepartment().getURL().equals("cre");
+        return studentGroup.getDepartment().getUrl().equals("cre");
     }
 
     private boolean isFromCollegeKgl(StudentGroup studentGroup) {
-        return studentGroup.getDepartment().getURL().equals("kgl");
+        return studentGroup.getDepartment().getUrl().equals("kgl");
     }
 
     private int collegeCreLessonNumber(LessonXml lessonXml) {
@@ -203,73 +154,19 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
         return lessonXml.number * 100 + lessonXml.number;
     }
 
-    private Teacher parseTeacher(TeacherXml teacher) {
-        List<Teacher> tList = teacherRepository.findBySurnameAndNameAndPatronymic(teacher.lastname, teacher.name, teacher.patronymic);
+    private Teacher parseTeacher(TeacherXml teacherXml) {
+        List<Teacher> teacherList = teacherRepository.findBySurnameAndNameAndPatronymic(teacherXml.lastname, teacherXml.name, teacherXml.patronymic);
 
-        if(tList.size() > 1) {
-            log.warn("Find more than 1 teacher for surname {}, name {}, patronymic {}", teacher.lastname, teacher.name, teacher.patronymic);
+        if (teacherList.size() > 1) {
+            log.warn("Find more than 1 teacher for surname {}, name {}, patronymic {}", teacherXml.lastname, teacherXml.name, teacherXml.patronymic);
         }
 
-        Teacher t;
-
-        if(CollectionUtils.isEmpty(tList)) {
-            t = new Teacher();
-        }
-        else {
-            t = tList.get(0);
-        }
-
-        t.setSurname(teacher.lastname);
-        t.setName(teacher.name);
-        t.setPatronymic(teacher.patronymic);
-        teacherRepository.save(t);
-        return t;
-    }
-
-    private LessonType convertLessonType(String type) {
-        switch(type) {
-            case "lecture":
-                return LessonType.LECTURE;
-            case "practice":
-                return LessonType.PRACTICE;
-            case "laboratory":
-                return LessonType.LABORATORY;
-            default:
-                return null;
-        }
-    }
-
-    private WeekType convertWeekType(String weekType) {
-        return WeekType.valueOf(weekType.toUpperCase());
-    }
-
-    private GroupType convertGroupType(int groupType) {
-        switch(groupType) {
-            case -1:
-                return GroupType.COLLEGE;
-            case 0:
-                return GroupType.SPECIALTY;
-            case 1:
-                return GroupType.BACHELOR;
-            case 2:
-                return GroupType.MASTER;
-            case 3:
-                return GroupType.GRADUATE_SCHOOL;
-            default:
-                return null;
-        }
-    }
-
-    private EducationForm convertEducationForm(int educationForm) {
-        switch(educationForm) {
-            case 0:
-                return EducationForm.DO;
-            case 1:
-                return EducationForm.ZO;
-            case 2:
-                return EducationForm.VO;
-            default:
-                return null;
+        if (CollectionUtils.isEmpty(teacherList)) {
+            var teacher = xmlMapper.toTeacher(teacherXml);
+            teacherRepository.save(teacher);
+            return teacher;
+        } else {
+            return teacherList.get(0);
         }
     }
 }

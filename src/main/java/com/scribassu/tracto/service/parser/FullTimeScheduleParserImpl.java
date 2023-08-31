@@ -79,9 +79,14 @@ public class FullTimeScheduleParserImpl implements ScheduleParser {
         }
 
         for (GroupXml group : groups) {
-            var studentGroup = xmlMapper.toStudentGroup(group, department);
-            studentGroupRepository.save(studentGroup);
-            log.info("Save student group {}", studentGroup);
+            EducationForm educationForm = xmlMapper.toEducationForm(group.eduForm);
+            StudentGroup studentGroup = studentGroupRepository.findByNumberAndEducationFormAndDepartment(group.numberRus.trim(), educationForm, department);
+            if (null == studentGroup) {
+                var newStudentGroup = xmlMapper.toStudentGroup(group, department);
+                newStudentGroup = studentGroupRepository.save(newStudentGroup);
+                log.info("Save student group {}", newStudentGroup);
+                studentGroup = newStudentGroup;
+            }
             if (studentGroup.getEducationForm().equals(EducationForm.DO)) {
                 parseDays(group.days, studentGroup);
             }

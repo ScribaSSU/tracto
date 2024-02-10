@@ -9,10 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1.0/manual")
@@ -27,7 +24,7 @@ public class ManualUpdateController {
     private final ExtramuralScheduleUpdaterServiceImpl extramuralScheduleUpdaterService;
     private final DepartmentRepository departmentRepository;
 
-    @GetMapping("/weekShift")
+    @PostMapping("/weekShift")
     public ResponseEntity updateWeekShiftForDepartment(@RequestParam("shift") int shift,
                                              @RequestParam("department") String department,
                                              @RequestParam("accessToken") String token) {
@@ -43,17 +40,17 @@ public class ManualUpdateController {
         }
     }
 
-    @GetMapping("/full")
+    @PostMapping("/full")
     public void updateFullTimeScheduleManually() {
         fullTimeScheduleUpdaterService.updateSchedule();
     }
 
-    @GetMapping("/exam")
+    @PostMapping("/exam")
     public void updateExamPeriodScheduleManually() {
         examPeriodScheduleUpdaterService.updateSchedule();
     }
 
-    @GetMapping("/extramural")
+    @PostMapping("/extramural")
     public void updateExtramuralScheduleManually() {
         extramuralScheduleUpdaterService.updateSchedule();
     }
